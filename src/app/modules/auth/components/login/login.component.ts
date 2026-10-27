@@ -203,7 +203,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
               backendMessage ||
               this.translateService.instant('AUTH.LOGIN_ERROR');
             this.errorMessage.next(message);
-            this.toastService.presentErrorToast('bottom', message);
             return;
           }
 
@@ -228,7 +227,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
           const message =
             backendMessage || this.translateService.instant(fallbackKey);
           this.errorMessage.next(message);
-          this.toastService.presentErrorToast('bottom', message);
         },
       });
   }
