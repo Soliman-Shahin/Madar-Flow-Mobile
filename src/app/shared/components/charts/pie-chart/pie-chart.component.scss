@@ -197,3 +197,56 @@
     margin-top: var(--ew-space-5);
   }
 }
+
+// ===================================================================
+//  Calm Personal Ledger — quieter donut
+// ===================================================================
+:host {
+  font-family: var(--mf-font-sans);
+}
+
+.center-label {
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink-3);
+}
+
+.center-subtitle {
+  margin-top: var(--mf-space-1);
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--mf-ink);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.chart-legend {
+  justify-content: flex-start;
+  gap: var(--mf-space-1) var(--mf-space-2);
+  margin-top: var(--mf-space-5);
+}
+
+.legend-item {
+  min-height: 36px;
+  padding: var(--mf-space-1) var(--mf-space-3);
+  border-radius: var(--mf-radius-pill);
+
+  &:hover {
+    background-color: var(--mf-surface-sunken);
+  }
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  margin-inline-end: var(--mf-space-2);
+  box-shadow: none;
+}
+
+.legend-label {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
+  overflow-wrap: anywhere;
+}

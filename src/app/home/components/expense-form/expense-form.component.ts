@@ -33,12 +33,7 @@ import { Expense, Category } from 'src/app/shared/models';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { trapFocus, releaseFocus } from 'src/app/shared/utils/focus-trap';
 import { IonicModule } from '@ionic/angular';
-import {
-  NgClass,
-  AsyncPipe,
-  DatePipe,
-  NgTemplateOutlet,
-} from '@angular/common';
+import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service';
 
@@ -52,7 +47,6 @@ import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    NgClass,
     AsyncPipe,
     DatePipe,
     NgTemplateOutlet,
@@ -455,9 +449,9 @@ export class ExpenseFormComponent
     try {
       const stored = JSON.parse(localStorage.getItem(key) || '{}');
       this.recentCategoryIds = Array.isArray(stored.recentCategoryIds)
-        ? stored.recentCategoryIds.filter(
-            (id: unknown) => typeof id === 'string'
-          ).slice(0, this.recentCategoryCap)
+        ? stored.recentCategoryIds
+            .filter((id: unknown) => typeof id === 'string')
+            .slice(0, this.recentCategoryCap)
         : [];
       this.favoriteCategoryIds = Array.isArray(stored.favoriteCategoryIds)
         ? stored.favoriteCategoryIds.filter(
@@ -539,6 +533,31 @@ export class ExpenseFormComponent
         !favoriteIds.has(category._id || '') &&
         !recentIds.has(category._id || '')
     );
+  }
+
+  /**
+   * Up to six one-tap category chips: favorites first, then recents, then
+   * the remaining categories of the current type.
+   */
+  get quickCategories(): Category[] {
+    const seen = new Set<string>();
+    const result: Category[] = [];
+    for (const category of [
+      ...this.favoriteCategories,
+      ...this.recentCategories,
+      ...this.remainingCategories,
+    ]) {
+      const id = category._id || '';
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      result.push(category);
+      if (result.length === 6) break;
+    }
+    return result;
+  }
+
+  get isIncomeType(): boolean {
+    return this.expenseForm?.get('type')?.value === 'income';
   }
 
   getSelectedCategoryText(): string {

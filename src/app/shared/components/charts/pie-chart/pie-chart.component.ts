@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { formatMoney } from 'src/app/shared/utils/money-format.util';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import {
   ChartTooltipComponent,
@@ -59,7 +60,7 @@ export class PieChartComponent
   @Input() showLegend: boolean =
     inject(CHART_SHOW_LEGEND, { optional: true }) ?? true;
   @Input() size: number = inject(CHART_SIZE, { optional: true }) || 300;
-  @Input() donutWidth: number = 40;
+  @Input() donutWidth: number = 28;
   @Input() centerLabelDefault: string = 'PROFILE.SALARY.TOTAL';
   @Input() centerSubtitleDefault: string = '';
   @Input() animationDuration = 800; // in ms
@@ -87,15 +88,16 @@ export class PieChartComponent
   centerSubtitle: string | null = null;
   totalValue: number = 0;
 
+  // Muted ledger palette; used only when an item has no category color.
   private colors: string[] = [
-    'var(--ion-color-primary)',
-    'var(--ion-color-secondary)',
-    'var(--ion-color-tertiary)',
-    'var(--ion-color-success)',
-    'var(--ion-color-warning)',
-    'var(--ion-color-danger)',
-    'var(--ion-color-light)',
-    'var(--ion-color-medium)',
+    'var(--mf-cat-1)',
+    'var(--mf-cat-2)',
+    'var(--mf-cat-3)',
+    'var(--mf-cat-4)',
+    'var(--mf-cat-5)',
+    'var(--mf-cat-6)',
+    'var(--mf-cat-7)',
+    'var(--mf-cat-8)',
   ];
 
   tooltipVisible = false;
@@ -308,7 +310,13 @@ export class PieChartComponent
   }
 
   getColor(index: number): string {
+    const own = this.chartData[index]?.['color'];
+    if (typeof own === 'string' && own) return own;
     return this.colors[index % this.colors.length];
+  }
+
+  private formatValue(value: number): string {
+    return formatMoney(value, { showSign: false });
   }
 
   getAriaLabel(slice: any, index: number): string {
@@ -317,7 +325,7 @@ export class PieChartComponent
     const item = this.chartData[slice.originalIndex];
     return `${
       item.name
-    }: ${item.value.toLocaleString()} (${slice.percentage.toFixed(1)}%)`;
+    }: ${this.formatValue(item.value)} (${slice.percentage.toFixed(1)}%)`;
   }
 
   toggleSeries(toggledItem: { label: string; visible: boolean }): void {
@@ -336,7 +344,7 @@ export class PieChartComponent
     if (!sliceData || !sliceData.visible) return;
 
     this.centerLabel = sliceData.name;
-    this.centerSubtitle = sliceData.value.toLocaleString();
+    this.centerSubtitle = this.formatValue(sliceData.value);
     this.showTooltip(index);
   }
 
@@ -349,7 +357,7 @@ export class PieChartComponent
   private updateCenterText(): void {
     this.centerLabel = this.centerLabelDefault;
     this.centerSubtitle =
-      this.totalValue > 0 ? this.totalValue.toLocaleString() : '';
+      this.totalValue > 0 ? this.formatValue(this.totalValue) : '';
   }
 
   showTooltip(index: number): void {

@@ -374,3 +374,76 @@ ion-searchbar {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+// ===================================================================
+//  Calm Personal Ledger — category list
+// ===================================================================
+.mf-cat-list {
+  margin-top: var(--mf-space-2);
+}
+
+ion-item.mf-cat-item {
+  --inner-padding-end: var(--mf-space-3);
+  --min-height: 64px;
+  --border-color: var(--mf-separator);
+  --inner-border-width: 0 0 1px 0;
+  font-family: var(--mf-font-sans);
+
+  &:last-of-type {
+    --inner-border-width: 0;
+  }
+}
+
+.mf-cat-item__mark {
+  --mf-cat-c: var(--mf-cat-color, var(--mf-cat-8));
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  margin-inline-end: var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-cat-c) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-cat-c) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.mf-cat-item__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-block: var(--mf-space-3);
+}
+
+.mf-cat-item__title {
+  // Align with the page direction, not the text's own (bdi) direction.
+  text-align: match-parent;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink);
+  overflow-wrap: anywhere;
+}
+
+.mf-cat-item__meta {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.mf-cat-item__more {
+  font-size: 20px;
+  color: var(--mf-ink-3);
+}
+
+ion-reorder {
+  color: var(--mf-ink-3);
+}

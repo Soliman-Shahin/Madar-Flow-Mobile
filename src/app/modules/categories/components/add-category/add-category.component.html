@@ -1,12 +1,11 @@
-<ion-header mode="ios" class="settings-header" translucent="false">
+<ion-header mode="ios" class="mf-sub-header" translucent="false">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button
         routerLink="/categories/list"
-        class="modern-back-btn"
         [attr.aria-label]="'COMMON.BACK' | translate"
       >
-        <ion-icon name="chevron-back"></ion-icon>
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{
@@ -15,158 +14,113 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="settings-content" [fullscreen]="true">
+<ion-content class="mf-cat-form" [fullscreen]="true">
   @if (vm$ | async; as vm) {
-  <!-- Live Preview -->
-  <div class="preview-container ion-padding" [class.bump]="animatePreview">
-    <div class="category-item-preview">
-      <div
-        class="category-icon-preview"
-        [style.background]="categoryForm.get('color')?.value"
+  <div class="mf-cat-form__body">
+    <!-- Live preview: how the category will look in the ledger -->
+    <div
+      class="mf-cat-form__preview"
+      [class.bump]="animatePreview"
+      aria-hidden="true"
+    >
+      <span
+        class="mf-cat-form__mark"
+        [style.--mf-cat-color]="categoryForm.get('color')?.value || null"
       >
         <ion-icon [name]="categoryForm.get('icon')?.value"></ion-icon>
-      </div>
-      <div class="category-details-preview">
-        <div class="category-title-preview">
-          {{
-            categoryForm.get("title")?.value || ("CATEGORY.ITEM" | translate)
-          }}
-        </div>
-        @if (categoryForm.get('type')?.value; as type) {
-        <p class="subtitle">
-          <span class="type-indicator" [ngClass]="type">
-            <ion-icon
-              [name]="
-                type === 'income'
-                  ? 'trending-down-outline'
-                  : 'trending-up-outline'
-              "
-            ></ion-icon>
-            {{
-              (type === "income" ? "COMMON.INCOME" : "COMMON.OUTCOME")
-                | translate
-            }}
-          </span>
-        </p>
-        }
-      </div>
+      </span>
+      <span class="mf-cat-form__preview-text">
+        <bdi class="mf-cat-form__preview-title">{{
+          categoryForm.get("title")?.value || ("CATEGORY.ITEM" | translate)
+        }}</bdi>
+        <span class="mf-cat-form__preview-meta">{{
+          (categoryForm.get("type")?.value === "income"
+            ? "COMMON.INCOME"
+            : "COMMON.OUTCOME"
+          ) | translate
+        }}</span>
+      </span>
     </div>
-  </div>
-  <div class="form-container ion-padding">
+
     @if (vm.errorMessage) {
-    <ion-note
-      color="danger"
-      class="error-message ion-padding-start ion-padding-end"
-      role="alert"
-    >
-      <ion-icon name="alert-circle-outline"></ion-icon>
+    <p class="mf-cat-form__error" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
       {{ vm.errorMessage | translate }}
-    </ion-note>
+    </p>
     }
-    <form [formGroup]="categoryForm">
-      <ion-grid class="form-grid">
-        <ion-row>
-          <ion-col size="12">
-            <app-ui-input
-              formControlName="title"
-              [label]="'CATEGORY.TITLE' | translate"
-              [placeholder]="'CATEGORY.TITLE_PLACEHOLDER' | translate"
-              startIcon="create-outline"
-              [maxLength]="50"
-            ></app-ui-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12">
-            <div class="section-title">
-              <ion-text>{{ "CATEGORY.TYPE" | translate }}</ion-text>
-            </div>
-            <ion-segment
-              formControlName="type"
-              value="outcome"
-              class="type-segment"
-            >
-              <ion-segment-button value="outcome" layout="icon-start">
-                <ion-icon
-                  name="arrow-up-outline"
-                  class="segment-icon"
-                ></ion-icon>
-                <ion-label>{{ "OUTCOME" | translate }}</ion-label>
-              </ion-segment-button>
-              <ion-segment-button value="income" layout="icon-start">
-                <ion-icon
-                  name="arrow-down-outline"
-                  class="segment-icon"
-                ></ion-icon>
-                <ion-label>{{ "INCOME" | translate }}</ion-label>
-              </ion-segment-button>
-            </ion-segment>
-          </ion-col>
-        </ion-row>
-        <ion-row class="mt-4">
-          <ion-col size="12">
-            <div class="section-title">
-              <ion-text>{{ "CATEGORY.COLOR" | translate }}</ion-text>
-            </div>
-            <app-color-selector
-              class="color-selector"
-              [selectedColor]="categoryForm.get('color')?.value"
-              (color)="selectColor($event)"
-              [attr.aria-label]="'CATEGORY.SELECT_COLOR' | translate"
-              role="group"
-            ></app-color-selector>
-          </ion-col>
-        </ion-row>
-        <ion-row class="mt-4">
-          <ion-col size="12">
-            <div class="section-title">
-              <ion-text>{{ "ICON" | translate }}</ion-text>
-            </div>
-            <app-icon-selector
-              class="icon-selector"
-              [selectedIcon]="categoryForm.get('icon')?.value"
-              [themeColor]="categoryForm.get('color')?.value"
-              (icon)="selectIcon($event)"
-              [attr.aria-label]="'CATEGORY.SELECT_ICON' | translate"
-              role="group"
-            ></app-icon-selector>
-          </ion-col>
-        </ion-row>
-        <ion-row class="mt-4">
-          <ion-col>
-            <ion-button
-              class="action-button form-submit-button"
-              [class.loading]="vm.isLoading"
-              [class.success]="formSubmitted && !vm.isLoading"
-              (click)="editMode ? updateCategory() : addCategory()"
-              expand="block"
-              shape="round"
-              size="large"
-              [disabled]="
-                !categoryForm.valid ||
-                (!categoryForm.dirty && editMode) ||
-                vm.isLoading
-              "
-              [attr.aria-label]="
-                (editMode ? 'COMMON.UPDATE' : 'COMMON.CREATE') | translate
-              "
-            >
-              @if (formSubmitted && !vm.isLoading) {
-              <ion-icon
-                name="checkmark-done-outline"
-                class="success-icon animated-icon"
-              >
-              </ion-icon>
-              } @if (!(formSubmitted && !vm.isLoading)) {
-              <span class="button-text">
-                {{ (editMode ? "COMMON.UPDATE" : "COMMON.CREATE") | translate }}
-              </span>
-              }
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+
+    <form [formGroup]="categoryForm" class="mf-cat-form__fields">
+      <section class="mf-cat-form__section">
+        <app-ui-input
+          formControlName="title"
+          [label]="'CATEGORY.TITLE' | translate"
+          [placeholder]="'CATEGORY.TITLE_PLACEHOLDER' | translate"
+          startIcon="create-outline"
+          [maxLength]="50"
+        ></app-ui-input>
+      </section>
+
+      <section class="mf-cat-form__section">
+        <h2 class="mf-cat-form__label">{{ "CATEGORY.TYPE" | translate }}</h2>
+        <ion-segment
+          formControlName="type"
+          value="outcome"
+          class="mf-cat-form__type"
+          mode="ios"
+        >
+          <ion-segment-button value="outcome">
+            <ion-label>{{ "OUTCOME" | translate }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="income">
+            <ion-label>{{ "INCOME" | translate }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </section>
+
+      <section class="mf-cat-form__section">
+        <h2 class="mf-cat-form__label">{{ "CATEGORY.COLOR" | translate }}</h2>
+        <app-color-selector
+          [selectedColor]="categoryForm.get('color')?.value"
+          (color)="selectColor($event)"
+          [attr.aria-label]="'CATEGORY.SELECT_COLOR' | translate"
+          role="group"
+        ></app-color-selector>
+      </section>
+
+      <section class="mf-cat-form__section">
+        <h2 class="mf-cat-form__label">{{ "ICON" | translate }}</h2>
+        <app-icon-selector
+          [selectedIcon]="categoryForm.get('icon')?.value"
+          [themeColor]="categoryForm.get('color')?.value"
+          (icon)="selectIcon($event)"
+          [attr.aria-label]="'CATEGORY.SELECT_ICON' | translate"
+          role="group"
+        ></app-icon-selector>
+      </section>
     </form>
+
+    <div class="mf-cat-form__actions">
+      <ion-button
+        class="mf-cat-form__submit"
+        expand="block"
+        (click)="editMode ? updateCategory() : addCategory()"
+        [disabled]="
+          !categoryForm.valid ||
+          (!categoryForm.dirty && editMode) ||
+          vm.isLoading
+        "
+      >
+        @if (vm.isLoading) {
+        <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+        } @else if (formSubmitted) {
+        <ion-icon name="checkmark" aria-hidden="true"></ion-icon>
+        } @else {
+        <span>{{
+          (editMode ? "COMMON.UPDATE" : "COMMON.CREATE") | translate
+        }}</span>
+        }
+      </ion-button>
+    </div>
   </div>
   }
 </ion-content>

@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { ledgerFormSheet } from 'src/app/shared/ui/sheet/sheet-options';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Subject, firstValueFrom, take } from 'rxjs';
@@ -49,7 +50,9 @@ export class QuickAddService {
     // Block only when the plan is known and its limit is reached; while the
     // plan is still loading the backend remains the source of truth (same
     // behaviour as the Transactions page).
-    const plan = await firstValueFrom(this.planService.currentPlan$.pipe(take(1)));
+    const plan = await firstValueFrom(
+      this.planService.currentPlan$.pipe(take(1))
+    );
     if (plan && !this.planService.canAddTransaction()) {
       await this.router.navigate(['/subscription'], {
         queryParams: {
@@ -63,6 +66,7 @@ export class QuickAddService {
     try {
       const modal = await this.modalCtrl.create({
         component: ExpenseFormComponent,
+        ...ledgerFormSheet(),
       });
       await modal.present();
       const { role } = await modal.onDidDismiss();

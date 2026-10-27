@@ -38,6 +38,7 @@ import {
 interface ChartData {
   name: string;
   value: number;
+  color?: string;
 }
 
 @Component({
@@ -168,13 +169,17 @@ export class BarChartComponent
   }
 
   getBarColor(index: number): string {
+    const own = this.data?.[index]?.color;
+    if (typeof own === 'string' && own) return own;
+    // Income first (green), then spending in the identity blue — spending is
+    // normal, not an error.
     const colors = [
-      'var(--ion-color-primary)',
-      'var(--ion-color-secondary)',
-      'var(--ion-color-tertiary)',
-      'var(--ion-color-success)',
-      'var(--ion-color-warning)',
-      'var(--ion-color-danger)',
+      'var(--mf-income)',
+      'var(--mf-primary)',
+      'var(--mf-cat-3)',
+      'var(--mf-cat-4)',
+      'var(--mf-cat-6)',
+      'var(--mf-cat-8)',
     ];
     return colors[index % colors.length];
   }

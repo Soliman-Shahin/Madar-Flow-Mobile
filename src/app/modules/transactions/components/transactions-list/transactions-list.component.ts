@@ -1,4 +1,8 @@
 import {
+  ledgerDetailSheet,
+  ledgerFormSheet,
+} from '../../../../shared/ui/sheet/sheet-options';
+import {
   expenseSyncAttention,
   expenseSyncLabel,
 } from 'src/app/shared/utils/expense-presentation';
@@ -234,6 +238,7 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
     try {
       const modal = await this.modalController.create({
         component: ExpenseFormComponent,
+        ...ledgerFormSheet(),
       });
       await modal.present();
       const { role } = await modal.onDidDismiss();
@@ -695,13 +700,13 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
     try {
       const modal = await this.modalController.create({
         component: ExpenseDetailComponent,
+        ...ledgerDetailSheet(),
         componentProps: {
           expense: item.original,
           categoryName: item.categoryName,
           currency: this.userCurrency(),
           locale: this.currentLang,
         },
-        cssClass: 'main-modal expense-record-modal',
       });
       await modal.present();
       role = (await modal.onDidDismiss()).role;
@@ -717,6 +722,7 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
     try {
       const modal = await this.modalController.create({
         component: ExpenseFormComponent,
+        ...ledgerFormSheet(),
         componentProps: { expense: item },
       });
       await modal.present();

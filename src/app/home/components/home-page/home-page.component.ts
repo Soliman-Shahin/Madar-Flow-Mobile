@@ -1,4 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ledgerFormSheet } from 'src/app/shared/ui/sheet/sheet-options';
 import { createInjectors } from './create-injectors';
 import {
   Injector,
@@ -749,6 +750,7 @@ export class HomePageComponent
     try {
       const modal = await this.modalCtrl.create({
         component: ExpenseFormComponent,
+        ...ledgerFormSheet(),
         componentProps: { expense, onClose: () => modal.dismiss() },
         backdropDismiss: false,
       });

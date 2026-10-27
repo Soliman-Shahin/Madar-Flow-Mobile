@@ -1,5 +1,9 @@
 @if (vm$ | async; as vm) {
-<ion-header mode="ios" class="category-ion-header" translucent="false">
+<ion-header
+  mode="ios"
+  class="category-ion-header mf-page-header"
+  translucent="false"
+>
   <ion-toolbar class="title-toolbar">
     <ion-title>
       <div class="header-title-container">
@@ -19,9 +23,33 @@
         }
       </div>
     </ion-title>
+    <ion-buttons slot="end">
+      @if (vm.response && vm.response.total > 1) {
+      @if (reorderMode) {
+      <ion-button (click)="toggleReorder()">
+        {{ "LEDGER.DONE" | translate }}
+      </ion-button>
+      } @else {
+      <ion-button
+        (click)="toggleReorder()"
+        [attr.aria-label]="'COMMON.REORDER' | translate"
+      >
+        <ion-icon slot="icon-only" name="swap-vertical"></ion-icon>
+      </ion-button>
+      }
+      } @if (!reorderMode) {
+      <ion-button
+        (click)="navigateToAdd()"
+        [attr.aria-label]="'CATEGORY.ADD' | translate"
+      >
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+      }
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
+      mode="md"
       class="modern-searchbar"
       animated="true"
       [placeholder]="'SEARCH' | translate"
@@ -37,16 +65,13 @@
       (ionChange)="filterByType($event)"
       class="custom-segment"
     >
-      <ion-segment-button value="all" layout="icon-start">
-        <ion-icon name="options-outline"></ion-icon>
+      <ion-segment-button value="all">
         <ion-label>{{ "COMMON.ALL" | translate }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="outcome" layout="icon-start">
-        <ion-icon name="trending-up-outline"></ion-icon>
+      <ion-segment-button value="outcome">
         <ion-label>{{ "COMMON.OUTCOME" | translate }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="income" layout="icon-start">
-        <ion-icon name="trending-down-outline"></ion-icon>
+      <ion-segment-button value="income">
         <ion-label>{{ "COMMON.INCOME" | translate }}</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -76,61 +101,52 @@
     [percentage]="categoriesLimitInfo.percentage"
   ></app-plan-limit-banner>
   } @if (!vm.isLoading && vm.response && vm.response.total > 0) {
-  <ion-list class="categories-list">
+  <ion-list class="mf-ledger__group mf-cat-list" lines="none">
     <ion-reorder-group
-      [disabled]="false"
+      [disabled]="!reorderMode"
       (ionItemReorder)="handleReorder($any($event))"
     >
-      @for (item of vm.response.data; track item; let i = $index) {
+      @for (item of vm.response.data; track item._id ?? item) {
       <ion-item
-        class="category-item"
+        class="mf-ledger__item mf-cat-item"
         lines="none"
-        [style.--animation-order]="i"
+        [button]="!reorderMode"
+        [detail]="false"
+        (click)="!reorderMode && presentActionSheet(item)"
+        [attr.aria-label]="
+          reorderMode
+            ? item.title
+            : ('MOBILE_UI.CATEGORY_ACTIONS' | translate) + ': ' + item.title
+        "
       >
         <span
-          class="category-icon"
-          [style.background]="item.color || 'var(--ion-color-primary)'"
+          slot="start"
+          class="mf-cat-item__mark"
           aria-hidden="true"
+          [style.--mf-cat-color]="item.color || null"
         >
-          <ion-icon
-            size="large"
-            [name]="item.icon || 'pricetag-outline'"
-          ></ion-icon>
+          <ion-icon [name]="item.icon || 'pricetag-outline'"></ion-icon>
         </span>
-        <ion-label>
-          <h3 class="title">
-            <bdi>{{ item.title }}</bdi>
-          </h3>
-          <p class="subtitle">
-            <span class="type-indicator" [ngClass]="item.type">
-              <ion-icon
-                [name]="
-                  item.type === 'income'
-                    ? 'trending-down-outline'
-                    : 'trending-up-outline'
-                "
-              ></ion-icon>
-              {{
-                (item.type === "income" ? "COMMON.INCOME" : "COMMON.OUTCOME")
-                  | translate
-              }}
-            </span>
-            <span class="usage-count">
-              {{ usageCount(item._id) }}
-              {{ usageLabelKey(usageCount(item._id)) | translate }}
-            </span>
-          </p>
-        </ion-label>
-        <ion-buttons slot="end">
-          <ion-button
-            (click)="presentActionSheet(item)"
-            [attr.aria-label]="
-              ('MOBILE_UI.CATEGORY_ACTIONS' | translate) + ': ' + item.title
-            "
-          >
-            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+        <span class="mf-cat-item__text">
+          <bdi class="mf-cat-item__title">{{ item.title }}</bdi>
+          <span class="mf-cat-item__meta">
+            {{
+              (item.type === "income" ? "COMMON.INCOME" : "COMMON.OUTCOME")
+                | translate
+            }}
+            ·
+            {{ usageCount(item._id) }}
+            {{ usageLabelKey(usageCount(item._id)) | translate }}
+          </span>
+        </span>
+        @if (!reorderMode) {
+        <ion-icon
+          slot="end"
+          name="ellipsis-horizontal"
+          class="mf-cat-item__more"
+          aria-hidden="true"
+        ></ion-icon>
+        }
         <ion-reorder
           slot="end"
           [attr.aria-label]="'COMMON.REORDER' | translate"
@@ -184,6 +200,3 @@
   </ion-infinite-scroll>
 </ion-content>
 }
-
-<!-- Shared Floating Add Button -->
-<app-add-fab-button (fabClick)="navigateToAdd()"></app-add-fab-button>

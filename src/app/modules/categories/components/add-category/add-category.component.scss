@@ -1,133 +1,197 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-.preview-container,
-.form-container {
-  max-width: 600px;
-  margin-inline: auto;
-}
-.preview-container {
-  padding: 16px 16px 0;
-}
-.category-item-preview {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--ew-wallet-line);
-  background: var(--ion-item-background);
-}
-.category-icon-preview {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-.category-icon-preview ion-icon {
-  color: white;
-  font-size: 24px;
-  filter: drop-shadow(0 1px 2px #0008);
-}
-.category-details-preview {
-  min-width: 0;
-}
-.category-title-preview {
-  font-size: 16px;
-  font-weight: 650;
-  overflow-wrap: anywhere;
-}
-.subtitle {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: var(--ew-wallet-muted);
-}
-.type-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.form-grid {
-  padding: 0;
-}
-ion-col {
-  padding: 0;
-}
-ion-row {
-  margin-bottom: 16px;
-}
-.section-title {
-  font-size: 13px;
-  font-weight: 650;
-  margin-bottom: 8px;
-  color: var(--ew-wallet-muted);
-}
-.type-segment {
-  background: var(--ew-wallet-inset);
-  border-radius: 10px;
-}
-ion-segment-button {
-  min-height: 44px;
-  min-width: 0;
-  font-size: 13px;
-  text-transform: none;
-}
-.error-message {
-  display: block;
-  margin-bottom: 12px;
-}
-.form-submit-button {
-  margin: 8px 0;
-  --border-radius: 12px;
-  font-size: 15px;
-  font-weight: 650;
+// Add/edit category — Calm Personal Ledger.
+
+ion-header.mf-sub-header {
+  font-family: var(--mf-font-sans);
+  border-bottom: 1px solid var(--mf-separator);
+
+  ion-toolbar {
+    --background: var(--mf-bg);
+    --color: var(--mf-ink);
+    --border-width: 0;
+  }
+
+  ion-title {
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+  }
+
+  ion-button {
+    --color: var(--mf-primary);
+    min-width: var(--mf-touch-target);
+    min-height: var(--mf-touch-target);
+  }
 }
 
-.category-item-preview {
-  padding: 16px;
-  border-radius: 18px 18px 18px 6px;
-  box-shadow: var(--ew-bold-shadow);
+:host-context([dir="rtl"]) ion-header.mf-sub-header ion-buttons ion-icon {
+  transform: scaleX(-1);
 }
-.category-icon-preview {
-  width: 44px;
-  height: 48px;
-  border-radius: 13px 13px 13px 5px;
+
+ion-content.mf-cat-form {
+  --background: var(--mf-bg);
+  --color: var(--mf-ink);
+  font-family: var(--mf-font-sans);
 }
-.category-title-preview {
-  font-size: 18px;
-  font-weight: 600;
+
+.mf-cat-form__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-5);
+  max-width: 600px;
+  min-height: 100%;
+  margin-inline: auto;
+  padding: var(--mf-space-4) var(--mf-gutter) 0;
 }
-.type-segment {
-  border-radius: 14px;
-  padding: 4px;
-}
-.type-segment ion-segment-button::part(indicator-background) {
-  background: var(--ion-item-background);
-  border-radius: 10px;
-  box-shadow: none;
-}
-.type-segment ion-segment-button {
-  --color: var(--ew-wallet-muted);
-  --color-checked: var(--ion-color-primary);
-}
-.form-submit-button {
-  min-height: 52px;
-  font-weight: 700;
-}
-.form-container ion-row:last-child {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-  padding-block: 8px;
-  background: var(--ion-background-color);
-  margin-bottom: 0;
-}
-:host-context([dir="rtl"]) {
-  .category-item-preview {
-    border-radius: 18px 18px 6px 18px;
+
+// --- Preview --------------------------------------------------------------
+.mf-cat-form__preview {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  transition: transform var(--mf-dur-quick) var(--mf-ease-standard);
+
+  &.bump {
+    transform: scale(1.01);
   }
-  .category-icon-preview {
-    border-radius: 13px 13px 5px 13px;
+}
+
+.mf-cat-form__mark {
+  --mf-cat-c: var(--mf-cat-color, var(--mf-cat-8));
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  height: 48px;
+  border-radius: var(--mf-radius-md);
+  background: color-mix(
+    in srgb,
+    var(--mf-cat-c) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-cat-c) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.mf-cat-form__preview-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mf-cat-form__preview-title {
+  font-size: var(--mf-text-headline);
+  font-weight: var(--mf-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.mf-cat-form__preview-meta {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.mf-cat-form__error {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  margin: 0;
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+  font-size: var(--mf-text-footnote);
+}
+
+// --- Fields ---------------------------------------------------------------
+.mf-cat-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-5);
+}
+
+.mf-cat-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+}
+
+.mf-cat-form__label {
+  margin: 0;
+  padding-inline: var(--mf-space-1);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}
+
+ion-segment.mf-cat-form__type {
+  --background: var(--mf-surface-sunken);
+  border-radius: var(--mf-radius-md);
+  padding: 3px;
+
+  ion-segment-button {
+    --color: var(--mf-ink-2);
+    --color-checked: var(--mf-ink);
+    --indicator-color: var(--mf-surface);
+    --indicator-box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+    min-height: 40px;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+// --- Actions --------------------------------------------------------------
+.mf-cat-form__actions {
+  position: sticky;
+  // Sit just above the docked tab bar.
+  bottom: var(--mf-tabbar-clearance);
+  z-index: 2;
+  margin-top: auto;
+  margin-inline: calc(var(--mf-gutter) * -1);
+  margin-bottom: var(--mf-tabbar-clearance);
+  padding: var(--mf-space-3) var(--mf-gutter);
+  background: var(--mf-bg);
+  box-shadow: 0 -1px 0 var(--mf-separator);
+}
+
+ion-button.mf-cat-form__submit {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  min-height: 52px;
+  margin: 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+
+  &.button-disabled {
+    opacity: 1;
+    --background: var(--mf-surface-sunken);
+    --color: var(--mf-ink-3);
+  }
+
+  ion-spinner {
+    width: 20px;
+    height: 20px;
+  }
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-cat-form__preview {
+    transition: none;
   }
 }

@@ -1,5 +1,8 @@
 {
   "LEDGER": {
+    "CHOOSE_CATEGORY": "اختر فئة",
+    "DONE": "تم",
+    "TYPE": "النوع",
     "SPENT_THIS_MONTH": "صرفت هذا الشهر",
     "SPENT_IN": "صرفت في {{month}}",
     "INCOME": "الدخل",

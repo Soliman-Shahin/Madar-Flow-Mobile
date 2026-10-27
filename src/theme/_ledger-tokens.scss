@@ -44,6 +44,8 @@
   --mf-space-12: 48px;
   --mf-gutter: 16px;
   --mf-touch-target: 48px;
+  // Space taken by the docked tab bar (0 when it is hidden; see below).
+  --mf-tabbar-clearance: calc(58px + env(safe-area-inset-bottom, 0px));
 
   // --- Shape --------------------------------------------------------
   --mf-radius-sm: 8px; // small controls, category marks
@@ -135,6 +137,11 @@
   --mf-cat-7: #d9bc5c;
   --mf-cat-8: #a3abbb;
   --mf-cat-soft-mix: 22%;
+}
+
+// No tab bar when signed out (LayoutComponent adds .no-tabs).
+ion-app.no-tabs {
+  --mf-tabbar-clearance: 0px;
 }
 
 // The app applies `.dark` to <html> and <body> (ThemeToggleService).
