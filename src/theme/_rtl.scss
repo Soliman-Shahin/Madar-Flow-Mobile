@@ -3,5 +3,5 @@
 // ===================================================================
 
 [dir="rtl"] body {
-  --ion-font-family: "Cairo", "Ubuntu", sans-serif !important;
+  --ion-font-family: var(--mf-font-sans) !important;
 }

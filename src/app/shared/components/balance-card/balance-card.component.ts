@@ -25,6 +25,8 @@ export interface ExpenseComparison {
   percentage?: number | null;
 }
 
+import { formatMoney } from 'src/app/shared/utils/money-format.util';
+
 @Component({
   selector: 'app-balance-card',
   templateUrl: './balance-card.component.html',
@@ -107,12 +109,11 @@ export class BalanceCardComponent {
     if (!show) return '•••••';
     if (amount === null || amount === undefined) return '-';
 
-    const formatted = amount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    // Shared ledger formatting: Western digits, true minus, two decimals.
+    return formatMoney(amount, {
+      currency: includeCurrency ? this.currency : null,
+      showSign: false,
     });
-
-    return includeCurrency ? `${formatted} ${this.currency}` : formatted;
   }
 
   /**

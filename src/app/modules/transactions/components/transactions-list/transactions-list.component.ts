@@ -27,7 +27,8 @@ import { ExpenseFormComponent } from 'src/app/home/components/expense-form/expen
 import { ComponentStateService } from 'src/app/shared/services/component-state.service';
 import { FormsModule } from '@angular/forms';
 import { SkeletonBlockComponent } from '../../../../shared/ui/skeleton-block/skeleton-block.component';
-import { NgClass, LowerCasePipe, DecimalPipe, DatePipe } from '@angular/common';
+import { AmountComponent } from '../../../../shared/ui/amount/amount.component';
+import { LowerCasePipe, DecimalPipe, DatePipe } from '@angular/common';
 import { AddFabButtonComponent } from '../../../../shared/ui/add-fab-button/add-fab-button.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { PlanService } from '../../../../core/services/plan.service';
@@ -64,12 +65,12 @@ interface TransactionGroup {
     IonicModule,
     FormsModule,
     SkeletonBlockComponent,
-    NgClass,
     AddFabButtonComponent,
     DecimalPipe,
     DatePipe,
     TranslateModule,
     PlanLimitBannerComponent,
+    AmountComponent,
   ],
 })
 export class TransactionsListComponent extends BaseComponent implements OnInit {

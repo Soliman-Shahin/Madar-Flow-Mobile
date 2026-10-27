@@ -26,8 +26,8 @@ ion-modal.main-modal {
   --border-radius: 20px;
 }
 [dir="rtl"] {
-  --ew-font-family-base: "Cairo", sans-serif;
-  --ew-font-family-heading: "Cairo", sans-serif;
+  --ew-font-family-base: var(--mf-font-sans);
+  --ew-font-family-heading: var(--mf-font-sans);
 }
 app-home-page .dashboard {
   .dash-header {

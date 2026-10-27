@@ -8,6 +8,8 @@
 // ===================================================================
 
 // App Design Tokens & Partials
+@use "theme/fonts";
+@use "theme/ledger-tokens";
 @use "theme/variables";
 @use "theme/base";
 @use "theme/rtl";
@@ -22,9 +24,8 @@
 @use "theme/premium-showcase";
 @use "theme/premium-secondary-overlays";
 
-// 1. Google Fonts
+// 1. Fonts are bundled locally (theme/_fonts.scss); no runtime fetch.
 // -------------------------------------------------------------------
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Ubuntu:wght@300;400;500;700&display=swap");
 
 // 2. Ionic Core & Default Styles
 // -------------------------------------------------------------------

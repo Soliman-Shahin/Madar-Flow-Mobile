@@ -19,7 +19,7 @@
   // ===================================================================
 
   // --- Base Font & Safe Area ---
-  --ion-font-family: "Ubuntu", sans-serif;
+  --ion-font-family: var(--mf-font-sans);
   --ion-safe-area-top: max(env(safe-area-inset-top), 48px);
 
   // --- Brand Colors (Light Theme) ---
@@ -209,8 +209,8 @@
   // ===================================================================
 
   // --- Font Families ---
-  --ew-font-family-base: "Ubuntu", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  --ew-font-family-heading: "Montserrat", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --ew-font-family-base: var(--mf-font-sans);
+  --ew-font-family-heading: var(--mf-font-sans);
   --ew-font-family-mono: "Roboto Mono", "Fira Mono", monospace;
 
   // --- Font Weights ---
@@ -455,7 +455,7 @@ ion-button {
 }
 
 [dir="rtl"] body {
-  --ion-font-family: "Cairo", sans-serif !important;
+  --ion-font-family: var(--mf-font-sans) !important;
 }
 
 // --- Toast Styles ---

@@ -29,6 +29,7 @@ import { Expense } from 'src/app/shared/models/expense.model';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 import { SkeletonBlockComponent } from 'src/app/shared/ui/skeleton-block/skeleton-block.component';
+import { AmountComponent } from 'src/app/shared/ui/amount/amount.component';
 import { ComponentStateService } from 'src/app/shared/services/component-state.service';
 import { ExpenseService } from 'src/app/core/services/expense.service';
 import { CategoryService } from 'src/app/modules/categories/services/categories.service';
@@ -38,7 +39,13 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, IonicModule, TranslateModule, SkeletonBlockComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    TranslateModule,
+    SkeletonBlockComponent,
+    AmountComponent,
+  ],
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss'],

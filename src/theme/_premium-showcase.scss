@@ -230,11 +230,6 @@ app-transactions-list {
     font-weight: 500 !important;
     letter-spacing: 0 !important;
   }
-  .transaction-amount .amount-value {
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.3px !important;
-  }
   .transaction-meta {
     font-size: 11px !important;
     gap: 4px 8px !important;
@@ -246,21 +241,12 @@ app-transactions-list {
   .transaction-meta ion-icon {
     display: none !important;
   }
-  .transaction-amount .amount-income {
-    color: #137956 !important;
-  }
   .empty-state-wrapper {
     padding: 36px 24px;
   }
   .empty-icon-glow {
     border-radius: 16px 16px 16px 5px;
     color: var(--ion-color-primary);
-  }
-}
-.dark app-home-page,
-.dark app-transactions-list {
-  .transaction-amount .amount-income {
-    color: #75dcbc !important;
   }
 }
 app-transactions-list {

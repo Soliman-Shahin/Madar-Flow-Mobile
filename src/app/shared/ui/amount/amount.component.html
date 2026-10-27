@@ -1,0 +1,18 @@
+@if (masked()) {
+<bdi
+  dir="ltr"
+  class="mf-amount__run"
+  role="img"
+  [attr.aria-label]="maskedLabel()"
+  ><span class="mf-amount__digits" aria-hidden="true">•••••</span></bdi
+>
+} @else if (parts(); as p) {
+<bdi dir="ltr" class="mf-amount__run"
+  >@if (p.sign) {<span class="mf-amount__sign">{{ p.sign }}</span
+  >}<span class="mf-amount__digits">{{ p.digits }}</span
+  >@if (currency()) {<span class="mf-amount__currency">{{ currency() }}</span
+  >}</bdi
+>
+} @else {
+<span class="mf-amount__empty">—</span>
+}

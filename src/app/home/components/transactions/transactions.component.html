@@ -50,20 +50,13 @@
               {{ getOperationName(t) }}
             </h3>
             <div class="transaction-amount">
-              <span
-                class="amount-value"
-                [ngClass]="
-                  getCategoryType(t) === 'income'
-                    ? 'amount-income'
-                    : 'amount-expense'
+              <app-amount
+                [value]="getAmountValue(t)"
+                [kind]="getCategoryType(t) === 'income' ? 'income' : 'expense'"
+                [currency]="
+                  userCurrency || ('MOBILE.CURRENCY_UNAVAILABLE' | translate)
                 "
-              >
-                {{ getCategoryType(t) === "income" ? "+" : "-"
-                }}{{ getAmountValue(t) | number : "1.2-2" : locale }}
-                {{
-                  userCurrency || ("MOBILE.CURRENCY_UNAVAILABLE" | translate)
-                }}
-              </span>
+              />
             </div>
           </div>
           <div class="transaction-meta">
