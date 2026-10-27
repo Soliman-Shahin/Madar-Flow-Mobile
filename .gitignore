@@ -74,6 +74,7 @@ Thumbs.db
 src/environments/environment.*.ts
 !src/environments/environment.ts
 !src/environments/environment.prod.ts
+!src/environments/environment.staging.ts
 
 # Android Studio inspection reports exported at the Android project root
 +/android/.descriptions.xml

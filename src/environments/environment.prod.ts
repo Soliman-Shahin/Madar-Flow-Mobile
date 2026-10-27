@@ -1,11 +1,12 @@
 export const environment = {
   production: true,
-  // Production remains direct; the development /api proxy is not used.
-  browserApiUrl: 'https://expenses-wallet.up.railway.app/v1',
-  nativeApiUrl: 'https://expenses-wallet.up.railway.app/v1',
-  backendOrigin: 'https://expenses-wallet.up.railway.app',
+  // Production: replace the api.madar-flow.invalid placeholder before release.
+  // `npm run build:prod` refuses to build while it is a placeholder or staging.
+  browserApiUrl: 'https://api.madar-flow.invalid/v1',
+  nativeApiUrl: 'https://api.madar-flow.invalid/v1',
+  backendOrigin: 'https://api.madar-flow.invalid',
   /** @deprecated Use browserApiUrl, nativeApiUrl, or backendOrigin explicitly. */
-  apiUrl: 'https://expenses-wallet.up.railway.app/v1',
+  apiUrl: 'https://api.madar-flow.invalid/v1',
 
   // Google OAuth
   google: {
