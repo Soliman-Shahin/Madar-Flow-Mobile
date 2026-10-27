@@ -49,6 +49,7 @@ import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { DashboardFacade } from 'src/app/shared/facades';
 import { Expense } from 'src/app/shared/models';
 import { MonthHeroComponent } from '../month-hero/month-hero.component';
+import { AmountComponent } from 'src/app/shared/ui/amount/amount.component';
 import { QuickAddService } from 'src/app/shared/services/quick-add.service';
 import { MonthsScrollHeaderComponent } from 'src/app/shared/components/months-scroll-header/months-scroll-header.component';
 import { ExpenseService } from 'src/app/core/services/expense.service';
@@ -70,6 +71,7 @@ import { ExpenseService } from 'src/app/core/services/expense.service';
     SkeletonBlockComponent,
     SectionHeaderComponent,
     MonthHeroComponent,
+    AmountComponent,
     MonthsScrollHeaderComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

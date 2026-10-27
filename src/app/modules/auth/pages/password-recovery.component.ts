@@ -31,71 +31,66 @@ const same = (control: AbstractControl): ValidationErrors | null =>
     TranslateModule,
     AsyncPipe,
   ],
-  template: ` <ion-content
-    ><main class="recovery">
-      <div class="recovery-card">
-        <img src="assets/icon/icon.png" [alt]="brand.productName" />
+  template: `<ion-content class="mf-auth-content">
+    <main class="mf-auth">
+      <div class="mf-auth__top">
+        <a
+          routerLink="/auth/login"
+          class="mf-auth__back"
+          [attr.aria-label]="'AUTH.BACK_TO_LOGIN' | translate"
+          ><ion-icon name="chevron-back" aria-hidden="true"></ion-icon
+        ></a>
+      </div>
+      <header class="mf-auth__heading">
         <h1>{{ 'AUTH.RECOVERY_TITLE' | translate }}</h1>
         <p>{{ 'AUTH.RECOVERY_SUBTITLE' | translate }}</p>
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <ion-item
-            ><ion-input
-              type="email"
-              formControlName="email"
-              [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
-            ></ion-input></ion-item
-          ><ion-button
-            expand="block"
-            type="submit"
-            [disabled]="form.invalid || loading()"
-            >{{ 'AUTH.SEND_RESET' | translate }}</ion-button
-          >
-        </form>
-        @if (sent()) {
-        <p class="success">{{ 'AUTH.RECOVERY_GENERIC' | translate }}</p>
-        }<a routerLink="/auth/login">{{ 'AUTH.BACK_TO_LOGIN' | translate }}</a>
-      </div>
-    </main></ion-content
-  >`,
+      </header>
+      @if (sent()) {
+      <p class="mf-auth__notice" role="status">
+        <ion-icon name="mail-unread-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'AUTH.RECOVERY_GENERIC' | translate }}</span>
+      </p>
+      }
+      <form [formGroup]="form" (ngSubmit)="submit()" class="mf-auth__form">
+        <label class="mf-auth__label" for="recovery-email">{{
+          'AUTH.EMAIL' | translate
+        }}</label>
+        <ion-item lines="none" class="form-input-item">
+          <ion-icon slot="start" name="mail-outline" aria-hidden="true"></ion-icon>
+          <ion-input
+            id="recovery-email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            formControlName="email"
+            [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
+          ></ion-input>
+        </ion-item>
+        <ion-button
+          expand="block"
+          type="submit"
+          class="mf-auth__primary"
+          [disabled]="form.invalid || loading()"
+        >
+          @if (loading()) {
+          <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+          } @else {
+          {{ 'AUTH.SEND_RESET' | translate }}
+          }
+        </ion-button>
+      </form>
+      <p class="mf-auth__switch">
+        <a routerLink="/auth/login" class="mf-auth__link">{{
+          'AUTH.BACK_TO_LOGIN' | translate
+        }}</a>
+      </p>
+    </main>
+  </ion-content>`,
   styles: [
     `
-      .recovery {
-        min-height: 100%;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background: var(--ion-background-color);
-      }
-      .recovery-card {
-        width: min(100%, 440px);
-        padding: 32px;
-        border-radius: 28px;
-        background: var(--ion-card-background);
-        box-shadow: 0 18px 50px #0002;
-        text-align: center;
-      }
-      .recovery-card img {
-        width: 64px;
-        border-radius: 16px;
-      }
-      .recovery-card h1 {
-        color: var(--ion-text-color);
-      }
-      .recovery-card p {
-        color: var(--ion-color-medium);
-      }
-      ion-item {
-        margin: 20px 0 14px;
-        border-radius: 14px;
-      }
-      .success {
-        color: var(--ion-color-success) !important;
-        margin: 16px 0;
-      }
-      .recovery-card a {
-        color: var(--ion-color-primary);
-        display: inline-block;
-        margin-top: 20px;
+      ion-content.mf-auth-content {
+        --background: var(--mf-bg);
+        --color: var(--mf-ink);
       }
     `,
   ],
@@ -128,85 +123,94 @@ export class ForgotPasswordComponent {
   selector: 'app-reset-password',
   standalone: true,
   imports: [IonicModule, ReactiveFormsModule, RouterLink, TranslateModule],
-  template: ` <ion-content
-    ><main class="recovery">
-      <div class="recovery-card">
-        <img src="assets/icon/icon.png" [alt]="brand.productName" />
-        <h1>{{ 'AUTH.RESET_PASSWORD' | translate }}</h1>
-        @if (!token) {
-        <p>{{ 'AUTH.RESET_INVALID' | translate }}</p>
-        } @else if (done()) {
-        <p class="success">{{ 'AUTH.RESET_SUCCESS' | translate }}</p>
-        } @else if (error()) {
-        <p class="error">{{ 'AUTH.RESET_INVALID' | translate }}</p>
-        } @else {
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <ion-item
-            ><ion-input
-              type="password"
-              formControlName="password"
-              [placeholder]="'AUTH.NEW_PASSWORD' | translate"
-            ></ion-input></ion-item
-          ><ion-item
-            ><ion-input
-              type="password"
-              formControlName="confirm"
-              [placeholder]="'AUTH.CONFIRM_PASSWORD' | translate"
-            ></ion-input></ion-item
-          >@if(form.hasError('mismatch')){
-          <p class="error">{{ 'AUTH.PASSWORD_MISMATCH' | translate }}</p>
-          }<ion-button
-            expand="block"
-            type="submit"
-            [disabled]="form.invalid || loading()"
-            >{{ 'AUTH.RESET_PASSWORD' | translate }}</ion-button
-          >
-        </form>
-        }<a routerLink="/auth/login">{{ 'AUTH.BACK_TO_LOGIN' | translate }}</a>
+  template: `<ion-content class="mf-auth-content">
+    <main class="mf-auth">
+      <div class="mf-auth__top">
+        <a
+          routerLink="/auth/login"
+          class="mf-auth__back"
+          [attr.aria-label]="'AUTH.BACK_TO_LOGIN' | translate"
+          ><ion-icon name="chevron-back" aria-hidden="true"></ion-icon
+        ></a>
       </div>
-    </main></ion-content
-  >`,
+      <header class="mf-auth__heading">
+        <h1>{{ 'AUTH.RESET_PASSWORD' | translate }}</h1>
+      </header>
+      @if (!token) {
+      <p class="mf-auth__error" role="alert">
+        <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'AUTH.RESET_INVALID' | translate }}</span>
+      </p>
+      } @else if (done()) {
+      <p class="mf-auth__notice" role="status">
+        <ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'AUTH.RESET_SUCCESS' | translate }}</span>
+      </p>
+      } @else if (error()) {
+      <p class="mf-auth__error" role="alert">
+        <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'AUTH.RESET_INVALID' | translate }}</span>
+      </p>
+      } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="mf-auth__form">
+        <label class="mf-auth__label" for="reset-password">{{
+          'AUTH.NEW_PASSWORD' | translate
+        }}</label>
+        <ion-item lines="none" class="form-input-item">
+          <ion-icon slot="start" name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <ion-input
+            id="reset-password"
+            type="password"
+            autocomplete="new-password"
+            formControlName="password"
+            [placeholder]="'AUTH.NEW_PASSWORD' | translate"
+          ></ion-input>
+        </ion-item>
+        <label class="mf-auth__label" for="reset-confirm">{{
+          'AUTH.CONFIRM_PASSWORD' | translate
+        }}</label>
+        <ion-item lines="none" class="form-input-item">
+          <ion-icon slot="start" name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+          <ion-input
+            id="reset-confirm"
+            type="password"
+            autocomplete="new-password"
+            formControlName="confirm"
+            [placeholder]="'AUTH.CONFIRM_PASSWORD' | translate"
+          ></ion-input>
+        </ion-item>
+        @if (form.hasError('mismatch')) {
+        <p class="mf-auth__error" role="alert">
+          <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+          <span>{{ 'AUTH.PASSWORD_MISMATCH' | translate }}</span>
+        </p>
+        }
+        <ion-button
+          expand="block"
+          type="submit"
+          class="mf-auth__primary"
+          [disabled]="form.invalid || loading()"
+        >
+          @if (loading()) {
+          <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+          } @else {
+          {{ 'AUTH.RESET_PASSWORD' | translate }}
+          }
+        </ion-button>
+      </form>
+      }
+      <p class="mf-auth__switch">
+        <a routerLink="/auth/login" class="mf-auth__link">{{
+          'AUTH.BACK_TO_LOGIN' | translate
+        }}</a>
+      </p>
+    </main>
+  </ion-content>`,
   styles: [
     `
-      .recovery {
-        min-height: 100%;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background: var(--ion-background-color);
-      }
-      .recovery-card {
-        width: min(100%, 440px);
-        padding: 32px;
-        border-radius: 28px;
-        background: var(--ion-card-background);
-        box-shadow: 0 18px 50px #0002;
-        text-align: center;
-      }
-      .recovery-card img {
-        width: 64px;
-        border-radius: 16px;
-      }
-      .recovery-card h1 {
-        color: var(--ion-text-color);
-      }
-      .recovery-card p {
-        color: var(--ion-color-medium);
-      }
-      ion-item {
-        margin: 12px 0;
-        border-radius: 14px;
-      }
-      .success {
-        color: var(--ion-color-success) !important;
-      }
-      .error {
-        color: var(--ion-color-danger) !important;
-      }
-      .recovery-card a {
-        color: var(--ion-color-primary);
-        display: inline-block;
-        margin-top: 20px;
+      ion-content.mf-auth-content {
+        --background: var(--mf-bg);
+        --color: var(--mf-ink);
       }
     `,
   ],

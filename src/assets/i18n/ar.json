@@ -1,5 +1,10 @@
 {
   "LEDGER": {
+    "WELCOME_TITLE": "اعرف فلوسك بتروح فين",
+    "WELCOME_SUBTITLE": "سجّل مصروفاتك في ثوانٍ وشوف شهرك كله بنظرة واحدة، حتى بدون إنترنت.",
+    "SAMPLE_LABEL": "مثال",
+    "SAMPLE_GROCERIES": "بقالة",
+    "SAMPLE_SALARY": "الراتب",
     "CHOOSE_CATEGORY": "اختر فئة",
     "DONE": "تم",
     "TYPE": "النوع",

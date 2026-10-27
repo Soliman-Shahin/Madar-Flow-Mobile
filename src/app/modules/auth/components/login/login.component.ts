@@ -232,4 +232,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
         },
       });
   }
+
+  toggleLanguage(): void {
+    this.translationService?.setLanguage(this.currentLang === 'ar' ? 'en' : 'ar');
+    this.cdr.markForCheck();
+  }
 }

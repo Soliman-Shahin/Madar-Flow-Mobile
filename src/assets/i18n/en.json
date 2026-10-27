@@ -1,5 +1,10 @@
 {
   "LEDGER": {
+    "WELCOME_TITLE": "Know where your money goes",
+    "WELCOME_SUBTITLE": "Log spending in seconds and see your month at a glance, even offline.",
+    "SAMPLE_LABEL": "Example",
+    "SAMPLE_GROCERIES": "Groceries",
+    "SAMPLE_SALARY": "Salary",
     "CHOOSE_CATEGORY": "Choose a category",
     "DONE": "Done",
     "TYPE": "Type",

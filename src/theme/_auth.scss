@@ -1,0 +1,289 @@
+// ===================================================================
+//  AUTH SCREENS — Calm Personal Ledger
+// ===================================================================
+// Sign in, sign up, password recovery. One calm column on the page
+// background: brand mark → title → form → alternatives → switch link.
+// No gradients, orbs, or animated rings; the form is the hero.
+
+.mf-auth {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-6);
+  width: 100%;
+  max-width: 440px;
+  // Fill the screen so the main action sits at the bottom, in thumb reach.
+  min-height: 100%;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--mf-space-6))
+    var(--mf-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--mf-space-6));
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+}
+
+.mf-auth__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  min-height: var(--mf-touch-target);
+}
+
+.mf-auth__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink);
+
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--mf-radius-sm);
+  }
+}
+
+.mf-auth__back {
+  display: grid;
+  place-items: center;
+  width: var(--mf-touch-target);
+  height: var(--mf-touch-target);
+  margin-inline-start: calc(var(--mf-space-3) * -1);
+  border-radius: 50%;
+  color: var(--mf-primary);
+  text-decoration: none;
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+[dir="rtl"] .mf-auth__back ion-icon {
+  transform: scaleX(-1);
+}
+
+.mf-auth__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+
+  h1 {
+    margin: 0;
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-bold);
+    line-height: var(--mf-leading-tight);
+    letter-spacing: -0.01em;
+    color: var(--mf-ink);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-body);
+    line-height: var(--mf-leading-body);
+    color: var(--mf-ink-2);
+  }
+}
+
+.mf-auth__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-auth__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+  margin: 0 0 var(--mf-space-4);
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
+
+  ion-icon {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    font-size: 18px;
+  }
+}
+
+.mf-auth__row {
+  display: flex;
+  flex-wrap: wrap; // large text: the link drops under the checkbox
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  margin: calc(var(--mf-space-1) * -1) 0 var(--mf-space-4);
+}
+
+.mf-auth__check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  min-height: var(--mf-touch-target);
+  font-size: var(--mf-text-callout);
+  color: var(--mf-ink-2);
+  cursor: pointer;
+
+  ion-checkbox {
+    --size: 20px;
+    --border-radius: 6px;
+    --border-color: var(--mf-outline);
+    --checkbox-background-checked: var(--mf-primary);
+    --border-color-checked: var(--mf-primary);
+  }
+}
+
+.mf-auth__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mf-touch-target);
+  padding-inline: var(--mf-space-1);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ion-button.mf-auth__primary,
+ion-button.mf-auth__secondary {
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  min-height: 52px;
+  margin: 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+ion-button.mf-auth__primary {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --background-hover: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+
+  &.button-disabled {
+    opacity: 1;
+    --background: var(--mf-surface-sunken);
+    --color: var(--mf-ink-3);
+  }
+
+  ion-spinner {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+ion-button.mf-auth__secondary {
+  --background: var(--mf-surface);
+  --background-activated: var(--mf-surface-sunken);
+  --background-hover: var(--mf-surface-sunken);
+  --color: var(--mf-ink);
+  --border-color: var(--mf-outline);
+  --border-style: solid;
+  --border-width: 1px;
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.mf-auth__alt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+}
+
+.mf-auth__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--mf-separator);
+  }
+}
+
+.mf-auth__switch {
+  margin: auto 0 0;
+  padding-top: var(--mf-space-4);
+  text-align: center;
+  font-size: var(--mf-text-callout);
+  color: var(--mf-ink-2);
+}
+
+.mf-auth__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-3);
+  margin: 0 0 var(--mf-space-4);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+
+  a {
+    color: var(--mf-primary);
+    font-weight: var(--mf-weight-medium);
+  }
+}
+
+.mf-auth__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+  min-height: 36px;
+  padding: 0 var(--mf-space-3);
+  border: 1px solid var(--mf-outline);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface);
+  font: inherit;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-2);
+  cursor: pointer;
+}
+
+.mf-auth :is(a, button):focus-visible {
+  outline: 2px solid var(--mf-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--mf-radius-sm);
+}
+
+.mf-auth__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+  margin: 0;
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-md);
+  background: color-mix(in srgb, var(--mf-success) 12%, var(--mf-surface));
+  color: var(--mf-ink);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
+
+  ion-icon {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    font-size: 18px;
+    color: var(--mf-success);
+  }
+}
+
+.mf-auth__label {
+  display: block;
+  margin: 0 var(--mf-space-1) var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}

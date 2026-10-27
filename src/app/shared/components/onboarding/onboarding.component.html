@@ -1,78 +1,85 @@
-<div class="onboarding-page" [dir]="translationService.getCurrentLanguage() === 'ar' ? 'rtl' : 'ltr'">
-
-  <!-- Ambient Background Orbs -->
-  <div class="ambient-bg">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="noise-overlay"></div>
-  </div>
-
-  <!-- Top Actions -->
-  <div class="top-bar">
-    <button class="glass-pill lang-btn" (click)="toggleLanguage()">
-      <ion-icon name="globe-outline"></ion-icon>
-      <span>{{ translationService.getCurrentLanguage() === "ar" ? "English" : "عربي" }}</span>
+<div
+  class="onboarding-page mf-onb"
+  [dir]="translationService.getCurrentLanguage() === 'ar' ? 'rtl' : 'ltr'"
+>
+  <!-- Top actions -->
+  <div class="mf-onb__top">
+    <button type="button" class="mf-onb__lang" (click)="toggleLanguage()">
+      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+      <span>{{
+        translationService.getCurrentLanguage() === "ar" ? "English" : "العربية"
+      }}</span>
     </button>
-    <button class="glass-pill skip-btn" (click)="skip()" [class.hidden]="isLastStep">
+    <button
+      type="button"
+      class="mf-onb__skip"
+      (click)="skip()"
+      [class.mf-onb__skip--hidden]="isLastStep"
+      [attr.aria-hidden]="isLastStep"
+      [attr.tabindex]="isLastStep ? -1 : null"
+    >
       {{ "ONBOARDING.SKIP" | translate }}
     </button>
   </div>
 
-  <!-- Slides -->
+  <!-- Slides (horizontal scroll-snap) -->
   <div class="slides-viewport">
     <div class="slides-container" #slidesContainer (scroll)="onScroll($event)">
       @for (step of steps; track step; let i = $index) {
-        <div class="slide" [class.active-slide]="i === currentStepIndex">
-          <div class="slide-content">
-            <!-- First Step: App Logo -->
-            @if (i === 0) {
-              <div class="app-logo-wrap">
-                <img src="assets/icon/icon.png" [alt]="brandParams.productName" class="onboarding-logo" />
-                <div class="logo-aura"></div>
-              </div>
-            }
-            <!-- Other Steps: Crystal Icon -->
-            @if (i > 0) {
-              <div class="icon-crystal">
-                <div class="crystal-inner">
-                  <ion-icon [name]="step.icon"></ion-icon>
-                </div>
-                <div class="crystal-glow"></div>
-              </div>
-            }
-            <h2 class="slide-title">{{ step.title | translate: brandParams }}</h2>
-            <p class="slide-desc">{{ step.description | translate }}</p>
-  </div>
-
-</div>
+      <section
+        class="slide"
+        [class.active-slide]="i === currentStepIndex"
+        [attr.aria-hidden]="i !== currentStepIndex"
+      >
+        <div class="mf-onb__slide">
+          @if (i === 0) {
+          <img
+            src="assets/icon/icon.png"
+            [alt]="brandParams.productName"
+            class="mf-onb__logo"
+          />
+          } @else {
+          <span
+            class="mf-onb__mark"
+            [style.--mf-onb-tone]="'var(--mf-cat-' + (((i - 1) % 6) + 1) + ')'"
+            aria-hidden="true"
+          >
+            <ion-icon [name]="step.icon"></ion-icon>
+          </span>
+          }
+          <h2 class="mf-onb__title">
+            {{ step.title | translate : brandParams }}
+          </h2>
+          <p class="mf-onb__desc">{{ step.description | translate }}</p>
+        </div>
+      </section>
       }
     </div>
   </div>
 
-  <!-- Floating Controls Dock -->
-  <div class="controls-dock">
-    <div class="pagination">
+  <!-- Progress + primary action, in thumb reach -->
+  <div class="mf-onb__bottom">
+    <div class="mf-onb__dots" role="tablist">
       @for (step of steps; track step; let i = $index) {
-        <div
-          class="dot-indicator"
-          [class.active]="i === currentStepIndex"
-          (click)="goToStep(i)"
-        ></div>
+      <button
+        type="button"
+        class="mf-onb__dot"
+        role="tab"
+        [class.mf-onb__dot--on]="i === currentStepIndex"
+        [attr.aria-selected]="i === currentStepIndex"
+        [attr.aria-label]="(i + 1) + ' / ' + steps.length"
+        (click)="goToStep(i)"
+      ></button>
       }
     </div>
-
-    <button class="next-btn" (click)="next()" [class.start-btn]="isLastStep">
-      @if (!isLastStep) {
-        <span class="btn-text">{{ "ONBOARDING.NEXT" | translate }}</span>
-      }
-      @if (isLastStep) {
-        <span class="btn-text">{{ "ONBOARDING.START" | translate }}</span>
-      }
-      <div class="icon-circle">
-        <ion-icon [name]="isLastStep ? 'rocket' : 'arrow-forward'"></ion-icon>
-      </div>
+    <button type="button" class="mf-onb__next" (click)="next()">
+      <span>{{
+        (isLastStep ? "ONBOARDING.START" : "ONBOARDING.NEXT") | translate
+      }}</span>
+      <ion-icon
+        [name]="isLastStep ? 'checkmark' : 'arrow-forward'"
+        aria-hidden="true"
+      ></ion-icon>
     </button>
   </div>
-
 </div>

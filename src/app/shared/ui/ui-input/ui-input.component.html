@@ -53,7 +53,7 @@
         class="end-clear"
         tabindex="0"
         role="button"
-        aria-label="Clear input"
+        [attr.aria-label]="'COMMON.CLEAR' | translate"
         name="close-circle"
         (click)="clear()"
       ></ion-icon>
@@ -65,7 +65,7 @@
         class="end-toggle"
         tabindex="0"
         role="button"
-        [attr.aria-label]="hide ? 'Show password' : 'Hide password'"
+        [attr.aria-label]="(hide ? 'AUTH.SHOW_PASSWORD' : 'AUTH.HIDE_PASSWORD') | translate"
         [name]="hide ? 'eye-outline' : 'eye-off-outline'"
         (click)="togglePasswordVisibility()"
       ></ion-icon>

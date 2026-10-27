@@ -58,23 +58,59 @@ ion-button {
   }
 }
 
-/* For ion-item used as a container for form inputs */
+/* For ion-item used as a container for form inputs (app-ui-input).
+   Calm Personal Ledger: one quiet bordered field; the border carries focus
+   and error state, no drop shadows. */
 .form-input-item {
-  --background: var(--ion-item-background, var(--ion-color-light));
-  --border-radius: var(--ew-radius-large, 12px);
+  --background: var(--mf-surface);
+  --color: var(--mf-ink);
+  --border-radius: var(--mf-radius-md);
   --min-height: 52px;
-  --padding-start: var(--ew-space-3, 12px);
-  --inner-padding-end: var(--ew-space-3, 12px);
-  margin-bottom: var(--ew-space-4, 16px);
-  box-shadow: var(--ew-shadow-sm);
-  border: 1px solid var(--ion-border-color);
-  border-radius: var(--ew-radius-lg);
-  transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+  --padding-start: var(--mf-space-4);
+  --inner-padding-end: var(--mf-space-3);
+  --highlight-height: 0;
+  margin-bottom: var(--mf-space-4);
+  border: 1px solid var(--mf-outline);
+  border-radius: var(--mf-radius-md);
+  box-shadow: none;
+  font-family: var(--mf-font-sans);
+  transition: border-color var(--mf-dur-quick) var(--mf-ease-standard),
+    box-shadow var(--mf-dur-quick) var(--mf-ease-standard);
+
+  > ion-icon {
+    font-size: 20px;
+    color: var(--mf-ink-3) !important; // beat Ionic slotted icon color
+  }
+
+  > ion-icon[slot="start"] {
+    margin-inline-end: var(--mf-space-3);
+  }
+
+  ion-input {
+    --color: var(--mf-ink);
+    --placeholder-color: var(--mf-ink-3);
+    --placeholder-opacity: 1;
+    font-size: var(--mf-text-body);
+  }
 
   &.item-has-focus {
-    border-color: var(--ion-color-primary);
-    box-shadow: var(--ew-shadow-md);
+    border-color: var(--mf-primary);
+    box-shadow: 0 0 0 3px var(--mf-primary-soft);
+    outline: none;
   }
+
+  &.ion-invalid.ion-touched {
+    border-color: var(--mf-danger);
+  }
+}
+
+app-ui-input .form-group > ion-label {
+  display: block;
+  margin: 0 var(--mf-space-1) var(--mf-space-2);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
 }
 
 /* Custom Toast & Loader Styles */
