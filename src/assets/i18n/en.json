@@ -1,5 +1,11 @@
 {
   "LEDGER": {
+    "CONTACT": "Contact us",
+    "LEGAL": "Legal",
+    "INBOX_EMPTY_TITLE": "You are all caught up",
+    "INBOX_EMPTY_HINT": "Alerts about your account, sync, and plan will appear here.",
+    "INBOX_LOAD_FAILED": "Could not load notifications. Check your connection and try again.",
+    "UNREAD": "Unread",
     "WELCOME_TITLE": "Know where your money goes",
     "WELCOME_SUBTITLE": "Log spending in seconds and see your month at a glance, even offline.",
     "SAMPLE_LABEL": "Example",

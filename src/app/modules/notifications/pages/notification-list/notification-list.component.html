@@ -1,82 +1,106 @@
-<ion-header
-  ><ion-toolbar
-    ><ion-buttons slot="start"
-      ><ion-back-button defaultHref="/home"></ion-back-button></ion-buttons
-    ><ion-title>{{
-      "SETTINGS.NOTIFICATIONS" | translate
-    }}</ion-title></ion-toolbar
-  ></ion-header
->
-<ion-content
-  ><ion-refresher slot="fixed" (ionRefresh)="load(true, $event)"
-    ><ion-refresher-content></ion-refresher-content
-  ></ion-refresher>
-  <div class="notification-skeleton" *ngIf="loading" role="status" aria-busy="true" [attr.aria-label]="'COMMON.LOADING' | translate">
-    <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
-    <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
-    <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
-  </div>
-  <div class="state" *ngIf="!loading && error" role="alert">
-    <p>{{ "MOBILE_UI.UNAVAILABLE" | translate }}</p>
-    <ion-button fill="outline" (click)="load(true)">{{
-      "COMMON.RETRY" | translate
-    }}</ion-button>
-  </div>
-  <div class="state" *ngIf="!loading && !error && !notifications.length">
-    <ion-icon name="notifications-off-outline" aria-hidden="true"></ion-icon>
-    <p>{{ "MOBILE_UI.NOT_FOUND" | translate }}</p>
-  </div>
-  <div class="inbox-action-row">
-    <ion-button
-      *ngIf="!loading && !error && notifications.some(item => !item.isRead)"
-      fill="outline"
-      (click)="markAllRead()"
-      ><ion-icon
-        name="checkmark-done-outline"
-        slot="start"
-        aria-hidden="true"
-      ></ion-icon
-      >{{ "MOBILE_UI.MARK_ALL_READ" | translate }}</ion-button
+<ion-header mode="ios" class="mf-sub-header" translucent="false">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/home"
+        [text]="''"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "SETTINGS.NOTIFICATIONS" | translate }}</ion-title>
+    @if (!loading && !error && hasUnread) {
+    <ion-buttons slot="end">
+      <ion-button
+        (click)="markAllRead()"
+        [attr.aria-label]="'MOBILE_UI.MARK_ALL_READ' | translate"
+      >
+        <ion-icon slot="icon-only" name="checkmark-done-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="mf-inbox">
+  <ion-refresher slot="fixed" (ionRefresh)="load(true, $event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="mf-inbox__body">
+    @if (loading) {
+    <div
+      class="mf-inbox__skeleton"
+      role="status"
+      aria-busy="true"
+      [attr.aria-label]="'COMMON.LOADING' | translate"
     >
-  </div>
-  <p *ngIf="markAllError" role="alert">
-    {{ "MOBILE_UI.MARK_ALL_READ_FAILED" | translate }}
-  </p>
-  <ng-container *ngIf="!loading && !error && notifications.length"
-    ><section *ngFor="let group of groups">
-      <h2 class="group-heading">{{ "MOBILE_UI." + group.key | translate }}</h2>
-      <ion-list
-        ><ion-item
-          *ngFor="let item of group.items; trackBy: trackById"
+      <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
+      <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
+      <app-skeleton-block variant="list-item-avatar"></app-skeleton-block>
+    </div>
+    } @else if (error) {
+    <div class="mf-empty" role="alert">
+      <p class="mf-empty__title">
+        {{ "LEDGER.INBOX_LOAD_FAILED" | translate }}
+      </p>
+      <ion-button fill="clear" (click)="load(true)">{{
+        "COMMON.RETRY" | translate
+      }}</ion-button>
+    </div>
+    } @else if (!notifications.length) {
+    <div class="mf-empty" role="status">
+      <ion-icon name="notifications-outline" aria-hidden="true"></ion-icon>
+      <p class="mf-empty__title">
+        {{ "LEDGER.INBOX_EMPTY_TITLE" | translate }}
+      </p>
+      <p class="mf-empty__hint">{{ "LEDGER.INBOX_EMPTY_HINT" | translate }}</p>
+    </div>
+    } @else { @if (markAllError) {
+    <p class="mf-inbox__error" role="alert">
+      {{ "MOBILE_UI.MARK_ALL_READ_FAILED" | translate }}
+    </p>
+    } @for (group of groups; track group.key) {
+    <section class="mf-inbox__group">
+      <h2 class="mf-inbox__day">{{ "MOBILE_UI." + group.key | translate }}</h2>
+      <ion-list class="mf-ledger__group" lines="none">
+        @for (item of group.items; track trackById($index, item)) {
+        <ion-item
           [routerLink]="['/notifications', item.id]"
-          [class.unread]="!item.isRead"
-          [class]="'notification-row tone-' + toneFor(item.type)"
+          [class]="'mf-ledger__item mf-note tone-' + toneFor(item.type)"
+          [class.mf-note--unread]="!item.isRead"
           (click)="markRead(item)"
           button
-          detail="true"
-          ><ion-icon
-            slot="start"
-            [name]="iconFor(item.type)"
-            aria-hidden="true"
-          ></ion-icon
-          ><ion-label
-            ><h2 dir="auto">{{ item.title }}</h2>
-            <p class="preview" dir="auto">{{ item.message }}</p>
-            <time
-              ><bdi>{{ item.createdAt | date : "medium" }}</bdi></time
-            ></ion-label
-          ><ion-badge
-            *ngIf="!item.isRead"
+          detail="false"
+        >
+          <span class="mf-note__mark" slot="start" aria-hidden="true">
+            <ion-icon [name]="iconFor(item.type)"></ion-icon>
+          </span>
+          <span class="mf-note__text">
+            <span class="mf-note__title"><bdi>{{ item.title }}</bdi></span>
+            <span class="mf-note__preview"><bdi>{{ item.message }}</bdi></span>
+            <time class="mf-note__time"
+              ><bdi>{{ timeLabel(item.createdAt) }}</bdi></time
+            >
+          </span>
+          @if (!item.isRead) {
+          <span
+            class="mf-note__dot"
             slot="end"
-            aria-label="Unread"
-          ></ion-badge></ion-item
-      ></ion-list>
+            role="img"
+            [attr.aria-label]="'LEDGER.UNREAD' | translate"
+          ></span>
+          }
+        </ion-item>
+        }
+      </ion-list>
     </section>
-    <ion-infinite-scroll
-      *ngIf="service.canLoadMore"
-      (ionInfinite)="loadMore($event)"
-      ><ion-infinite-scroll-content
+    } @if (service.canLoadMore) {
+    <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content
         loadingSpinner="crescent"
         [loadingText]="'MOBILE_UI.LOADING_OLDER' | translate"
-      ></ion-infinite-scroll-content></ion-infinite-scroll></ng-container
-></ion-content>
+      ></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    } }
+  </div>
+</ion-content>

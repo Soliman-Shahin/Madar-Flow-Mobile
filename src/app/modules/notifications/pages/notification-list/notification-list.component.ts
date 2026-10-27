@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import {
   AppNotification,
@@ -19,7 +19,13 @@ import { SkeletonBlockComponent } from 'src/app/shared/ui/skeleton-block/skeleto
 @Component({
   selector: 'app-notification-list',
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule, TranslateModule, SkeletonBlockComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    RouterModule,
+    TranslateModule,
+    SkeletonBlockComponent,
+  ],
   templateUrl: './notification-list.component.html',
   styleUrls: ['./notification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,8 +39,35 @@ export class NotificationListComponent implements OnInit {
   private stateSubscription?: Subscription;
   constructor(
     public service: NotificationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
+
+  get hasUnread(): boolean {
+    return this.notifications.some((item) => !item.isRead);
+  }
+
+  /** Time for today, short date otherwise; Western digits in both languages. */
+  timeLabel(value: string | Date | undefined): string {
+    if (!value) return '';
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return '';
+    const lang = this.translate.currentLang || 'en';
+    const now = new Date();
+    const sameDay = date.toDateString() === now.toDateString();
+    return new Intl.DateTimeFormat(lang, {
+      ...(sameDay
+        ? { hour: 'numeric', minute: '2-digit' }
+        : {
+            day: 'numeric',
+            month: 'short',
+            ...(date.getFullYear() !== now.getFullYear()
+              ? { year: 'numeric' }
+              : {}),
+          }),
+      numberingSystem: 'latn',
+    }).format(date);
+  }
   ngOnInit(): void {
     this.stateSubscription = this.service.notifications$.subscribe((items) => {
       this.notifications = items;
