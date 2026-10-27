@@ -1,4 +1,7 @@
-import { Component, ChangeDetectionStrategy, EventEmitter,
+import {
+  Component,
+  ChangeDetectionStrategy,
+  EventEmitter,
   Input,
   Output,
   OnInit,
@@ -6,20 +9,22 @@ import { Component, ChangeDetectionStrategy, EventEmitter,
   ViewChild,
   ElementRef,
   OnChanges,
-  SimpleChanges, } from '@angular/core';
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 import { MonthYear } from 'src/app/home/models';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-months-scroll-header',
-    templateUrl: './months-scroll-header.component.html',
-    styleUrls: ['./months-scroll-header.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [DatePipe]
+  selector: 'app-months-scroll-header',
+  templateUrl: './months-scroll-header.component.html',
+  styleUrls: ['./months-scroll-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [DatePipe],
 })
 export class MonthsScrollHeaderComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy
 {
   @Input() selectedDate: MonthYear | undefined;
   @Input() locale: string | undefined;
@@ -57,9 +62,47 @@ export class MonthsScrollHeaderComponent
     requestAnimationFrame(() =>
       setTimeout(() => this.forceCenterSelectedOnce(), 0)
     );
+    // A language switch flips the strip's direction while the page may be
+    // hidden (zero width); re-center once it has a size again.
+    if (typeof ResizeObserver !== 'undefined' && this.monthsContainer) {
+      this.resizeObserver = new ResizeObserver(() => this.recenterIfPending());
+      this.resizeObserver.observe(this.monthsContainer.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+    this.clearAutoTimers();
+  }
+
+  private recenterPending = false;
+  private resizeObserver?: ResizeObserver;
+
+  private recenterIfPending(): void {
+    const container = this.monthsContainer?.nativeElement as
+      | HTMLElement
+      | undefined;
+    if (!this.recenterPending || !container || container.clientWidth === 0) {
+      return;
+    }
+    const index = this.selectedDate
+      ? this.months.findIndex(
+          (m) =>
+            m.year === this.selectedDate!.year &&
+            m.month === this.selectedDate!.month
+        )
+      : -1;
+    const child = container.children.item(index) as HTMLElement | null;
+    if (!child) return;
+    this.recenterPending = false;
+    container.scrollBy({ left: this.centerDelta(container, child) });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['locale'] && !changes['locale'].firstChange) {
+      this.recenterPending = true;
+      requestAnimationFrame(() => this.recenterIfPending());
+    }
     if (changes['selectedDate'] && this.selectedDate) {
       // When parent updates or sets the selected date, ensure we reflect it and scroll
       setTimeout(() => this.scrollToSelected());
@@ -148,32 +191,10 @@ export class MonthsScrollHeaderComponent
       const child = container.children.item(index) as HTMLElement | null;
       if (!child) return;
 
-      const isRtl = getComputedStyle(container).direction === 'rtl';
-      const centerOffset = (container.clientWidth - child.clientWidth) / 2;
-      let targetLeft = child.offsetLeft - centerOffset;
-
-      if (isRtl) {
-        // Normalize RTL scroll across engines
-        const desiredLeftFromLtr = Math.max(0, targetLeft);
-        const type = this.getRtlScrollType();
-        // Immediate jump
-        this.setNormalizedScrollLeft(container, desiredLeftFromLtr, type);
-        // Smooth refine
-        const smoothLeft = this.getEngineScrollLeft(
-          container,
-          desiredLeftFromLtr,
-          type
-        );
-        container.scrollTo({ left: smoothLeft, behavior: 'smooth' });
-      } else {
-        // Immediate jump to ensure visibility on first paint
-        container.scrollLeft = Math.max(0, targetLeft);
-        // Smooth refine
-        container.scrollTo({
-          left: Math.max(0, targetLeft),
-          behavior: 'smooth',
-        });
-      }
+      container.scrollBy({
+        left: this.centerDelta(container, child),
+        behavior: 'smooth',
+      });
 
       // Single lightweight update; avoid repeated retries to prevent fighting the user
       this.scheduleAuto(() => {
@@ -217,89 +238,19 @@ export class MonthsScrollHeaderComponent
       }
       return;
     }
-    const isRtl = getComputedStyle(container).direction === 'rtl';
-    const centerOffset = (container.clientWidth - child.clientWidth) / 2;
-    const targetFromLtr = Math.max(0, child.offsetLeft - centerOffset);
-    if (isRtl) {
-      const type = this.getRtlScrollType();
-      this.setNormalizedScrollLeft(container, targetFromLtr, type);
-    } else {
-      container.scrollLeft = targetFromLtr;
-    }
-    // Fallback: if still not fully visible, use scrollIntoView to ensure visibility
-    const cRect = container.getBoundingClientRect();
-    const mRect = child.getBoundingClientRect();
-    const isOutside =
-      mRect.left < cRect.left + 4 || mRect.right > cRect.right - 4;
-    if (isOutside) {
-      try {
-        child.scrollIntoView({
-          behavior: 'auto',
-          block: 'nearest',
-          inline: 'center' as ScrollLogicalPosition,
-        });
-      } catch {
-        child.scrollIntoView();
-      }
-    }
+    container.scrollBy({ left: this.centerDelta(container, child) });
     this._didInitialForceCenter = true;
   }
 
-  // --- RTL scroll normalization helpers ---
-  private _rtlScrollType: 'default' | 'negative' | 'reverse' | null = null;
-
-  private getRtlScrollType(): 'default' | 'negative' | 'reverse' {
-    if (this._rtlScrollType) return this._rtlScrollType;
-    if (typeof document === 'undefined')
-      return (this._rtlScrollType = 'default');
-
-    const outer = document.createElement('div');
-    const inner = document.createElement('div');
-    outer.style.width = '100px';
-    outer.style.height = '1px';
-    outer.style.overflow = 'scroll';
-    outer.style.direction = 'rtl';
-    inner.style.width = '200px';
-    outer.appendChild(inner);
-    document.body.appendChild(outer);
-
-    // Test sequence
-    outer.scrollLeft = 0;
-    if (outer.scrollLeft > 0) {
-      this._rtlScrollType = 'default';
-    } else {
-      outer.scrollLeft = 1;
-      this._rtlScrollType = outer.scrollLeft === 0 ? 'negative' : 'reverse';
-    }
-
-    document.body.removeChild(outer);
-    return this._rtlScrollType;
-  }
-
-  private getEngineScrollLeft(
-    el: HTMLElement,
-    desiredLeftFromLtr: number,
-    type: 'default' | 'negative' | 'reverse'
-  ): number {
-    const max = el.scrollWidth - el.clientWidth;
-    switch (type) {
-      case 'negative':
-        return -desiredLeftFromLtr;
-      case 'reverse':
-        return max - desiredLeftFromLtr;
-      case 'default':
-      default:
-        return desiredLeftFromLtr;
-    }
-  }
-
-  private setNormalizedScrollLeft(
-    el: HTMLElement,
-    desiredLeftFromLtr: number,
-    type: 'default' | 'negative' | 'reverse'
-  ): void {
-    const val = this.getEngineScrollLeft(el, desiredLeftFromLtr, type);
-    (el as any).scrollLeft = val;
+  /**
+   * Horizontal distance from the strip's center to the month's center, on
+   * screen. scrollBy takes a physical delta, so the same value centers the
+   * month in both LTR and RTL without per-engine scrollLeft conventions.
+   */
+  private centerDelta(container: HTMLElement, child: HTMLElement): number {
+    const c = container.getBoundingClientRect();
+    const m = child.getBoundingClientRect();
+    return m.left + m.width / 2 - (c.left + c.width / 2);
   }
 
   // Accessibility and display helpers

@@ -638,10 +638,6 @@ app-line-chart {
   }
 }
 
-:host-context([dir="rtl"]) .mf-home-recent__all ion-icon {
-  transform: scaleX(-1);
-}
-
 // Header and section switch, on Ledger tokens (overrides the legacy
 // global home rules in theme/_mobile-core and theme/_premium-showcase).
 .dashboard.mf-dash {

@@ -1102,3 +1102,46 @@ ion-searchbar {
     --padding-bottom: var(--ew-core-bottom-clearance);
   }
 }
+
+// Empty states on the shared .mf-empty card (theme/_ledger.scss).
+.mf-tx-empty {
+  align-items: center;
+  max-width: 420px;
+  margin: var(--mf-space-6) auto 0;
+  margin-inline: max(var(--mf-gutter), calc((100% - 420px) / 2));
+}
+
+.mf-tx-empty__icon {
+  margin-bottom: var(--mf-space-2);
+  font-size: 28px;
+  color: var(--mf-ink-3);
+}
+
+.mf-empty__hint {
+  max-width: 30ch;
+  line-height: var(--mf-leading-snug);
+}
+
+ion-button.mf-tx-empty__action {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  --padding-start: var(--mf-space-5);
+  --padding-end: var(--mf-space-5);
+  min-height: var(--mf-touch-target);
+  margin: var(--mf-space-4) 0 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+
+  &.mf-tx-empty__action--quiet {
+    --background: transparent;
+    --background-activated: var(--mf-primary-soft);
+    --color: var(--mf-primary);
+    margin-top: var(--mf-space-2);
+  }
+}

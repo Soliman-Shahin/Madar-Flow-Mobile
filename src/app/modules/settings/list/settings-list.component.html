@@ -5,6 +5,9 @@
 </ion-header>
 
 <ion-content class="settings-content" [fullscreen]="true">
+  <!-- Re-created per language: ion-select caches its display text and
+       ion-toggle reads the direction only when it first renders. -->
+  @for (lang of [renderLang]; track lang) {
   <div class="settings-container">
     <!-- Account -->
     <ion-list class="premium-list mf-account">
@@ -52,7 +55,12 @@
     <!-- General -->
     <h2 class="section-label">{{ "SETTINGS.GENERAL" | translate }}</h2>
     <ion-list class="premium-list">
-      <ion-item lines="none">
+      <ion-item
+        lines="none"
+        button
+        detail="false"
+        (click)="openSelect(langSelect, $event)"
+      >
         <div slot="start" class="icon-wrapper color-blue">
           <ion-icon name="language-outline" aria-hidden="true"></ion-icon>
         </div>
@@ -60,8 +68,10 @@
           <h3>{{ "SETTINGS.LANGUAGE" | translate }}</h3>
         </ion-label>
         <ion-select
+          #langSelect
           slot="end"
           [attr.aria-label]="'SETTINGS.LANGUAGE' | translate"
+          [cancelText]="'COMMON.CANCEL' | translate"
           [value]="currentLanguage"
           (ionChange)="onLanguageChange($event)"
           interface="action-sheet"
@@ -75,7 +85,12 @@
         </ion-select>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item
+        lines="none"
+        button
+        detail="false"
+        (click)="openSelect(themeSelect, $event)"
+      >
         <div slot="start" class="icon-wrapper color-orange">
           <ion-icon name="contrast-outline" aria-hidden="true"></ion-icon>
         </div>
@@ -83,8 +98,10 @@
           <h3>{{ "SETTINGS.THEME" | translate }}</h3>
         </ion-label>
         <ion-select
+          #themeSelect
           slot="end"
           [attr.aria-label]="'SETTINGS.THEME' | translate"
+          [cancelText]="'COMMON.CANCEL' | translate"
           [value]="selectedTheme"
           (ionChange)="onThemeChange($event)"
           interface="action-sheet"
@@ -234,4 +251,5 @@
       </p>
     </footer>
   </div>
+  }
 </ion-content>

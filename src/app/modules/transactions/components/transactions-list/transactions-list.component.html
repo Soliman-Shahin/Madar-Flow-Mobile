@@ -319,36 +319,47 @@
     }
   </div>
   } @if (transactions().length === 0 && hasActiveFilters()) {
-  <div class="empty-state-wrapper filtered-empty-state">
-    <div class="empty-icon-glow">
-      <ion-icon name="search-outline"></ion-icon>
-    </div>
-    <h3 class="empty-title">{{ "TRANSACTIONS.NONE_FOUND" | translate }}</h3>
-    <ion-button fill="outline" (click)="clearAllFilters()">{{
-      "FILTERS.CLEAR_FILTERS" | translate
-    }}</ion-button>
+  <div class="mf-empty mf-tx-empty" role="status">
+    <ion-icon
+      class="mf-tx-empty__icon"
+      name="search-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <p class="mf-empty__title">{{ "TRANSACTIONS.NONE_FOUND" | translate }}</p>
+    <ion-button
+      fill="clear"
+      class="mf-tx-empty__action mf-tx-empty__action--quiet"
+      (click)="clearAllFilters()"
+      >{{ "FILTERS.CLEAR_FILTERS" | translate }}</ion-button
+    >
   </div>
   } @if (transactions().length === 0 && !hasActiveFilters()) {
-  <div class="empty-state-wrapper">
-    <div class="empty-icon-glow">
-      <ion-icon name="receipt-outline"></ion-icon>
-    </div>
-    <h3 class="empty-title">{{ "TRANSACTIONS.EMPTY_TITLE" | translate }}</h3>
-    <p class="empty-subtitle">{{ "TRANSACTIONS.EMPTY_MESSAGE" | translate }}</p>
-    <ion-button (click)="openAddTransactionModal()">
-      <ion-icon slot="start" name="add-outline"></ion-icon>
+  <div class="mf-empty mf-tx-empty" role="status">
+    <ion-icon
+      class="mf-tx-empty__icon"
+      name="receipt-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <p class="mf-empty__title">{{ "TRANSACTIONS.EMPTY_TITLE" | translate }}</p>
+    <p class="mf-empty__hint">{{ "TRANSACTIONS.EMPTY_MESSAGE" | translate }}</p>
+    <ion-button class="mf-tx-empty__action" (click)="openAddTransactionModal()">
+      <ion-icon slot="start" name="add" aria-hidden="true"></ion-icon>
       {{ "TRANSACTIONS.ADD" | translate }}
     </ion-button>
   </div>
   }
   <!-- Empty State -->
   <ng-template #empty>
-    <div class="empty-state-wrapper">
-      <div class="empty-icon-glow">
-        <ion-icon name="receipt-outline"></ion-icon>
-      </div>
-      <h3 class="empty-title">{{ "TRANSACTIONS.EMPTY_TITLE" | translate }}</h3>
-      <p class="empty-subtitle">
+    <div class="mf-empty mf-tx-empty" role="status">
+      <ion-icon
+        class="mf-tx-empty__icon"
+        name="receipt-outline"
+        aria-hidden="true"
+      ></ion-icon>
+      <p class="mf-empty__title">
+        {{ "TRANSACTIONS.EMPTY_TITLE" | translate }}
+      </p>
+      <p class="mf-empty__hint">
         {{ "TRANSACTIONS.EMPTY_MESSAGE" | translate }}
       </p>
     </div>

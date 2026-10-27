@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { BiometricService } from 'src/app/core/services/biometric.service';
 import { BiometricSignInService } from 'src/app/modules/auth/services/biometric-signin.service';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonSelect } from '@ionic/angular';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { User } from 'src/app/modules/auth/models';
 import { TranslateModule } from '@ngx-translate/core';
@@ -170,6 +170,21 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     super.changeLanguage(newLang);
     this.currentLanguage = newLang;
     this.cdr.markForCheck();
+  }
+
+  /** Language whose translations are loaded; re-keys the settings lists. */
+  renderLang = '';
+
+  protected override onLanguageChanged(lang: string): void {
+    this.currentLanguage = lang;
+    this.renderLang = lang;
+    this.cdr.markForCheck();
+  }
+
+  /** Lets the whole row open its select, not just the value on the end. */
+  openSelect(select: IonSelect, event: Event): void {
+    if ((event.target as HTMLElement | null)?.closest('ion-select')) return;
+    select.open(event as UIEvent);
   }
 
   onLanguageChange(event: any) {
