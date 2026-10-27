@@ -249,11 +249,15 @@ export class DashboardFacade {
           : (categoriesWrapped?.data as any)?.data ??
             (categoriesWrapped?.data as Category[]) ??
             [];
-        const byId = new Map<string, { name: string; type?: string }>();
+        const byId = new Map<
+          string,
+          { name: string; type?: string; color?: string }
+        >();
         categories.forEach((c) =>
           byId.set(c._id, {
             name: (c as any).title || c.title,
             type: (c as any).type,
+            color: (c as any).color,
           })
         );
 
@@ -261,6 +265,7 @@ export class DashboardFacade {
           ? (expenses as Expense[])
           : (expenses as any)?.data?.data || (expenses as any)?.data || [];
         const sums = new Map<string, number>();
+        const colors = new Map<string, string>();
 
         expArr
           .filter((e) => {
@@ -273,17 +278,21 @@ export class DashboardFacade {
             // Only aggregate expense (non-income) categories
             let name = 'Uncategorized';
             let catType: string | undefined;
+            let catColor: string | undefined;
             if (e.category && typeof e.category === 'object') {
               name =
                 (e.category as any).title || (e.category as any).title || name;
               catType = (e.category as any).type;
+              catColor = (e.category as any).color;
             } else if (typeof e.category === 'string') {
               const meta = byId.get(e.category);
               if (meta) {
                 name = meta.name;
                 catType = meta.type;
+                catColor = meta.color;
               }
             }
+            if (catColor && !colors.has(name)) colors.set(name, catColor);
             const typeLower = (catType ?? '').toString().toLowerCase();
             if (typeLower === 'income') return; // skip income lines
 
@@ -293,7 +302,7 @@ export class DashboardFacade {
           });
 
         return Array.from(sums.entries())
-          .map(([name, value]) => ({ name, value }))
+          .map(([name, value]) => ({ name, value, color: colors.get(name) }))
           .sort((a, b) => b.value - a.value);
       })
     );
@@ -323,11 +332,15 @@ export class DashboardFacade {
           : (categoriesWrapped?.data as any)?.data ??
             (categoriesWrapped?.data as Category[]) ??
             [];
-        const byId = new Map<string, { name: string; type?: string }>();
+        const byId = new Map<
+          string,
+          { name: string; type?: string; color?: string }
+        >();
         categories.forEach((c) =>
           byId.set(c._id, {
             name: (c as any).title || c.title,
             type: (c as any).type,
+            color: (c as any).color,
           })
         );
 
@@ -335,6 +348,7 @@ export class DashboardFacade {
           ? (expenses as Expense[])
           : (expenses as any)?.data?.data || (expenses as any)?.data || [];
         const sums = new Map<string, number>();
+        const colors = new Map<string, string>();
 
         expArr
           .filter((e) => {
@@ -347,17 +361,21 @@ export class DashboardFacade {
             // Only aggregate expense (non-income) categories
             let name = 'Uncategorized';
             let catType: string | undefined;
+            let catColor: string | undefined;
             if (e.category && typeof e.category === 'object') {
               name =
                 (e.category as any).title || (e.category as any).title || name;
               catType = (e.category as any).type;
+              catColor = (e.category as any).color;
             } else if (typeof e.category === 'string') {
               const meta = byId.get(e.category);
               if (meta) {
                 name = meta.name;
                 catType = meta.type;
+                catColor = meta.color;
               }
             }
+            if (catColor && !colors.has(name)) colors.set(name, catColor);
             const typeLower = (catType ?? '').toString().toLowerCase();
             if (typeLower === 'income') return; // skip income lines
 
@@ -367,7 +385,7 @@ export class DashboardFacade {
           });
 
         return Array.from(sums.entries())
-          .map(([name, value]) => ({ name, value }))
+          .map(([name, value]) => ({ name, value, color: colors.get(name) }))
           .sort((a, b) => b.value - a.value);
       })
     );

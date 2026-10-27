@@ -243,3 +243,32 @@ app-chart-tooltip {
     font-size: var(--ew-font-xxs);
   }
 }
+
+// ===================================================================
+//  Calm Personal Ledger — flat bars
+// ===================================================================
+:host {
+  font-family: var(--mf-font-sans);
+}
+
+.bar {
+  width: 56%;
+  border-radius: var(--mf-radius-sm) var(--mf-radius-sm) 0 0;
+  box-shadow: none;
+
+  &::before {
+    display: none;
+  }
+}
+
+.bar-label {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.bar-value {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--mf-ink);
+}

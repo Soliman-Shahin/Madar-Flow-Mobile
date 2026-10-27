@@ -28,8 +28,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { BaseListComponent } from 'src/app/shared/base';
 import { Category, CategoryParams } from '../../models';
 import { SkeletonBlockComponent } from '../../../../shared/ui/skeleton-block/skeleton-block.component';
-import { NgClass, AsyncPipe } from '@angular/common';
-import { AddFabButtonComponent } from '../../../../shared/ui/add-fab-button/add-fab-button.component';
+import { AsyncPipe } from '@angular/common';
 import { PlanService } from '../../../../core/services/plan.service';
 import { PlanLimitBannerComponent } from '../../../../shared/components/plan-limit-banner/plan-limit-banner.component';
 import { ExpenseService } from 'src/app/core/services/expense.service';
@@ -43,8 +42,6 @@ import { ExpenseService } from 'src/app/core/services/expense.service';
   imports: [
     IonicModule,
     SkeletonBlockComponent,
-    NgClass,
-    AddFabButtonComponent,
     AsyncPipe,
     TranslateModule,
     PlanLimitBannerComponent,
@@ -239,6 +236,14 @@ export class CategoriesComponent
       return;
     }
     this.router.navigate(['/categories/create']);
+  }
+
+  /** Reordering is an explicit mode so rows show one affordance at a time. */
+  reorderMode = false;
+
+  toggleReorder(): void {
+    this.reorderMode = !this.reorderMode;
+    this.cdr.markForCheck();
   }
 
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {

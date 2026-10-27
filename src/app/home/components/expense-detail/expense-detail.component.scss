@@ -1,0 +1,197 @@
+// Transaction record — Calm Personal Ledger content-height bottom sheet.
+
+:host {
+  display: block;
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+  background: var(--mf-bg);
+}
+
+.mf-detail {
+  padding: 0 var(--mf-gutter);
+}
+
+.mf-detail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  padding-top: var(--mf-space-2);
+}
+
+.mf-detail__eyebrow {
+  margin: 0;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-3);
+}
+
+.mf-detail__close {
+  display: grid;
+  place-items: center;
+  width: var(--mf-touch-target);
+  height: var(--mf-touch-target);
+  margin-inline-end: calc(var(--mf-space-3) * -1);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mf-ink-2);
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 22px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.mf-detail__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+  padding-block: var(--mf-space-2) var(--mf-space-5);
+}
+
+.mf-detail__mark {
+  --mf-detail-color: var(--mf-detail-cat, var(--mf-cat-8));
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--mf-radius-md);
+  background: color-mix(
+    in srgb,
+    var(--mf-detail-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-detail-color) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+.mf-detail__title {
+  margin: 0;
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+  line-height: var(--mf-leading-snug);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mf-detail__amount {
+  --mf-amount-hero-size: clamp(1.75rem, 10vw, 2.5rem);
+  color: var(--mf-ink);
+}
+
+.mf-detail__facts {
+  margin: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+}
+
+.mf-detail__fact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mf-space-1) var(--mf-space-4);
+  min-height: 52px;
+  padding: var(--mf-space-3) var(--mf-space-4);
+
+  & + & {
+    box-shadow: inset 0 1px 0 var(--mf-separator);
+  }
+
+  dt {
+    font-size: var(--mf-text-callout);
+    color: var(--mf-ink-2);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink);
+    text-align: end;
+    overflow-wrap: anywhere;
+  }
+}
+
+.mf-detail__sync {
+  dt {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mf-space-2);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink);
+  }
+
+  dd {
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-regular);
+    color: var(--mf-ink-3);
+  }
+
+  ion-icon {
+    font-size: 18px;
+    color: var(--mf-success);
+  }
+
+  &.state-pending ion-icon {
+    color: var(--mf-warning);
+  }
+
+  &.state-issue ion-icon {
+    color: var(--mf-danger);
+  }
+}
+
+.mf-detail__unavailable {
+  display: grid;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-6) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+
+  h1 {
+    margin: 0;
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+  }
+
+  p {
+    margin: 0;
+    color: var(--mf-ink-3);
+    line-height: var(--mf-leading-body);
+  }
+}
+
+.mf-detail__actions {
+  position: sticky;
+  bottom: 0;
+  margin-inline: calc(var(--mf-gutter) * -1);
+  padding: var(--mf-space-4) var(--mf-gutter)
+    calc(var(--mf-space-4) + env(safe-area-inset-bottom, 0px));
+  background: var(--mf-bg);
+}
+
+ion-button.mf-detail__edit {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  min-height: 52px;
+  margin: 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}

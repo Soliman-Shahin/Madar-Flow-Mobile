@@ -1,240 +1,211 @@
 <ion-content
   [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'"
-  class="expense-modal-content"
+  class="mf-form"
   [fullscreen]="true"
 >
   <form
     #formContainer
     [formGroup]="expenseForm"
     (ngSubmit)="onSubmit($event)"
-    class="form-container"
+    class="mf-form__body"
   >
-    <!-- Top Hero Section (Dynamic Background based on type) -->
-    <div
-      class="top-hero"
-      [ngClass]="expenseForm.get('type')?.value || 'outcome'"
-    >
-      <!-- Integrated Header inside Hero for seamless look -->
-      <ion-header class="ion-no-border transparent-header">
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button
-              (click)="close()"
-              class="close-btn"
-              [attr.aria-label]="'COMMON.CLOSE' | translate"
-            >
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          <ion-title>
-            {{
-              (isEditMode ? "EXPENSE.UPDATE_TITLE" : "EXPENSE.CREATE_TITLE")
-                | translate
-            }}
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
+    <!-- Header: cancel on the start side, title centered -->
+    <header class="mf-form__head">
+      <button type="button" class="mf-form__cancel" (click)="close()">
+        {{ "COMMON.CANCEL" | translate }}
+      </button>
+      <h1 class="mf-form__title">
+        {{
+          (isEditMode ? "EXPENSE.UPDATE_TITLE" : "EXPENSE.CREATE_TITLE")
+            | translate
+        }}
+      </h1>
+      <span class="mf-form__head-spacer" aria-hidden="true"></span>
+    </header>
 
-      <div class="hero-body">
-        <!-- Custom Premium Segment -->
-        <div class="custom-segment-container">
-          <div class="custom-segment">
-            <button
-              type="button"
-              class="segment-btn"
-              [attr.aria-pressed]="expenseForm.get('type')?.value === 'outcome'"
-              [class.active]="expenseForm.get('type')?.value === 'outcome'"
-              (click)="changeType('outcome')"
-            >
-              {{ "COMMON.OUTCOME" | translate }}
-            </button>
-            <button
-              type="button"
-              class="segment-btn"
-              [attr.aria-pressed]="expenseForm.get('type')?.value === 'income'"
-              [class.active]="expenseForm.get('type')?.value === 'income'"
-              (click)="changeType('income')"
-            >
-              {{ "COMMON.INCOME" | translate }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Amount entry -->
-        <span class="amount-label">{{ "EXPENSE.AMOUNT" | translate }}</span>
-        <div class="amount-wrapper" dir="ltr">
-          <bdi class="currency-symbol">{{
-            userCurrency || ("MOBILE.CURRENCY_UNAVAILABLE" | translate)
-          }}</bdi>
-          <ion-input
-            type="number"
-            inputmode="decimal"
-            enterkeyhint="next"
-            [attr.aria-label]="'EXPENSE.AMOUNT' | translate"
-            formControlName="amount"
-            class="huge-amount-input"
-            [placeholder]="'0.00'"
-          ></ion-input>
-        </div>
-      </div>
+    <!-- Type -->
+    <div class="mf-form__type" role="group">
+      <button
+        type="button"
+        class="mf-form__type-btn"
+        [attr.aria-pressed]="!isIncomeType"
+        [class.mf-form__type-btn--on]="!isIncomeType"
+        (click)="changeType('outcome')"
+      >
+        {{ "COMMON.OUTCOME" | translate }}
+      </button>
+      <button
+        type="button"
+        class="mf-form__type-btn"
+        [attr.aria-pressed]="isIncomeType"
+        [class.mf-form__type-btn--on]="isIncomeType"
+        (click)="changeType('income')"
+      >
+        {{ "COMMON.INCOME" | translate }}
+      </button>
     </div>
 
-    @if (expenseForm.get("amount")?.touched &&
-    expenseForm.get("amount")?.invalid) {
-    <p class="field-error" role="alert">
-      {{ "MOBILE.AMOUNT_ERROR" | translate }}
-    </p>
-    }
-    <!-- Bottom Form Section -->
-    <div class="bottom-sheet">
-      <div class="sheet-indicator"></div>
-
-      <ion-list class="grouped-fields-list">
-        <!-- Category -->
-        <ion-item
-          class="form-field"
-          lines="full"
-          [button]="true"
-          [detail]="true"
-          id="cat-select-trigger"
-          (click)="openCategoryPopover($event)"
-        >
-          <div
-            class="icon-box category-icon-box"
-            slot="start"
-            [style.background]="
-              getSelectedCategoryColor() || 'var(--ion-color-primary)'
-            "
-          >
-            <ion-icon [name]="getSelectedCategoryIcon()"></ion-icon>
-          </div>
-          <ion-label class="premium-label">
-            <span class="field-caption">{{
-              "EXPENSE.CATEGORY" | translate
-            }}</span
-            ><bdi>{{ getSelectedCategoryText() }}</bdi>
-          </ion-label>
-        </ion-item>
-        @if (expenseForm.get('category')?.touched &&
-        expenseForm.get('category')?.invalid) {
-        <p class="field-error inline-field-error" role="alert">
-          {{ "VALIDATION.REQUIRED" | translate }}
-        </p>
-        }
-
-        <!-- Description -->
-        <ion-item class="form-field" lines="full">
-          <div class="icon-box desc-icon-box" slot="start">
-            <ion-icon name="text-outline"></ion-icon>
-          </div>
-          <ion-input
-            formControlName="description"
-            labelPlacement="stacked"
-            [label]="'EXPENSE.DESCRIPTION' | translate"
-            [errorText]="'VALIDATION.REQUIRED' | translate"
-            enterkeyhint="next"
-            [placeholder]="'EXPENSE.DESCRIPTION' | translate"
-            class="premium-input"
-          ></ion-input>
-        </ion-item>
-
-        <!-- Date -->
-        <ion-item
-          class="form-field"
-          lines="none"
-          [button]="true"
-          [detail]="true"
-          id="date-picker-trigger"
-        >
-          <div class="icon-box date-icon-box" slot="start">
-            <ion-icon name="calendar-outline"></ion-icon>
-          </div>
-          <ion-label class="premium-label">
-            <span class="field-caption">{{ "EXPENSE.DATE" | translate }}</span>
-            <bdi>{{
-              (expenseForm.get("date")?.value
-                | date : "longDate" : undefined : currentLang) ||
-                ("EXPENSE.DATE" | translate)
-            }}</bdi>
-          </ion-label>
-        </ion-item>
-
-        <ion-popover
-          trigger="date-picker-trigger"
-          cssClass="date-popover expense-date-popover"
-          side="top"
-          alignment="center"
-          [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'"
-        >
-          <ng-template>
-            <ion-datetime
-              [value]="expenseForm.get('date')?.value"
-              (ionChange)="onDateChange($event)"
-              presentation="date"
-              [locale]="currentLang"
-              [max]="maxDate"
-            ></ion-datetime>
-          </ng-template>
-        </ion-popover>
-      </ion-list>
-
-      @if (expense && syncLabel(expense); as status) {
-      <p class="field-caption" role="status">{{ status | translate }}</p>
+    <!-- Amount: the hero of the form -->
+    <div class="mf-form__amount" [class.mf-form__amount--income]="isIncomeType">
+      <div class="mf-form__amount-row" dir="ltr">
+        <ion-input
+          type="number"
+          inputmode="decimal"
+          enterkeyhint="next"
+          [attr.aria-label]="'EXPENSE.AMOUNT' | translate"
+          formControlName="amount"
+          class="mf-form__amount-input"
+          [placeholder]="'0.00'"
+        ></ion-input>
+        <bdi class="mf-form__currency">{{
+          userCurrency || ("MOBILE.CURRENCY_UNAVAILABLE" | translate)
+        }}</bdi>
+      </div>
+      @if (expenseForm.get("amount")?.touched &&
+      expenseForm.get("amount")?.invalid) {
+      <p class="mf-form__error" role="alert">
+        {{ "MOBILE.AMOUNT_ERROR" | translate }}
+      </p>
       }
-      <!-- Action Buttons -->
-      <div class="form-actions-row">
-        @if (!isEditMode && hasDraft) {
-        <ion-button
-          fill="clear"
-          class="discard-draft-btn"
-          type="button"
-          (click)="discardDraft()"
-        >
-          {{ "EXPENSE.DISCARD_DRAFT" | translate }}
-        </ion-button>
-        } @if (isEditMode) {
-        <ion-button
-          fill="clear"
-          color="danger"
-          class="delete-btn"
-          (click)="onDelete()"
-          [disabled]="isDeleteSubmitting || (vm$ | async)?.isLoading"
-          [attr.aria-label]="'EXPENSE.DELETE' | translate"
-        >
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-button>
-        }
-
-        <ion-button
-          type="submit"
-          [disabled]="
-            expenseForm.invalid ||
-            (isEditMode && !hasFormChanges()) ||
-            (vm$ | async)?.isLoading
-          "
-          class="submit-btn"
-          expand="block"
-        >
-          @if ((vm$ | async)?.isLoading) {
-          <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
-          <span class="visually-hidden">{{
-            "COMMON.LOADING" | translate
-          }}</span>
-          } @else {
-          <span>
-            {{ (isEditMode ? "COMMON.SAVE" : "COMMON.CREATE") | translate }}
-          </span>
-          }
-        </ion-button>
-      </div>
     </div>
+
+    <!-- One-tap categories -->
+    @if (quickCategories.length > 0) {
+    <div
+      class="mf-form__chips"
+      role="group"
+      [attr.aria-label]="'EXPENSE.CATEGORY' | translate"
+    >
+      @for (category of quickCategories; track category._id) {
+      <button
+        type="button"
+        class="mf-chip"
+        [class.mf-chip--on]="
+          expenseForm.get('category')?.value === category._id
+        "
+        [attr.aria-pressed]="
+          expenseForm.get('category')?.value === category._id
+        "
+        [style.--mf-chip-cat]="category.color || null"
+        (click)="selectCategory(category._id!)"
+      >
+        <span class="mf-chip__mark" aria-hidden="true">
+          <ion-icon [name]="category.icon || 'pricetag-outline'"></ion-icon>
+        </span>
+        <bdi class="mf-chip__text">{{ category.title }}</bdi>
+      </button>
+      }
+    </div>
+    }
+
+    <!-- Fields -->
+    <ion-list class="mf-form__group" lines="none">
+      <ion-item
+        class="mf-form__field"
+        [button]="true"
+        [detail]="true"
+        id="cat-select-trigger"
+        (click)="openCategoryPopover($event)"
+      >
+        <span
+          class="mf-form__mark"
+          slot="start"
+          aria-hidden="true"
+          [style.--mf-field-cat]="getSelectedCategoryColor() || null"
+        >
+          <ion-icon [name]="getSelectedCategoryIcon()"></ion-icon>
+        </span>
+        <ion-label class="mf-form__label">
+          <span class="mf-form__caption">{{
+            "EXPENSE.CATEGORY" | translate
+          }}</span>
+          @if (expenseForm.get('category')?.value) {
+          <bdi class="mf-form__value">{{ getSelectedCategoryText() }}</bdi>
+          } @else {
+          <span class="mf-form__value mf-form__value--placeholder">{{
+            "LEDGER.CHOOSE_CATEGORY" | translate
+          }}</span>
+          }
+        </ion-label>
+      </ion-item>
+      @if (expenseForm.get('category')?.touched &&
+      expenseForm.get('category')?.invalid) {
+      <p class="mf-form__error mf-form__error--inline" role="alert">
+        {{ "VALIDATION.REQUIRED" | translate }}
+      </p>
+      }
+
+      <ion-item class="mf-form__field">
+        <span
+          class="mf-form__mark mf-form__mark--neutral"
+          slot="start"
+          aria-hidden="true"
+        >
+          <ion-icon name="create-outline"></ion-icon>
+        </span>
+        <ion-input
+          formControlName="description"
+          labelPlacement="stacked"
+          [label]="'EXPENSE.DESCRIPTION' | translate"
+          [errorText]="'VALIDATION.REQUIRED' | translate"
+          enterkeyhint="done"
+          [placeholder]="'EXPENSE.DESCRIPTION' | translate"
+          class="mf-form__input"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item
+        class="mf-form__field"
+        [button]="true"
+        [detail]="true"
+        id="date-picker-trigger"
+      >
+        <span
+          class="mf-form__mark mf-form__mark--neutral"
+          slot="start"
+          aria-hidden="true"
+        >
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+        </span>
+        <ion-label class="mf-form__label">
+          <span class="mf-form__caption">{{ "EXPENSE.DATE" | translate }}</span>
+          <bdi class="mf-form__value">{{
+            (expenseForm.get("date")?.value
+              | date : "longDate" : undefined : currentLang) ||
+              ("EXPENSE.DATE" | translate)
+          }}</bdi>
+        </ion-label>
+      </ion-item>
+
+      <ion-popover
+        trigger="date-picker-trigger"
+        cssClass="date-popover expense-date-popover"
+        side="top"
+        alignment="center"
+        [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'"
+      >
+        <ng-template>
+          <ion-datetime
+            [value]="expenseForm.get('date')?.value"
+            (ionChange)="onDateChange($event)"
+            presentation="date"
+            [locale]="currentLang"
+            [max]="maxDate"
+          ></ion-datetime>
+        </ng-template>
+      </ion-popover>
+    </ion-list>
+
+    @if (expense && syncLabel(expense); as status) {
+    <p class="mf-form__status" role="status">{{ status | translate }}</p>
+    }
 
     <!-- Category Popover -->
     <ion-popover
       trigger="cat-select-trigger"
       [isOpen]="showCategoryPopover"
       (didDismiss)="closeCategoryPopover()"
-      cssClass="custom-cat-popover"
+      cssClass="custom-cat-popover mf-cat-popover"
       [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'"
       alignment="start"
       side="bottom"
@@ -300,7 +271,7 @@
           >
             <div
               class="popover-item-icon"
-              [style.background]="category.color"
+              [style.--mf-pop-cat]="category.color || null"
               aria-hidden="true"
             >
               <ion-icon [name]="category.icon"></ion-icon>
@@ -340,3 +311,42 @@
     </ion-popover>
   </form>
 </ion-content>
+<ion-footer class="mf-form__footer">
+  <!-- Actions: ion-footer stays at the bottom of the visible sheet -->
+  <div class="mf-form__actions">
+    @if (isEditMode) {
+    <button
+      type="button"
+      class="mf-form__delete"
+      (click)="onDelete()"
+      [disabled]="isDeleteSubmitting || (vm$ | async)?.isLoading"
+      [attr.aria-label]="'EXPENSE.DELETE' | translate"
+    >
+      <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+    </button>
+    } @if (!isEditMode && hasDraft) {
+    <button type="button" class="mf-form__discard" (click)="discardDraft()">
+      {{ "EXPENSE.DISCARD_DRAFT" | translate }}
+    </button>
+    }
+    <ion-button
+      type="button"
+      (click)="onSubmit($event)"
+      class="mf-form__submit"
+      [disabled]="
+        expenseForm.invalid ||
+        (isEditMode && !hasFormChanges()) ||
+        (vm$ | async)?.isLoading
+      "
+    >
+      @if ((vm$ | async)?.isLoading) {
+      <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+      <span class="visually-hidden">{{ "COMMON.LOADING" | translate }}</span>
+      } @else {
+      <span>{{
+        (isEditMode ? "COMMON.SAVE" : "COMMON.CREATE") | translate
+      }}</span>
+      }
+    </ion-button>
+  </div>
+</ion-footer>

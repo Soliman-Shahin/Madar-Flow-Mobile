@@ -1,0 +1,52 @@
+// ===================================================================
+//  BOTTOM SHEETS — Calm Personal Ledger
+// ===================================================================
+// Shared modal chrome for ledgerFormSheet()/ledgerDetailSheet().
+
+ion-modal.mf-sheet {
+  --background: var(--mf-bg);
+  --border-radius: var(--mf-radius-xl);
+  --box-shadow: var(--mf-shadow-sheet);
+  --backdrop-opacity: 0.32;
+
+  &::part(handle) {
+    width: 36px;
+    height: 5px;
+    margin-top: var(--mf-space-2);
+    background: var(--mf-outline);
+  }
+}
+
+// Content-height sheet anchored to the bottom edge (read-only records).
+ion-modal.mf-sheet--auto {
+  --height: auto;
+  --width: 100%;
+  --max-width: 560px;
+  align-items: flex-end;
+
+  &::part(content) {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .ion-page {
+    position: relative;
+    display: block;
+    contain: content;
+  }
+
+  .mf-sheet__scroll {
+    max-height: min(90dvh, 720px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+// Decorative grab bar for the auto-height sheet (it is not draggable).
+.mf-sheet__grabber {
+  width: 36px;
+  height: 5px;
+  margin: var(--mf-space-2) auto 0;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-outline);
+}

@@ -1,5 +1,8 @@
 {
   "LEDGER": {
+    "CHOOSE_CATEGORY": "Choose a category",
+    "DONE": "Done",
+    "TYPE": "Type",
     "SPENT_THIS_MONTH": "Spent this month",
     "SPENT_IN": "Spent in {{month}}",
     "INCOME": "Income",

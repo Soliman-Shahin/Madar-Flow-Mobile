@@ -1,0 +1,74 @@
+// ===================================================================
+//  PAGE HEADER — Calm Personal Ledger
+// ===================================================================
+// Large title + count, search, and a type switch. Shared by the
+// Transactions and Categories pages (ion-header.mf-page-header).
+// The doubled class raises specificity above the legacy
+// `app-… .category-ion-header` overrides in theme/_premium-showcase.
+
+ion-header.mf-page-header.mf-page-header {
+  font-family: var(--mf-font-sans);
+  border-bottom: 1px solid var(--mf-separator);
+
+  ion-toolbar {
+    --background: var(--mf-bg);
+    --border-width: 0;
+  }
+
+  .header-title-container .main-title {
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-bold);
+    letter-spacing: -0.01em;
+    color: var(--mf-ink);
+  }
+
+  .header-title-container .sub-title {
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-medium);
+    letter-spacing: 0;
+    color: var(--mf-ink-3);
+  }
+
+  ion-buttons ion-button {
+    --color: var(--mf-primary) !important;
+    min-height: var(--mf-touch-target);
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-medium);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  ion-searchbar {
+    --background: var(--mf-surface) !important;
+    --border-radius: var(--mf-radius-md) !important;
+    --box-shadow: none !important;
+    --color: var(--mf-ink) !important;
+    --placeholder-color: var(--mf-ink-3) !important;
+    --placeholder-opacity: 1;
+    --icon-color: var(--mf-ink-3) !important;
+    --clear-button-color: var(--mf-ink-3);
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+  }
+
+  .custom-segment {
+    --background: var(--mf-surface-sunken);
+    border-radius: var(--mf-radius-md);
+    padding: 3px;
+  }
+
+  .custom-segment ion-segment-button {
+    --color: var(--mf-ink-2) !important;
+    --color-checked: var(--mf-ink) !important;
+    --indicator-color: var(--mf-surface);
+    --indicator-box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+    min-height: 36px;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}

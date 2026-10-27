@@ -1,229 +1,471 @@
-:host {
-  display: block;
-  height: 100%;
+// Add/edit transaction — Calm Personal Ledger bottom sheet.
+// Order of the eye: amount → category → description/date → save.
+
+// The host is the modal's .ion-page (flex column): content scrolls, the
+// footer stays pinned to the bottom of the visible sheet.
+
+ion-content.mf-form {
+  --background: var(--mf-bg);
+  --color: var(--mf-ink);
+  font-family: var(--mf-font-sans);
 }
-.expense-modal-content {
-  --background: var(--ion-background-color);
-}
-.form-container {
-  min-height: 100%;
+
+.mf-form__body {
   display: flex;
   flex-direction: column;
+  gap: var(--mf-space-4);
+  padding: var(--mf-space-4) var(--mf-gutter) var(--mf-space-6);
 }
-.top-hero {
-  background: var(--ion-item-background);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--ew-wallet-line);
+
+// --- Header -----------------------------------------------------------
+.mf-form__head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--mf-space-2);
+  padding-top: var(--mf-space-2);
 }
-.transparent-header ion-toolbar {
-  --background: transparent;
-  --color: var(--ion-text-color);
-  --border-width: 0;
-}
-ion-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-.close-btn {
-  min-width: 44px;
-  height: 44px;
-}
-.hero-body {
-  padding: 12px 20px 16px;
-}
-.custom-segment {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 12px;
-  background: var(--ew-wallet-inset);
-}
-.segment-btn {
-  flex: 1;
+
+.mf-form__cancel {
+  justify-self: start;
+  min-height: var(--mf-touch-target);
+  padding-inline: var(--mf-space-2);
+  margin-inline-start: calc(var(--mf-space-2) * -1);
   border: 0;
-  border-radius: 8px;
-  min-height: 44px;
-  padding: 8px;
-  font: inherit;
-  color: var(--ew-wallet-muted);
   background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-body);
+  color: var(--mf-primary);
   cursor: pointer;
 }
-.segment-btn.active {
-  background: var(--ion-item-background);
-  color: var(--ion-color-primary);
-  font-weight: 700;
-}
-.amount-label {
-  display: block;
-  margin-top: 20px;
-  color: var(--ew-wallet-muted);
-  font-size: 13px;
-}
-.amount-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  direction: ltr;
-  unicode-bidi: isolate;
-}
-.currency-symbol {
-  color: var(--ew-wallet-muted);
-  font-size: 16px;
-  font-weight: 600;
-}
-.huge-amount-input {
-  min-width: 0;
-  font-size: 40px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  --padding-start: 0;
-  --placeholder-color: var(--ew-wallet-muted);
-}
-.bottom-sheet {
-  padding: 16px 20px max(20px, env(safe-area-inset-bottom));
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-.sheet-indicator {
-  display: none;
-}
-.grouped-fields-list {
-  padding: 0;
-  margin: 0 0 12px;
-  background: var(--ion-item-background);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.form-field {
-  --background: transparent;
-  --min-height: 72px;
-  --padding-start: 12px;
-  --inner-padding-end: 12px;
-  --border-color: var(--ew-wallet-line);
-}
-.icon-box {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  color: var(--ion-text-color);
-  background: var(--ew-wallet-inset);
-  margin-inline-end: 12px;
-}
-.category-icon-box {
-  color: white;
-}
-.premium-label,
-.premium-input {
-  font-size: 16px;
-}
-.field-caption {
-  display: block;
-  font-size: 12px;
-  color: var(--ew-wallet-muted);
-  margin-bottom: 5px;
-}
-.form-actions-row {
-  position: sticky;
-  bottom: 0;
-  margin-top: 8px;
-  padding-block: 12px;
-  display: flex;
-  gap: 12px;
-  background: var(--ion-background-color);
-  z-index: 2;
-}
-.submit-btn {
-  flex: 1;
-  min-width: 0;
-  min-height: 50px;
+
+.mf-form__title {
   margin: 0;
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
-  --box-shadow: none;
-  --border-radius: 12px;
+  font-size: var(--mf-text-headline);
+  font-weight: var(--mf-weight-semibold);
+  text-align: center;
+  color: var(--mf-ink);
 }
-.delete-btn {
-  flex: 0 0 48px;
-  min-width: 48px;
-  min-height: 48px;
+
+// --- Type ---------------------------------------------------------------
+.mf-form__type {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface-sunken);
+}
+
+.mf-form__type-btn {
+  min-height: 40px;
+  border: 0;
+  border-radius: calc(var(--mf-radius-md) - 3px);
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+  cursor: pointer;
+  transition: background-color var(--mf-dur-quick) var(--mf-ease-standard);
+
+  &.mf-form__type-btn--on {
+    background: var(--mf-surface);
+    color: var(--mf-ink);
+    box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+  }
+}
+
+// --- Amount -------------------------------------------------------------
+.mf-form__amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mf-space-1);
+  padding-block: var(--mf-space-3);
+}
+
+.mf-form__amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  max-width: 100%;
+}
+
+ion-input.mf-form__amount-input {
+  --color: var(--mf-ink);
+  --placeholder-color: var(--mf-ink-3);
+  --placeholder-opacity: 0.6;
   --padding-start: 0;
   --padding-end: 0;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 4ch;
+  max-width: 11ch;
+  min-height: 0;
+  font-family: var(--mf-font-sans);
+  font-size: clamp(2.25rem, 12vw, 3rem);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.mf-form__amount--income ion-input.mf-form__amount-input {
+  --color: var(--mf-income);
+}
+
+// The native input grows with what is typed so the currency stays beside it.
+:host ::ng-deep ion-input.mf-form__amount-input .native-input {
+  field-sizing: content;
+  min-width: 4ch;
+  max-width: 11ch;
+  text-align: center;
+}
+
+.mf-form__currency {
+  flex: 0 0 auto;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-3);
+}
+
+.mf-form__error {
   margin: 0;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-danger);
 }
-.field-error {
-  color: var(--ion-color-danger);
-  font-size: 13px;
-  margin: 8px 0;
+
+.mf-form__error--inline {
+  padding: 0 var(--mf-space-4) var(--mf-space-2);
 }
+
+// --- Category chips -----------------------------------------------------
+.mf-form__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mf-space-2);
+}
+
+.mf-chip {
+  --mf-chip-color: var(--mf-chip-cat, var(--mf-cat-8));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  max-width: 100%;
+  min-height: 40px;
+  padding: 4px var(--mf-space-3) 4px 4px;
+  border: 1px solid var(--mf-separator);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface);
+  font: inherit;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink);
+  cursor: pointer;
+  transition: border-color var(--mf-dur-quick) var(--mf-ease-standard),
+    background-color var(--mf-dur-quick) var(--mf-ease-standard);
+
+  &.mf-chip--on {
+    border-color: var(--mf-primary);
+    background: var(--mf-primary-soft);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+:host-context([dir="rtl"]) .mf-chip {
+  padding: 4px 4px 4px var(--mf-space-3);
+}
+
+.mf-chip__mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    var(--mf-chip-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-chip-color) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.mf-chip__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Fields -------------------------------------------------------------
+ion-list.mf-form__group {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  overflow: hidden;
+}
+
+ion-item.mf-form__field {
+  --background: var(--mf-surface);
+  --color: var(--mf-ink);
+  --padding-start: var(--mf-space-4);
+  --inner-padding-end: var(--mf-space-3);
+  --min-height: 60px;
+  --border-width: 0;
+  --inner-border-width: 0;
+  --detail-icon-color: var(--mf-ink-3);
+  --detail-icon-opacity: 1;
+  font-family: var(--mf-font-sans);
+}
+
+ion-item.mf-form__field + ion-item.mf-form__field::part(native) {
+  box-shadow: inset 0 1px 0 var(--mf-separator);
+}
+
+.mf-form__mark {
+  --mf-field-color: var(--mf-field-cat, var(--mf-cat-8));
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-inline-end: var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-field-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-field-color) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  &.mf-form__mark--neutral {
+    background: var(--mf-surface-sunken);
+    color: var(--mf-ink-2);
+  }
+}
+
+ion-label.mf-form__label {
+  display: flex !important;
+  flex-direction: column;
+  gap: 2px;
+  margin-block: var(--mf-space-2);
+  white-space: normal;
+}
+
+.mf-form__caption {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.mf-form__value {
+  font-size: var(--mf-text-body);
+  color: var(--mf-ink);
+  overflow-wrap: anywhere;
+
+  &.mf-form__value--placeholder {
+    color: var(--mf-ink-3);
+  }
+}
+
+ion-input.mf-form__input {
+  --highlight-height: 0;
+  --border-width: 0;
+  --color: var(--mf-ink);
+  --placeholder-color: var(--mf-ink-3);
+  --placeholder-opacity: 1;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  text-align: start;
+}
+
+.mf-form__status {
+  margin: 0;
+  padding-inline: var(--mf-space-1);
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+// --- Actions (sticky to the bottom of the sheet) -------------------------
+ion-footer.mf-form__footer {
+  background: var(--mf-bg);
+  box-shadow: 0 -1px 0 var(--mf-separator);
+}
+
+.mf-form__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-3) var(--mf-gutter)
+    calc(var(--mf-space-3) + env(safe-area-inset-bottom, 0px));
+  font-family: var(--mf-font-sans);
+}
+
+ion-button.mf-form__submit {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  flex: 1 1 auto;
+  min-height: 52px;
+  margin: 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+
+  &.button-disabled {
+    opacity: 1;
+    --background: var(--mf-surface-sunken);
+    --color: var(--mf-ink-3);
+  }
+
+  ion-spinner {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.mf-form__delete {
+  display: grid;
+  place-items: center;
+  flex: 0 0 52px;
+  height: 52px;
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 22px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.mf-form__discard {
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding-inline: var(--mf-space-3);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  color: var(--mf-ink-2);
+  cursor: pointer;
+}
+
+.mf-form__cancel:focus-visible,
+.mf-form__type-btn:focus-visible,
+.mf-form__delete:focus-visible,
+.mf-form__discard:focus-visible {
+  outline: 2px solid var(--mf-focus-ring);
+  outline-offset: 2px;
+}
+
+// --- Category popover (kept; restyled on tokens) ---------------------------
 .popover-content {
-  background: var(--ion-item-background);
-  color: var(--ion-text-color);
+  background: var(--mf-surface);
+  color: var(--mf-ink);
+  font-family: var(--mf-font-sans);
 }
+
 .popover-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--ew-wallet-line);
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-bottom: 1px solid var(--mf-separator);
 }
+
 .popover-header h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--mf-text-headline);
+  font-weight: var(--mf-weight-semibold);
 }
+
 .popover-options {
   max-height: 320px;
   overflow-y: auto;
 }
+
 .category-section-label {
   margin: 0;
-  padding: 10px 16px 6px;
-  color: var(--ew-wallet-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  padding: var(--mf-space-3) var(--mf-space-4) var(--mf-space-1);
+  font-size: var(--mf-text-caption);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-3);
 }
+
 .popover-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--mf-space-3);
   width: 100%;
   min-height: 52px;
-  padding: 10px 16px;
+  padding: var(--mf-space-2) var(--mf-space-4);
   border: 0;
   text-align: start;
   font: inherit;
   color: inherit;
   background: transparent;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &.selected {
+    background: var(--mf-primary-soft);
+  }
 }
-.popover-item:focus-visible {
-  outline: 2px solid var(--ion-color-primary);
-  outline-offset: -2px;
-}
-.popover-item.selected {
-  background: var(--ew-wallet-inset);
-}
+
 .popover-item-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  --mf-pop-color: var(--mf-pop-cat, var(--mf-cat-8));
   display: grid;
   place-items: center;
-  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-pop-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-pop-color) 78%, var(--mf-ink));
 }
+
 .popover-item-text {
   flex: 1;
+  text-align: match-parent;
   overflow-wrap: anywhere;
 }
+
 .popover-empty {
-  padding: 20px;
+  padding: var(--mf-space-5);
   text-align: center;
+  color: var(--mf-ink-3);
 }
+
 .check-icon {
-  color: var(--ion-color-primary);
+  color: var(--mf-primary);
 }
+
 .favorite-button {
   flex: 0 0 40px;
   min-width: 40px;
@@ -231,54 +473,13 @@ ion-title {
   margin: 0;
   --padding-start: 8px;
   --padding-end: 8px;
-  --color: var(--ew-wallet-muted);
-}
-.favorite-button ion-icon {
-  font-size: 18px;
-}
-@media (max-height: 560px) {
-  .hero-body {
-    padding-block: 8px;
-  }
-  .amount-label {
-    margin-top: 8px;
-  }
-  .huge-amount-input {
-    font-size: 32px;
+  --color: var(--mf-ink-3);
+
+  ion-icon {
+    font-size: 18px;
   }
 }
-.form-field {
-  --color: var(--ion-text-color);
-}
-.premium-label,
-.premium-input {
-  color: var(--ion-text-color) !important;
-}
-.close-btn {
-  --color: var(--ion-text-color);
-}
-.submit-btn {
-  --background: var(--ion-color-primary) !important;
-  --color: var(--ion-color-primary-contrast) !important;
-}
-.field-error {
-  padding-inline: 20px;
-}
-.discard-draft-btn {
-  min-height: 48px;
-  margin: 0;
-  color: var(--ew-wallet-muted);
-  white-space: nowrap;
-}
-.inline-field-error {
-  margin: -8px 0 8px;
-  color: var(--ion-color-danger);
-  font-size: 12px;
-}
-.submit-btn ion-spinner {
-  width: 20px;
-  height: 20px;
-}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -291,37 +492,9 @@ ion-title {
   border: 0;
 }
 
-.form-field .premium-label,
-.premium-input {
-  text-align: start;
-}
-.amount-wrapper {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  text-align: left;
-}
-.currency-symbol {
-  max-width: 9rem;
-  overflow-wrap: anywhere;
-}
-.huge-amount-input {
-  text-align: left;
-  width: 100%;
-  min-width: 0;
-}
-.transparent-header ion-title {
-  text-align: start;
-  padding-inline: 8px 16px;
-}
-.form-actions-row {
-  align-items: stretch;
-  gap: 12px;
-}
-.submit-btn.button-disabled {
-  opacity: 1;
-  --background: var(--ew-wallet-inset) !important;
-  --color: var(--ew-wallet-muted) !important;
-  --border-color: var(--ew-wallet-line);
-  --border-style: solid;
-  --border-width: 1px;
+@media (prefers-reduced-motion: reduce) {
+  .mf-form__type-btn,
+  .mf-chip {
+    transition: none;
+  }
 }

@@ -1,0 +1,87 @@
+<div class="mf-sheet__scroll mf-detail" [dir]="locale === 'ar' ? 'rtl' : 'ltr'">
+  <div class="mf-sheet__grabber" aria-hidden="true"></div>
+  <header class="mf-detail__head">
+    <h2 class="mf-detail__eyebrow">{{ "MOBILE.RECORD" | translate }}</h2>
+    <button
+      type="button"
+      class="mf-detail__close"
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
+      <ion-icon name="close" aria-hidden="true"></ion-icon>
+    </button>
+  </header>
+
+  @if (isUnavailable()) {
+  <section class="mf-detail__unavailable" role="status" aria-live="polite">
+    <h1>{{ "EXPENSE.UNAVAILABLE_TITLE" | translate }}</h1>
+    <p>{{ "EXPENSE.UNAVAILABLE_DESCRIPTION" | translate }}</p>
+  </section>
+  } @else {
+  <section class="mf-detail__hero">
+    <span
+      class="mf-detail__mark"
+      aria-hidden="true"
+      [style.--mf-detail-cat]="categoryVisual?.color || null"
+    >
+      <ion-icon [name]="categoryVisual?.icon || 'receipt-outline'"></ion-icon>
+    </span>
+    <h1 class="mf-detail__title" dir="auto">
+      {{ detailExpense().description }}
+    </h1>
+    <app-amount
+      class="mf-detail__amount"
+      size="hero"
+      [kind]="isIncome ? 'income' : 'expense'"
+      [value]="absoluteAmount"
+      [currency]="currency || ('MOBILE.CURRENCY_UNAVAILABLE' | translate)"
+    />
+  </section>
+
+  <dl class="mf-detail__facts">
+    <div class="mf-detail__fact">
+      <dt>{{ "EXPENSE.CATEGORY" | translate }}</dt>
+      <dd>
+        <bdi>{{ categoryName || ("EXPENSE.CATEGORY" | translate) }}</bdi>
+      </dd>
+    </div>
+    <div class="mf-detail__fact">
+      <dt>{{ "LEDGER.TYPE" | translate }}</dt>
+      <dd>
+        {{ (isIncome ? "COMMON.INCOME" : "COMMON.OUTCOME") | translate }}
+      </dd>
+    </div>
+    <div class="mf-detail__fact">
+      <dt>{{ "EXPENSE.DATE" | translate }}</dt>
+      <dd>
+        <bdi>{{
+          isValidDate ? formattedDate : ("EXPENSE.DATE" | translate)
+        }}</bdi>
+      </dd>
+    </div>
+    <div
+      [class]="'mf-detail__fact mf-detail__sync state-' + syncState"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <dt>
+        <ion-icon [name]="syncIcon" aria-hidden="true"></ion-icon>
+        {{ syncLabelKey | translate }}
+      </dt>
+      <dd>{{ syncDescriptionKey | translate }}</dd>
+    </div>
+  </dl>
+  } @if (!isUnavailable()) {
+  <div class="mf-detail__actions">
+    <ion-button class="mf-detail__edit" expand="block" (click)="edit()">
+      <ion-icon
+        slot="start"
+        name="create-outline"
+        aria-hidden="true"
+      ></ion-icon>
+      {{ "MOBILE.EDIT" | translate }}
+    </ion-button>
+  </div>
+  }
+</div>
