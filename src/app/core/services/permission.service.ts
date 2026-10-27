@@ -6,6 +6,7 @@
  */
 
 import { Injectable, inject, signal, computed } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
 import { map, tap, finalize } from 'rxjs/operators';
@@ -38,7 +39,9 @@ interface MissingPermissionsResponse {
 })
 export class PermissionService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = Capacitor.isNativePlatform()
+    ? environment.nativeApiUrl
+    : environment.browserApiUrl;
 
   // Signals for reactive state management
   private permissionsSignal = signal<Permission[]>([]);

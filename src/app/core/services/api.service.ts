@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
@@ -10,7 +11,9 @@ import { ConnectionService } from './connection.service';
   providedIn: 'root',
 })
 export class ApiService {
-  private readonly baseUrl = environment.apiUrl;
+  private readonly baseUrl = Capacitor.isNativePlatform()
+    ? environment.nativeApiUrl
+    : environment.browserApiUrl;
   private connectionService = inject(ConnectionService);
 
   constructor(private http: HttpClient, private storageService: TokenService) {}

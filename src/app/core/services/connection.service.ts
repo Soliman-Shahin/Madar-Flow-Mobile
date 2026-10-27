@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject, fromEvent, merge, of } from 'rxjs';
 import { map, debounceTime, timeout } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Capacitor } from '@capacitor/core';
 
 export interface ConnectionStatus {
   online: boolean;
@@ -152,7 +153,10 @@ export class ConnectionService {
    */
   async checkBackendHealth(): Promise<boolean> {
     try {
-      const healthUrl = `${environment.apiUrl.replace('/v1', '')}/health/detailed?t=${new Date().getTime()}`;
+      const baseUrl = Capacitor.isNativePlatform()
+        ? environment.nativeApiUrl
+        : environment.browserApiUrl;
+      const healthUrl = `${baseUrl.replace('/v1', '')}/health/detailed?t=${new Date().getTime()}`;
 
       const response = await this.http
         .get<any>(healthUrl, {

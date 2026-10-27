@@ -1,0 +1,72 @@
+<ion-header mode="ios" class="settings-header" translucent="false">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button
+        routerLink="/settings/list"
+        class="modern-back-btn"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'SETTINGS.DELETE_ACCOUNT' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="settings-content" [fullscreen]="true">
+  <div class="settings-container delete-account-page">
+    <section class="delete-account-warning" role="note">
+      <div class="icon-wrapper color-red">
+        <ion-icon name="warning" aria-hidden="true"></ion-icon>
+      </div>
+      <div>
+        <h2>{{ 'SETTINGS.DELETE_ACCOUNT_WARNING_TITLE' | translate }}</h2>
+        <p>{{ 'SETTINGS.DELETE_ACCOUNT_WARNING' | translate }}</p>
+        <p>
+          {{ 'SETTINGS.DELETE_ACCOUNT_EXPORT_HINT' | translate }}
+          <a routerLink="/settings/backup"
+            >{{ 'SETTINGS.BACKUP_RESTORE' | translate }}</a
+          >
+        </p>
+      </div>
+    </section>
+
+    <form class="delete-account-form" (ngSubmit)="deleteAccount()">
+      @if (requiresPassword) {
+      <ion-input
+        type="password"
+        name="password"
+        autocomplete="current-password"
+        fill="outline"
+        labelPlacement="stacked"
+        [label]="'SETTINGS.DELETE_ACCOUNT_PASSWORD' | translate"
+        [(ngModel)]="password"
+        [disabled]="deleting"
+      ></ion-input>
+      }
+      <ion-input
+        type="text"
+        name="confirmation"
+        autocomplete="off"
+        autocapitalize="characters"
+        fill="outline"
+        labelPlacement="stacked"
+        [label]="'SETTINGS.DELETE_ACCOUNT_CONFIRM_LABEL' | translate"
+        [placeholder]="confirmationWord"
+        [(ngModel)]="confirmation"
+        [disabled]="deleting"
+      ></ion-input>
+
+      <ion-button
+        type="submit"
+        expand="block"
+        color="danger"
+        [disabled]="!canSubmit"
+      >
+        @if (deleting) {
+        <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+        } @else { {{ 'SETTINGS.DELETE_ACCOUNT_BUTTON' | translate }} }
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

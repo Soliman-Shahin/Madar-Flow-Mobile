@@ -1,0 +1,55 @@
+@use "src/theme/mobile-secondary" as secondary;
+@include secondary.settings;
+
+.delete-account-page {
+  display: grid;
+  gap: 16px;
+  padding-block: 8px
+    calc(
+      16px + var(--ew-tab-bar-height, 72px) + env(safe-area-inset-bottom, 0px)
+    );
+}
+
+.delete-account-warning {
+  background: rgba(var(--ion-color-danger-rgb), 0.08);
+  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.3);
+  border-radius: 14px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  padding: 14px;
+
+  .icon-wrapper {
+    align-items: center;
+    border-radius: 10px;
+    display: grid;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+  }
+  h2 {
+    color: var(--ion-color-danger);
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  p {
+    color: var(--ew-wallet-muted);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 6px;
+  }
+  a {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+  }
+}
+
+.delete-account-form {
+  display: grid;
+  gap: 14px;
+
+  ion-button {
+    margin-top: 4px;
+  }
+}

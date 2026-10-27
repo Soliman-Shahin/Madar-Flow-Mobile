@@ -40,4 +40,11 @@ export const routes: Routes = [
         (m) => m.NotificationPreferencesPage
       ),
   },
+  {
+    path: APP_ROUTES.SETTINGS.DELETE_ACCOUNT,
+    loadComponent: () =>
+      import('./delete-account/delete-account.page').then(
+        (m) => m.DeleteAccountPage
+      ),
+  },
 ];

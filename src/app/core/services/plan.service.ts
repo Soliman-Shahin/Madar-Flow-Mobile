@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -27,7 +28,9 @@ import { invalidateHttpCache } from '../interceptors/cache.interceptor';
 })
 export class PlanService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = Capacitor.isNativePlatform()
+    ? environment.nativeApiUrl
+    : environment.browserApiUrl;
 
   // State management
   private currentPlanSubject = new BehaviorSubject<MyPlanResponse | null>(null);

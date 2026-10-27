@@ -10,6 +10,7 @@ import { Observable, from, of } from 'rxjs';
 import { switchMap, mergeMap } from 'rxjs/operators';
 import { EncryptionAdvancedService } from '../services/encryption-advanced.service';
 import { environment } from 'src/environments/environment';
+import { Capacitor } from '@capacitor/core';
 
 const SENSITIVE_FIELDS = ['id', '_id'];
 
@@ -29,7 +30,10 @@ function shouldEncrypt(
   if (request.url.includes('assets/') || request.url.includes('/i18n/')) {
     return false;
   }
-  if (!request.url.startsWith(environment.apiUrl)) {
+  const apiUrl = Capacitor.isNativePlatform()
+    ? environment.nativeApiUrl
+    : environment.browserApiUrl;
+  if (!request.url.startsWith(apiUrl)) {
     return false;
   }
   if (request.url.includes('/health')) {

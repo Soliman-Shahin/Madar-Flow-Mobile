@@ -29,6 +29,7 @@ export const APP_ROUTES = {
     CONFLICTS: 'conflicts',
     BACKUP: 'backup',
     NOTIFICATION_PREFERENCES: 'notification-preferences',
+    DELETE_ACCOUNT: 'delete-account',
   },
   PROFILE: {
     INDEX: 'profile',

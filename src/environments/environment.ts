@@ -4,8 +4,14 @@
 
 export const environment = {
   production: false,
-  // apiUrl: 'http://localhost:3000/v1',
-  apiUrl: 'https://expenses-wallet.up.railway.app/v1',
+  // Browser REST calls stay same-origin and are routed by proxy.conf.js.
+  browserApiUrl: '/api/v1',
+  // Native Capacitor calls continue to use the absolute Backend URL.
+  nativeApiUrl: 'https://expenses-wallet.up.railway.app/v1',
+  // Non-REST connections (for example Socket.IO) use the absolute origin.
+  backendOrigin: 'https://expenses-wallet.up.railway.app',
+  /** @deprecated Use browserApiUrl, nativeApiUrl, or backendOrigin explicitly. */
+  apiUrl: '/api/v1',
 
   // Encryption settings
   // NOTE: Full payload encryption for login/signup requests
