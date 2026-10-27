@@ -1,347 +1,190 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-ion-card {
-  position: relative;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  margin: 12px 16px;
-  overflow: hidden;
+// Plan card — Calm Personal Ledger. One identity for every plan; the
+// current plan is outlined in the primary color, the popular one tagged.
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  }
+:host {
+  display: block;
+}
 
-  &.current-plan {
-    border: 1px solid var(--ion-color-primary);
-    background: linear-gradient(
-      135deg,
-      var(--ion-color-primary-tint) 0%,
-      var(--ion-background-color) 100%
-    );
-  }
+.mf-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-5) var(--mf-space-4) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: inset 0 0 0 1px var(--mf-separator);
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
 
-  &.popular-plan {
-    border-color: rgba(var(--ion-color-warning-rgb), 0.55);
+  &.mf-plan--current {
+    box-shadow: inset 0 0 0 2px var(--mf-primary);
   }
 }
 
-.plan-heading {
+.mf-plan__head {
   display: flex;
+  flex-wrap: wrap; // large text: the badge drops under the name
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--mf-space-3);
 }
-.plan-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 6px;
+
+.mf-plan__name {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: var(--mf-text-title-2);
+    font-weight: var(--mf-weight-semibold);
+    line-height: var(--mf-leading-snug);
+  }
+
+  p {
+    margin: var(--mf-space-1) 0 0;
+    font-size: var(--mf-text-footnote);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink-3);
+  }
 }
-.plan-badges ion-badge {
+
+.mf-plan__badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 8px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
-  white-space: normal;
-}
-.plan-badges ion-icon {
-  font-size: 13px;
-}
+  flex: 0 0 auto;
+  padding: 4px var(--mf-space-2);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface-sunken);
+  font-size: var(--mf-text-caption);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
 
-ion-card-header {
-  padding: 18px 16px 8px;
-
-  ion-card-title {
-    font-size: 23px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  ion-card-subtitle {
+  ion-icon {
     font-size: 14px;
-    opacity: 0.8;
-    line-height: 1.4;
-  }
-}
-
-ion-card-content {
-  padding: 10px 16px 16px;
-}
-
-.price-section {
-  text-align: center;
-  padding: 8px 0 12px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--ion-color-light);
-
-  .price {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 4px;
-
-    .currency {
-      font-size: 18px;
-      font-weight: 600;
-      opacity: 0.7;
-    }
-
-    .amount {
-      font-size: 34px;
-      font-weight: 800;
-      color: var(--ion-color-primary);
-    }
-
-    .period {
-      font-size: 14px;
-      opacity: 0.6;
-    }
-  }
-}
-
-.limits-section,
-.features-section {
-  margin-bottom: 14px;
-
-  h4 {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--ion-color-dark);
+    color: var(--mf-warning);
   }
 
-  ion-list {
-    background: transparent;
-    padding: 0;
-  }
-
-  ion-item {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --background: transparent;
-    margin-bottom: 8px;
+  &.mf-plan__badge--current {
+    background: var(--mf-primary-soft);
+    color: var(--mf-primary);
 
     ion-icon {
-      font-size: 20px;
-      margin-inline-end: 12px;
-    }
-
-    ion-label {
-      p {
-        font-size: 12px;
-        opacity: 0.6;
-        margin-bottom: 4px;
-      }
-
-      h3 {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--ion-color-primary);
-      }
+      color: var(--mf-primary);
     }
   }
 }
 
-.upgrade-button {
-  margin-top: 12px;
-  height: 48px;
-  font-weight: 700;
-  font-size: 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
-
-  &:hover:not([disabled]) {
-    transform: scale(1.02);
-  }
-
-  &[disabled] {
-    opacity: 0.6;
-  }
+.mf-plan__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--mf-space-2);
+  margin: 0;
 }
 
-// Dark mode adjustments
-@media (prefers-color-scheme: dark) {
-  ion-card {
-    &.current-plan {
-      background: linear-gradient(
-        135deg,
-        rgba(var(--ion-color-primary-rgb), 0.2) 0%,
-        var(--ion-background-color) 100%
-      );
-    }
-  }
-
-  .limits-section,
-  .features-section {
-    h4 {
-      color: var(--ion-color-light);
-    }
-  }
+.mf-plan__amount {
+  font-size: var(--mf-text-title-1);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
 }
 
-// Responsive
-@media (min-width: 768px) {
-  ion-card {
-    margin: 24px;
-  }
+.mf-plan__currency {
+  margin-inline-start: 0.25em;
+  font-size: 0.5em;
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-3);
 }
 
-ion-card-subtitle {
-  color: var(--ion-color-medium);
-  opacity: 0.9;
-  font-weight: 500;
+.mf-plan__period {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
 }
 
-.limits-info h4 {
-  opacity: 1;
+.mf-plan__label {
+  margin: var(--mf-space-2) 0 0;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
 }
 
-:host {
-  ion-card,
-  ion-card.current-plan,
-  ion-card.popular-plan {
-    background: var(--ion-item-background);
-    border: 1px solid var(--ew-wallet-line);
-    border-radius: 12px;
-    box-shadow: none;
-    transform: none;
+.mf-plan__limits {
+  margin: 0;
+
+  div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--mf-space-3);
+    padding-block: var(--mf-space-2);
+    border-top: 1px solid var(--mf-separator);
   }
-  ion-card.current-plan {
-    border-color: var(--ion-color-primary);
+
+  dt {
+    font-size: var(--mf-text-callout);
+    color: var(--mf-ink-2);
   }
-  ion-card-header {
-    padding: 24px 16px 8px;
-  }
-  ion-card-title {
-    font-size: 22px;
-  }
-  .price-section {
-    padding: 12px 0;
-    margin-bottom: 16px;
-    border-color: var(--ew-wallet-line);
-  }
-  .price {
-    direction: ltr;
-    unicode-bidi: isolate;
+
+  dd {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
     font-variant-numeric: tabular-nums;
-    flex-wrap: wrap;
-  }
-  .price-section .price .amount {
-    font-size: 32px;
-    color: var(--ion-text-color);
-  }
-  .limits-section h4,
-  .features-section h4 {
-    color: var(--ion-text-color);
-  }
-  .limits-section,
-  .features-section {
-    margin-bottom: 16px;
-  }
-  .upgrade-button {
-    box-shadow: none;
-    margin-top: 12px;
+    color: var(--mf-ink);
   }
 }
 
-// Compact plan comparison and readable secondary text in both themes.
-:host ion-card {
-  border-radius: 16px;
-}
-:host ion-card-header {
-  padding: 20px 16px 4px;
-}
-:host ion-card-header ion-card-title {
-  font-size: 22px;
-  margin-bottom: 4px;
-}
-:host ion-card-subtitle {
-  color: var(--ew-wallet-muted);
-  opacity: 1;
-  font-size: 13px;
-}
-:host ion-card-content {
-  padding: 12px 16px 16px;
-}
-:host .limits-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-:host .limit-cell {
-  min-height: 48px;
-  padding: 9px 10px;
-  border: 1px solid var(--ew-wallet-line);
-  border-radius: 10px;
+.mf-plan__features {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 4px;
-}
-:host .limit-cell ion-icon {
-  font-size: 16px;
-}
-:host .limit-cell span {
-  color: var(--ew-wallet-muted);
-  font-size: 11px;
-  line-height: 1.25;
-}
-:host .limit-cell strong {
-  color: var(--ion-text-color);
-  font-size: 16px;
-  font-variant-numeric: tabular-nums;
-}
-:host .price-section {
-  text-align: start;
-  padding: 4px 0 12px;
-  margin-bottom: 12px;
-}
-:host .price-section .price {
-  justify-content: flex-start;
-}
-:host .price-section .currency,
-:host .price-section .period {
-  opacity: 1;
-  color: var(--ew-wallet-muted);
-  font-size: 13px;
-}
-:host .limits-section ion-item {
-  --min-height: 44px;
-  margin-bottom: 0;
-}
-:host .limits-section ion-item ion-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-}
-:host .limits-section ion-item ion-label p,
-:host .features-section ion-item ion-label p {
-  opacity: 1;
-  color: var(--ew-wallet-muted);
-  line-height: 1.5;
+  gap: var(--mf-space-2);
   margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--mf-space-2);
+    font-size: var(--mf-text-callout);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink-2);
+
+    &::before {
+      content: "✓";
+      flex: 0 0 auto;
+      font-weight: var(--mf-weight-bold);
+      color: var(--mf-success);
+    }
+  }
+
+  .mf-plan__more {
+    color: var(--mf-ink-3);
+
+    &::before {
+      content: "";
+      width: 0.9em;
+    }
+  }
 }
-:host .limits-section ion-item ion-label h3 {
-  font-size: 16px;
-  font-variant-numeric: tabular-nums;
-  color: var(--ion-text-color);
-  flex-shrink: 0;
-  margin: 0;
-}
-:host .limits-section ion-icon {
-  display: none;
-}
-:host .limits-section h4,
-:host .features-section h4 {
-  font-size: 14px;
-  margin: 0 0 8px;
-}
-:host .upgrade-button:hover:not([disabled]) {
-  transform: none;
+
+ion-button.mf-plan__action {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  min-height: 52px;
+  margin: var(--mf-space-2) 0 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+
+  &.button-disabled {
+    opacity: 1;
+    --background: var(--mf-primary-soft);
+    --color: var(--mf-primary);
+  }
 }

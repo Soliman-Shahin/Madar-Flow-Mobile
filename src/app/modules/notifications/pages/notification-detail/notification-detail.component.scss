@@ -1,83 +1,84 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-.notification-detail-content {
-  --background: var(--ion-background-color);
-}
-.notification-detail-content::part(scroll) {
-  padding-bottom: var(--ew-core-bottom-clearance);
-}
-.notification-detail-card {
-  width: min(100%, 720px);
-  margin-inline: auto;
-}
-ion-card {
-  margin: 0;
-  border: 1px solid var(--ew-wallet-line);
-  border-radius: 20px;
-  box-shadow: 0 12px 30px
-    color-mix(in srgb, var(--ion-text-color) 7%, transparent);
-  background: var(--ion-item-background);
-}
-ion-card-title {
-  font-size: clamp(1.25rem, 5vw, 1.75rem);
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-.detail-type {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--ion-color-primary);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.detail-type.tone-success {
-  color: var(--ion-color-success);
-}
-.detail-type.tone-warning {
-  color: var(--ion-color-warning);
-}
-.detail-type.tone-error {
-  color: var(--ion-color-danger);
-}
-.detail-type ion-icon {
-  width: 34px;
-  height: 34px;
-  padding: 8px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--ion-color-primary) 12%, transparent);
-}
-.notification-detail-card ion-card-content p {
-  margin: 0;
-}
-ion-card-content {
-  font-size: 15px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  white-space: pre-line;
-}
-ion-card-subtitle {
-  color: var(--ew-wallet-muted);
-  margin-top: 8px;
-}
-.notification-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 32px;
-  color: var(--ew-wallet-muted);
+// Notification detail — Calm Personal Ledger.
+
+ion-content.mf-note-detail {
+  --background: var(--mf-bg);
+  --color: var(--mf-ink);
 }
 
-ion-text[role="alert"] {
-  display: block;
-  padding: 16px;
-  border-radius: 14px;
-  border-inline-start: 3px solid var(--ion-color-danger);
-  background: var(--ion-item-background);
-  line-height: 1.6;
+.mf-note-detail__body {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--mf-space-4) var(--mf-gutter)
+    calc(var(--mf-space-6) + var(--mf-tabbar-clearance));
+  font-family: var(--mf-font-sans);
+}
+
+.mf-note-detail__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-5) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+
+  ion-button {
+    align-self: stretch;
+    margin-top: var(--mf-space-2);
+  }
+}
+
+.mf-note-detail__kind {
+  --mf-kind: var(--mf-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+  padding: 4px var(--mf-space-3);
+  border-radius: var(--mf-radius-pill);
+  background: color-mix(in srgb, var(--mf-kind) 14%, var(--mf-surface));
+  color: color-mix(in srgb, var(--mf-kind) 85%, var(--mf-ink));
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  &.tone-success {
+    --mf-kind: var(--mf-success);
+  }
+
+  &.tone-warning {
+    --mf-kind: var(--mf-warning);
+  }
+
+  &.tone-error {
+    --mf-kind: var(--mf-danger);
+  }
+
+  &.tone-neutral {
+    --mf-kind: var(--mf-cat-8);
+  }
+}
+
+.mf-note-detail__title {
+  margin: 0;
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+  line-height: var(--mf-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.mf-note-detail__time {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.mf-note-detail__message {
+  margin: var(--mf-space-1) 0 0;
+  font-size: var(--mf-text-body);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }

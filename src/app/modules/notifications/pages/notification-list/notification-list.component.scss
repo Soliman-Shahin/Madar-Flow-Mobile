@@ -1,110 +1,140 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-ion-content {
-  --background: var(--ion-background-color);
+// Notification inbox — Calm Personal Ledger.
+// Same grammar as the transaction ledger: day groups, one surface per
+// group, a tinted mark per kind; unread = stronger title + a primary dot.
+
+ion-content.mf-inbox {
+  --background: var(--mf-bg);
+  --color: var(--mf-ink);
 }
-ion-refresher {
-  padding: 1rem;
+
+.mf-inbox__body {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--mf-space-2) var(--mf-gutter)
+    calc(var(--mf-space-6) + var(--mf-tabbar-clearance));
+  font-family: var(--mf-font-sans);
 }
-ion-list {
-  background: transparent;
-  padding: 1rem;
-}
-ion-item {
-  --background: var(--ion-item-background);
-  --border-color: var(--ew-wallet-line);
-  margin: 0 0 10px;
-  border: 1px solid color-mix(in srgb, var(--ion-text-color) 9%, transparent);
-  border-radius: 16px;
-  --padding-start: 14px;
-  --inner-padding-end: 12px;
-  min-height: 78px;
-  box-shadow: var(--ew-bold-shadow, 0 4px 14px rgba(0, 0, 0, 0.04));
-}
-ion-item.unread {
-  --background: color-mix(
-    in srgb,
-    var(--ion-color-primary) 8%,
-    var(--ion-item-background)
-  );
-}
-.notification-row.unread {
-  border-inline-start: 3px solid var(--ion-color-primary);
-}
-ion-label h2 {
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-ion-item > ion-icon {
-  width: 32px;
-  height: 32px;
-  padding: 7px;
-  border-radius: 11px 11px 11px 4px;
-  color: var(--ion-color-primary);
-  background: var(--ew-wallet-inset);
-}
-.tone-success > ion-icon {
-  color: var(--ion-color-success);
-}
-.tone-warning > ion-icon {
-  color: var(--ion-color-warning);
-}
-.tone-error > ion-icon {
-  color: var(--ion-color-danger);
-}
-.inbox-action-row {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 1rem;
-}
-.inbox-action-row ion-button {
-  --border-radius: 12px;
-  font-weight: 600;
-}
-.inbox-actions ion-button {
-  --border-radius: 12px;
-  font-weight: 600;
-}
-ion-label p {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  margin: 4px 0;
-}
-ion-label time {
-  color: var(--ew-wallet-muted);
-  font-size: 0.78rem;
-}
-ion-badge {
-  width: 9px;
-  height: 9px;
-  min-width: 9px;
-  border-radius: 50%;
-  padding: 0;
-}
-.state {
-  min-height: 45vh;
+
+.mf-inbox__skeleton {
   display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 12px;
-  padding: 32px;
-  color: var(--ew-wallet-muted);
-  text-align: center;
+  gap: var(--mf-space-2);
+  padding-top: var(--mf-space-4);
 }
-.notification-skeleton { display: grid; gap: 10px; padding: 0; }
-.notification-skeleton app-skeleton-block { display: block; }
-.group-heading {
-  padding: 0 1rem;
-  color: var(--ew-text-color-secondary);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+
+.mf-inbox__error {
+  margin: var(--mf-space-3) 0 0;
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+  font-size: var(--mf-text-footnote);
 }
-section:first-of-type .group-heading {
-  padding-top: 4px;
+
+.mf-inbox__day {
+  margin: 0;
+  padding: var(--mf-space-5) var(--mf-space-1) var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}
+
+ion-item.mf-note {
+  --min-height: 72px;
+  --border-color: var(--mf-separator);
+  --inner-border-width: 0 0 1px 0;
+  align-items: flex-start;
+
+  &:last-of-type {
+    --inner-border-width: 0;
+  }
+}
+
+.mf-note__mark {
+  --mf-note-tone: var(--mf-primary);
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  margin: var(--mf-space-3) var(--mf-space-3) 0 0;
+  margin-inline: 0 var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-note-tone) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-note-tone) 80%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.tone-success .mf-note__mark {
+  --mf-note-tone: var(--mf-success);
+}
+
+.tone-warning .mf-note__mark {
+  --mf-note-tone: var(--mf-warning);
+}
+
+.tone-error .mf-note__mark {
+  --mf-note-tone: var(--mf-danger);
+}
+
+.tone-neutral .mf-note__mark {
+  --mf-note-tone: var(--mf-cat-8);
+}
+
+.mf-note__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-block: var(--mf-space-3);
+}
+
+.mf-note__title {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink);
+  text-align: match-parent;
+  overflow-wrap: anywhere;
+}
+
+.mf-note__preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink-2);
+  text-align: match-parent;
+}
+
+.mf-note__time {
+  font-size: var(--mf-text-caption);
+  color: var(--mf-ink-3);
+}
+
+.mf-note--unread .mf-note__title {
+  font-weight: var(--mf-weight-semibold);
+}
+
+.mf-note__dot {
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  margin-inline-start: var(--mf-space-2);
+  border-radius: 50%;
+  background: var(--mf-primary);
+}
+
+.mf-empty ion-icon {
+  font-size: 28px;
+  color: var(--mf-ink-3);
 }

@@ -1,90 +1,147 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-.header-section {
-  margin: 8px 0 24px;
-  text-align: start;
+// Help & support — Calm Personal Ledger.
+
+ion-content.mf-help {
+  --background: var(--mf-bg);
+  --color: var(--mf-ink);
 }
-.header-section h2 {
-  font-size: 22px;
-  margin: 0 0 8px;
-  font-weight: 750;
+
+.mf-help__body {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--mf-space-4) var(--mf-gutter)
+    calc(var(--mf-space-8) + var(--mf-tabbar-clearance));
+  font-family: var(--mf-font-sans);
 }
-.header-section p,
-.contact-card p,
-.faq-answer p,
-.version-info {
-  font-size: 13px;
-  color: var(--ew-wallet-muted);
-  line-height: 1.6;
+
+.mf-help__intro {
+  h1 {
+    margin: 0 0 var(--mf-space-1);
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-bold);
+    line-height: var(--mf-leading-tight);
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-body);
+    color: var(--mf-ink-2);
+  }
 }
-.contact-grid {
-  display: grid;
-  margin-bottom: 24px;
-  border: 1px solid var(--ew-wallet-line);
-  border-radius: 12px;
+
+.mf-help__label {
+  margin: var(--mf-space-6) var(--mf-space-4) var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}
+
+ion-list.mf-help__group,
+ion-accordion-group.mf-help__faq {
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
 }
-.contact-card {
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 4px 12px;
-  padding: 14px;
-  text-align: start;
-  background: var(--ion-item-background);
-  color: var(--ion-text-color);
-  border: 0;
-  border-bottom: 1px solid var(--ew-wallet-line);
-  font: inherit;
+
+ion-item.mf-help__row,
+ion-item.mf-help__q {
+  --background: var(--mf-surface);
+  --color: var(--mf-ink);
+  --min-height: 56px;
+  --padding-start: var(--mf-space-4);
+  --inner-padding-end: var(--mf-space-4);
+  --border-color: var(--mf-separator);
+  --inner-border-width: 0 0 1px 0;
+  --detail-icon-color: var(--mf-ink-3);
+  --detail-icon-opacity: 1;
+  font-family: var(--mf-font-sans);
+
+  ion-label {
+    margin-block: var(--mf-space-3);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-regular);
+    color: var(--mf-ink);
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-3);
+    text-align: match-parent;
+  }
 }
-.contact-card:last-child {
+
+ion-list.mf-help__group ion-item.mf-help__row:last-of-type {
+  --inner-border-width: 0;
+}
+
+ion-item.mf-help__q ion-label {
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+}
+
+ion-accordion:last-of-type ion-item.mf-help__q {
+  --inner-border-width: 0;
+}
+
+ion-accordion.accordion-expanded ion-item.mf-help__q {
+  --inner-border-width: 0;
+}
+
+.mf-help__a {
+  padding: 0 var(--mf-space-4) var(--mf-space-4);
+  border-bottom: 1px solid var(--mf-separator);
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+    line-height: var(--mf-leading-body);
+    color: var(--mf-ink-2);
+  }
+}
+
+ion-accordion:last-of-type .mf-help__a {
   border-bottom: 0;
 }
-.icon-box {
-  grid-row: span 2;
-  align-self: center;
-  color: var(--ion-color-primary);
-  font-size: 22px;
+
+.mf-help__mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-inline-end: var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-h-tone, var(--mf-cat-8)) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(
+    in srgb,
+    var(--mf-h-tone, var(--mf-cat-8)) 80%,
+    var(--mf-ink)
+  );
+
+  ion-icon {
+    font-size: 18px;
+  }
 }
-.contact-card h3 {
-  font-size: 15px;
-  margin: 0;
-}
-.contact-card p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-.section-title h3 {
-  font-size: 16px;
-  margin: 20px 0 12px;
-}
-ion-accordion-group,
-.legal-section {
-  display: block;
-  border: 1px solid var(--ew-wallet-line);
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--ion-item-background);
-  margin-bottom: 20px;
-}
-ion-item {
-  --background: var(--ion-item-background);
-  --min-height: 54px;
-  --border-color: var(--ew-wallet-line);
-  font-size: 14px;
-}
-.faq-answer {
-  background: var(--ew-wallet-inset);
-}
-.faq-answer p {
-  margin: 0;
-}
-.legal-list {
-  padding: 0;
-}
-.version-info {
-  padding: 16px;
+
+.mf-help__about {
+  padding: var(--mf-space-8) 0 var(--mf-space-2);
   text-align: center;
-}
-.version-info p {
-  margin: 0;
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-caption);
+    line-height: var(--mf-leading-body);
+    color: var(--mf-ink-3);
+  }
 }

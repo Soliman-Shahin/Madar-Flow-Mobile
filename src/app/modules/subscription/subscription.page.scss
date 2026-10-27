@@ -10,17 +10,6 @@ ion-header {
     }
   }
 
-  ion-segment {
-    --background: transparent;
-    padding: 8px 16px;
-
-    ion-segment-button {
-      --indicator-color: var(--ion-color-primary);
-      --color-checked: var(--ion-color-primary);
-      font-weight: 600;
-      text-transform: none;
-    }
-  }
 }
 
 ion-content {
@@ -238,4 +227,87 @@ ion-content {
     height: auto;
     min-height: 180px;
   }
+}
+
+// ===================================================================
+//  Calm Personal Ledger — subscription
+// ===================================================================
+ion-header.mf-sub-tabs ion-toolbar.mf-sub-tabs__bar {
+  --padding-start: var(--mf-gutter);
+  --padding-end: var(--mf-gutter);
+  --padding-bottom: var(--mf-space-2);
+}
+
+ion-segment.mf-sub-tabs__segment {
+  width: 100%;
+  --background: var(--mf-surface-sunken);
+  border-radius: var(--mf-radius-md);
+  padding: 3px;
+
+  ion-segment-button {
+    --color: var(--mf-ink-2);
+    --color-checked: var(--mf-ink);
+    --indicator-color: var(--mf-surface);
+    --indicator-box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+    min-height: 36px;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+ion-content.mf-sub {
+  --background: var(--mf-bg);
+}
+
+.plans-container,
+.usage-container {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--mf-space-4) var(--mf-gutter)
+    calc(var(--mf-space-8) + var(--mf-tabbar-clearance));
+}
+
+.mf-sub__intro {
+  margin: 0 var(--mf-space-1) var(--mf-space-4);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+}
+
+.mf-sub__alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-3);
+  margin-bottom: var(--mf-space-4);
+  padding: var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-danger-soft);
+  font-family: var(--mf-font-sans);
+  color: var(--mf-danger);
+
+  ion-icon {
+    flex: 0 0 auto;
+    font-size: 22px;
+  }
+
+  h3 {
+    margin: 0 0 2px;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-2);
+  }
+}
+
+.plans-grid {
+  display: grid;
+  gap: var(--mf-space-4);
 }

@@ -1,10 +1,11 @@
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
+  inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -33,58 +34,59 @@ export function shouldOpenSyncConflict(notification: AppNotification): boolean {
   standalone: true,
   imports: [CommonModule, IonicModule, TranslateModule, SkeletonBlockComponent],
   template: `
-    <ion-header>
+    <ion-header mode="ios" class="mf-sub-header" translucent="false">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button defaultHref="/home"></ion-back-button>
+          <ion-back-button
+            defaultHref="/notifications"
+            [text]="''"
+            [attr.aria-label]="'COMMON.BACK' | translate"
+          ></ion-back-button>
         </ion-buttons>
         <ion-title>{{ 'MOBILE_UI.NOTIFICATION' | translate }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding notification-detail-content">
-      <div
-        *ngIf="loading"
-        role="status"
-        aria-busy="true"
-        [attr.aria-label]="'COMMON.LOADING' | translate"
-        class="notification-loading"
-      >
-        <app-skeleton-block variant="detail"></app-skeleton-block>
-      </div>
-      <ion-card class="notification-detail-card" *ngIf="notification as item">
-        <ion-card-header>
-          <div
-            class="detail-type"
-            [class]="'detail-type tone-' + typePresentation(item.type).tone"
+    <ion-content class="mf-note-detail">
+      <div class="mf-note-detail__body">
+        <div
+          *ngIf="loading"
+          role="status"
+          aria-busy="true"
+          [attr.aria-label]="'COMMON.LOADING' | translate"
+        >
+          <app-skeleton-block variant="detail"></app-skeleton-block>
+        </div>
+        <article class="mf-note-detail__card" *ngIf="notification as item">
+          <span
+            [class]="
+              'mf-note-detail__kind tone-' + typePresentation(item.type).tone
+            "
           >
             <ion-icon
               [name]="typePresentation(item.type).icon"
               aria-hidden="true"
-            ></ion-icon
-            ><span>{{ typePresentation(item.type).labelKey | translate }}</span>
-          </div>
-          <ion-card-title dir="auto">{{ item.title }}</ion-card-title>
-          <ion-card-subtitle
-            ><bdi>{{
-              item.createdAt | date : 'medium'
-            }}</bdi></ion-card-subtitle
+            ></ion-icon>
+            {{ typePresentation(item.type).labelKey | translate }}
+          </span>
+          <h1 class="mf-note-detail__title" dir="auto">{{ item.title }}</h1>
+          <time class="mf-note-detail__time"
+            ><bdi>{{ formatDate(item.createdAt) }}</bdi></time
           >
-        </ion-card-header>
-        <ion-card-content>
-          <p dir="auto">{{ item.message }}</p>
-        </ion-card-content>
-        <ion-button
-          *ngIf="canReviewSyncConflict(item)"
-          expand="block"
-          fill="solid"
-          (click)="reviewSyncConflict(item)"
-        >
-          {{ 'SYNC.REVIEW_CONFLICT' | translate }}
-        </ion-button>
-      </ion-card>
-      <ion-text color="danger" role="alert" *ngIf="error">{{
-        error | translate
-      }}</ion-text>
+          <p class="mf-note-detail__message" dir="auto">{{ item.message }}</p>
+          <ion-button
+            *ngIf="canReviewSyncConflict(item)"
+            expand="block"
+            class="mf-auth__primary"
+            (click)="reviewSyncConflict(item)"
+          >
+            {{ 'SYNC.REVIEW_CONFLICT' | translate }}
+          </ion-button>
+        </article>
+        <p class="mf-auth__error" role="alert" *ngIf="error">
+          <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+          <span>{{ error | translate }}</span>
+        </p>
+      </div>
     </ion-content>
   `,
   styleUrls: ['./notification-detail.component.scss'],
@@ -95,6 +97,19 @@ export class NotificationDetailComponent implements OnInit {
   loading = true;
   error = '';
   typePresentation = notificationTypePresentation;
+  private readonly translateSvc = inject(TranslateService);
+
+  /** Full date and time in the current language, Western digits. */
+  formatDate(value: string | undefined): string {
+    if (!value) return '';
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat(this.translateSvc.currentLang || 'en', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      numberingSystem: 'latn',
+    }).format(date);
+  }
 
   constructor(
     private route: ActivatedRoute,

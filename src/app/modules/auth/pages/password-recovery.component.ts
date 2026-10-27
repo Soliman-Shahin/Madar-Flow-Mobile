@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import {
   FormControl,
   FormGroup,
@@ -24,13 +23,7 @@ const same = (control: AbstractControl): ValidationErrors | null =>
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [
-    IonicModule,
-    ReactiveFormsModule,
-    RouterLink,
-    TranslateModule,
-    AsyncPipe,
-  ],
+  imports: [IonicModule, ReactiveFormsModule, RouterLink, TranslateModule],
   template: `<ion-content class="mf-auth-content">
     <main class="mf-auth">
       <div class="mf-auth__top">
@@ -56,7 +49,11 @@ const same = (control: AbstractControl): ValidationErrors | null =>
           'AUTH.EMAIL' | translate
         }}</label>
         <ion-item lines="none" class="form-input-item">
-          <ion-icon slot="start" name="mail-outline" aria-hidden="true"></ion-icon>
+          <ion-icon
+            slot="start"
+            name="mail-outline"
+            aria-hidden="true"
+          ></ion-icon>
           <ion-input
             id="recovery-email"
             type="email"
@@ -157,7 +154,11 @@ export class ForgotPasswordComponent {
           'AUTH.NEW_PASSWORD' | translate
         }}</label>
         <ion-item lines="none" class="form-input-item">
-          <ion-icon slot="start" name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <ion-icon
+            slot="start"
+            name="lock-closed-outline"
+            aria-hidden="true"
+          ></ion-icon>
           <ion-input
             id="reset-password"
             type="password"
@@ -170,7 +171,11 @@ export class ForgotPasswordComponent {
           'AUTH.CONFIRM_PASSWORD' | translate
         }}</label>
         <ion-item lines="none" class="form-input-item">
-          <ion-icon slot="start" name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+          <ion-icon
+            slot="start"
+            name="shield-checkmark-outline"
+            aria-hidden="true"
+          ></ion-icon>
           <ion-input
             id="reset-confirm"
             type="password"

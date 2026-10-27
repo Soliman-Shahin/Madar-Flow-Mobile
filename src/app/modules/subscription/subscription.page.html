@@ -1,20 +1,24 @@
-<ion-header [translucent]="true">
+<ion-header mode="ios" class="mf-sub-header mf-sub-tabs" translucent="false">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button
-        class="modern-back-btn"
         [attr.aria-label]="'COMMON.BACK' | translate"
         (click)="goBack()"
       >
-        <ion-icon name="arrow-back"></ion-icon>
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ 'SUBSCRIPTION.TITLE' | translate }}</ion-title>
   </ion-toolbar>
 
   <!-- Segment -->
-  <ion-toolbar>
-    <ion-segment [value]="selectedSegment" (ionChange)="segmentChanged($event)">
+  <ion-toolbar class="mf-sub-tabs__bar">
+    <ion-segment
+      mode="ios"
+      class="mf-sub-tabs__segment"
+      [value]="selectedSegment"
+      (ionChange)="segmentChanged($event)"
+    >
       <ion-segment-button value="plans">
         <ion-label>{{ 'SUBSCRIPTION.TITLE' | translate }}</ion-label>
       </ion-segment-button>
@@ -25,48 +29,53 @@
   </ion-toolbar>
 </ion-header>
 
-<div
-  class="content-loading-state"
-  *ngIf="isLoading"
-  role="status"
-  aria-busy="true"
-  [attr.aria-label]="'COMMON.LOADING' | translate"
->
-  <app-skeleton-block variant="title"></app-skeleton-block>
-  <div class="content-loading-cards">
-    <app-skeleton-block variant="card-md"></app-skeleton-block
-    ><app-skeleton-block variant="card-md"></app-skeleton-block>
-  </div>
-</div>
+<ion-content [fullscreen]="true" class="mf-sub">
 
-<ion-content [fullscreen]="true">
+  <div
+
+    class="content-loading-state"
+
+    *ngIf="isLoading"
+
+    role="status"
+
+    aria-busy="true"
+
+    [attr.aria-label]="'COMMON.LOADING' | translate"
+
+  >
+
+    <app-skeleton-block variant="title"></app-skeleton-block>
+
+    <div class="content-loading-cards">
+
+      <app-skeleton-block variant="card-md"></app-skeleton-block
+
+      ><app-skeleton-block variant="card-md"></app-skeleton-block>
+
+    </div>
+
+  </div>
   <!-- Plans Tab -->
   <div
     class="plans-container"
     *ngIf="selectedSegment === 'plans' && !isLoading"
   >
     <!-- Header -->
-    <div class="header-section">
-      <h1>{{ 'SUBSCRIPTION.TITLE' | translate }}</h1>
-      <p>{{ 'SUBSCRIPTION.SUBTITLE' | translate }}</p>
-    </div>
+    <p class="mf-sub__intro">{{ 'SUBSCRIPTION.SUBTITLE' | translate }}</p>
 
     <!-- Alert for expired plan -->
-    <ion-card
-      class="alert-card"
+    <div
+      class="mf-sub__alert"
+      role="alert"
       *ngIf="currentPlan?.context?.isExpired"
-      color="danger"
     >
-      <ion-card-content>
-        <div class="alert-content">
-          <ion-icon name="alert-circle"></ion-icon>
-          <div>
-            <h3>{{ 'SUBSCRIPTION.PLAN_EXPIRED' | translate }}</h3>
-            <p>{{ 'SUBSCRIPTION.LIMIT_REACHED_MSG' | translate }}</p>
-          </div>
-        </div>
-      </ion-card-content>
-    </ion-card>
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <div>
+        <h3>{{ 'SUBSCRIPTION.PLAN_EXPIRED' | translate }}</h3>
+        <p>{{ 'SUBSCRIPTION.LIMIT_REACHED_MSG' | translate }}</p>
+      </div>
+    </div>
 
     <!-- Plans Grid -->
     <div class="plans-grid">

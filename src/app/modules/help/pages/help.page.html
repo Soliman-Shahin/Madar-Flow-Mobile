@@ -1,5 +1,5 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="transparent-toolbar">
+<ion-header mode="ios" class="mf-sub-header" translucent="false">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -7,81 +7,130 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding help-content">
-  <div class="header-section">
-    <h2>{{ "HELP_PAGE.SUPPORT_CENTER" | translate }}</h2>
-    <p>{{ "HELP_PAGE.SUPPORT_SUBTITLE" | translate }}</p>
-  </div>
+<ion-content class="mf-help">
+  <div class="mf-help__body">
+    <header class="mf-help__intro">
+      <h1>{{ "HELP_PAGE.SUPPORT_CENTER" | translate }}</h1>
+      <p>{{ "HELP_PAGE.SUPPORT_SUBTITLE" | translate }}</p>
+    </header>
 
-  <!-- Contact Cards -->
-  <div class="contact-grid">
-    <button type="button" class="contact-card email" (click)="openEmail()">
-      <div class="icon-box">
-        <ion-icon name="mail-outline"></ion-icon>
-      </div>
-      <h3>{{ "HELP_PAGE.EMAIL" | translate }}</h3>
-      <p dir="ltr">support&#64;expenses-wallet.com</p>
-    </button>
+    <!-- Contact -->
+    <h2 class="mf-help__label">{{ "LEDGER.CONTACT" | translate }}</h2>
+    <ion-list class="mf-help__group" lines="none">
+      <ion-item button detail="true" (click)="openEmail()" class="mf-help__row">
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-1)"
+          aria-hidden="true"
+        >
+          <ion-icon name="mail-outline"></ion-icon>
+        </span>
+        <ion-label>
+          <h3>{{ "HELP_PAGE.EMAIL" | translate }}</h3>
+          <p dir="ltr">support&#64;expenses-wallet.com</p>
+        </ion-label>
+      </ion-item>
+      <ion-item
+        button
+        detail="true"
+        (click)="openWhatsApp()"
+        class="mf-help__row"
+      >
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-2)"
+          aria-hidden="true"
+        >
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </span>
+        <ion-label>
+          <h3>{{ "HELP_PAGE.WHATSAPP" | translate }}</h3>
+          <p>{{ "HELP_PAGE.REPLY_FAST" | translate }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item
+        button
+        detail="true"
+        (click)="openWebsite()"
+        class="mf-help__row"
+      >
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-6)"
+          aria-hidden="true"
+        >
+          <ion-icon name="globe-outline"></ion-icon>
+        </span>
+        <ion-label>
+          <h3>{{ "HELP_PAGE.WEBSITE" | translate }}</h3>
+          <p dir="ltr">www.expenses-wallet.com</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
 
-    <button
-      type="button"
-      class="contact-card whatsapp"
-      (click)="openWhatsApp()"
-    >
-      <div class="icon-box">
-        <ion-icon name="logo-whatsapp"></ion-icon>
-      </div>
-      <h3>{{ "HELP_PAGE.WHATSAPP" | translate }}</h3>
-      <p>{{ "HELP_PAGE.REPLY_FAST" | translate }}</p>
-    </button>
-
-    <button type="button" class="contact-card website" (click)="openWebsite()">
-      <div class="icon-box">
-        <ion-icon name="globe-outline"></ion-icon>
-      </div>
-      <h3>{{ "HELP_PAGE.WEBSITE" | translate }}</h3>
-      <p dir="ltr">www.expenses-wallet.com</p>
-    </button>
-  </div>
-
-  <!-- FAQ Section -->
-  <div class="faq-section">
-    <div class="section-title">
-      <h3>{{ "HELP_PAGE.FAQ_TITLE" | translate }}</h3>
-    </div>
-
-    <ion-accordion-group>
+    <!-- FAQ -->
+    <h2 class="mf-help__label">{{ "HELP_PAGE.FAQ_TITLE" | translate }}</h2>
+    <ion-accordion-group class="mf-help__faq">
       @for (faq of faqs; track faq; let i = $index) {
       <ion-accordion [value]="'faq-' + i">
-        <ion-item slot="header">
+        <ion-item slot="header" lines="none" class="mf-help__q">
           <ion-label class="ion-text-wrap"
             >{{ faq.question | translate }}</ion-label
           >
         </ion-item>
-        <div class="ion-padding faq-answer" slot="content">
+        <div class="mf-help__a" slot="content">
           <p>{{ faq.answer | translate }}</p>
         </div>
       </ion-accordion>
       }
     </ion-accordion-group>
-  </div>
 
-  <!-- Legal & Version -->
-  <div class="legal-section">
-    <ion-list lines="none" class="legal-list">
-      <ion-item button detail="true" routerLink="/legal/terms">
-        <ion-icon name="document-text-outline" slot="start"></ion-icon>
-        <ion-label>{{ "HELP_PAGE.TERMS" | translate }}</ion-label>
+    <!-- Legal -->
+    <h2 class="mf-help__label">{{ "LEDGER.LEGAL" | translate }}</h2>
+    <ion-list class="mf-help__group" lines="none">
+      <ion-item
+        button
+        detail="true"
+        routerLink="/legal/terms"
+        class="mf-help__row"
+      >
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-8)"
+          aria-hidden="true"
+        >
+          <ion-icon name="document-text-outline"></ion-icon>
+        </span>
+        <ion-label><h3>{{ "HELP_PAGE.TERMS" | translate }}</h3></ion-label>
       </ion-item>
-      <ion-item button detail="true" routerLink="/legal/privacy">
-        <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
-        <ion-label>{{ "HELP_PAGE.PRIVACY" | translate }}</ion-label>
+      <ion-item
+        button
+        detail="true"
+        routerLink="/legal/privacy"
+        class="mf-help__row"
+      >
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-8)"
+          aria-hidden="true"
+        >
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+        </span>
+        <ion-label><h3>{{ "HELP_PAGE.PRIVACY" | translate }}</h3></ion-label>
       </ion-item>
     </ion-list>
 
-    <div class="version-info">
-      <p>{{ "VERSION" | translate }} 1.0.0</p>
-      <p class="copyright">© 2026 {{ brand.productName }}</p>
-    </div>
+    <footer class="mf-help__about">
+      <p>
+        {{ brand.productName }} · {{ "SETTINGS.VERSION" | translate }}
+        <bdi>1.0.0</bdi>
+      </p>
+      <p>© 2026 {{ brand.companyName }}</p>
+    </footer>
   </div>
 </ion-content>

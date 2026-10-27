@@ -456,3 +456,31 @@ ion-card-subtitle {
     font-size: 15px;
   }
 }
+
+// ===================================================================
+//  Calm Personal Ledger — usage
+// ===================================================================
+ion-card {
+  margin: 0 0 var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: none !important;
+  font-family: var(--mf-font-sans);
+}
+
+ion-card-title {
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--mf-ink);
+}
+
+ion-card-subtitle {
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mf-ink-3);
+}
