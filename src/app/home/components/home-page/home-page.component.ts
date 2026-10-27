@@ -754,7 +754,6 @@ export class HomePageComponent
         component: ExpenseFormComponent,
         ...ledgerFormSheet(),
         componentProps: { expense, onClose: () => modal.dismiss() },
-        backdropDismiss: false,
       });
 
       await modal.present();
