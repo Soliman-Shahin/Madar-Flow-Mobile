@@ -330,7 +330,6 @@ export class SignupComponent extends BaseComponent implements OnInit {
 
           const errorMessage = this.translateService.instant(errorKey);
           this.errorMessage.next(errorMessage);
-          this.toastService.presentErrorToast('bottom', errorMessage);
         },
       });
   }
