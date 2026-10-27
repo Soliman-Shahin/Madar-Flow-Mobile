@@ -1,40 +1,34 @@
-// Scoped to remaining consumer screens; approved M.1 components do not import this.
+// Secondary consumer screens (settings, profile, auth, subscription,
+// notifications, help…). Since the Calm Personal Ledger redesign these mixins
+// bridge the legacy --ion-*/--ew-* names to the --mf-* tokens, so every
+// screen that includes them shares one identity in light and dark.
 @mixin palette {
-  --ion-background-color: #f2f5fa;
-  --ion-background-color-rgb: 242, 245, 250;
-  --ion-item-background: #fff;
-  --ion-card-background: #fff;
-  --ion-text-color: #142440;
-  --ion-text-color-rgb: 20, 36, 64;
-  --ion-color-primary: #2855e8;
-  --ion-color-primary-rgb: 40, 85, 232;
-  --ion-color-primary-contrast: #fff;
-  --ion-color-primary-shade: #234bcc;
-  --ion-color-primary-tint: #3e66ea;
-  --ew-wallet-muted: #5d6c83;
-  --ew-wallet-line: #e0e7f1;
-  --ew-wallet-inset: #e8eef9;
-  --ew-text-color-primary: var(--ion-text-color);
-  --ew-text-color-secondary: var(--ew-wallet-muted);
-  --ew-text-color-muted: var(--ew-wallet-muted);
-  --ew-bold-shadow: 0 8px 26px #14244009;
+  --ion-background-color: var(--mf-bg);
+  --ion-background-color-rgb: 246, 247, 249;
+  --ion-item-background: var(--mf-surface);
+  --ion-card-background: var(--mf-surface);
+  --ion-text-color: var(--mf-ink);
+  --ion-text-color-rgb: 16, 24, 40;
+  --ion-color-primary: var(--mf-primary);
+  --ion-color-primary-rgb: 31, 79, 209;
+  --ion-color-primary-contrast: var(--mf-primary-contrast);
+  --ion-color-primary-shade: #1b46b8;
+  --ion-color-primary-tint: #3561d6;
+  --ew-wallet-muted: var(--mf-ink-3);
+  --ew-wallet-line: var(--mf-separator);
+  --ew-wallet-inset: var(--mf-surface-sunken);
+  --ew-text-color-primary: var(--mf-ink);
+  --ew-text-color-secondary: var(--mf-ink-2);
+  --ew-text-color-muted: var(--mf-ink-3);
+  --ew-bold-shadow: none;
+  font-family: var(--mf-font-sans);
 }
 @mixin dark-palette {
-  --ion-background-color: #0b1425;
-  --ion-background-color-rgb: 11, 20, 37;
-  --ion-item-background: #142139;
-  --ion-card-background: #142139;
-  --ion-text-color: #eef3ff;
-  --ion-text-color-rgb: 238, 243, 255;
-  --ion-color-primary: #1374e2;
-  --ion-color-primary-rgb: 19, 116, 226;
-  --ion-color-primary-contrast: #fff;
-  --ion-color-primary-shade: #7390e0;
-  --ion-color-primary-tint: #8fadff;
-  --ew-wallet-muted: #a6b6d1;
-  --ew-wallet-line: #263650;
-  --ew-wallet-inset: #1c2d49;
-  --ew-bold-shadow: 0 8px 26px #00000020;
+  --ion-background-color-rgb: 11, 17, 28;
+  --ion-text-color-rgb: 238, 242, 248;
+  --ion-color-primary-rgb: 126, 162, 255;
+  --ion-color-primary-shade: #6f8fe0;
+  --ion-color-primary-tint: #8baeff;
 }
 @mixin page {
   :host {
@@ -73,6 +67,13 @@
     padding: 10px 16px !important;
     min-width: 0;
   }
+  // Pages with a back button use a compact, centered title.
+  :host ion-toolbar:has(ion-buttons[slot="start"]) ion-title {
+    font-size: var(--mf-text-headline) !important;
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-align: center;
+  }
   :host ion-select::part(icon) {
     position: static;
     inset: auto;
@@ -103,14 +104,21 @@
     --border-color: var(--ew-wallet-line);
   }
   ion-title {
-    font-size: 24px;
-    font-weight: 700;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-bold);
+    letter-spacing: -0.01em;
     text-align: start;
+    color: var(--mf-ink);
   }
   ion-button {
-    --border-radius: 12px;
+    --border-radius: var(--mf-radius-md);
     --box-shadow: none;
-    min-height: 44px;
+    min-height: 48px;
+    font-family: var(--mf-font-sans);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
   }
   ion-button.button-disabled {
     opacity: 1;
@@ -119,6 +127,12 @@
     --border-color: var(--ew-wallet-line);
     --border-width: 1px;
     --border-style: solid;
+  }
+  // A disabled colored button (e.g. color="danger") must look disabled too.
+  ion-button.button-disabled.ion-color {
+    opacity: 1;
+    --ion-color-base: var(--mf-surface-sunken) !important;
+    --ion-color-contrast: var(--mf-ink-3) !important;
   }
   ion-select,
   ion-toggle {
@@ -176,7 +190,7 @@
     line-height: 1.5;
   }
   :is(button, a, [tabindex]):focus-visible {
-    outline: 2px solid var(--ion-color-primary);
+    outline: 2px solid var(--mf-focus-ring);
     outline-offset: 3px;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -190,113 +204,159 @@
 }
 @mixin settings {
   @include page;
-  ion-toggle {
-    --track-background: var(--ew-wallet-line);
-    --track-background-checked: var(--ion-color-primary);
-    --handle-background-checked: var(--ion-color-primary-contrast);
-    flex-shrink: 0;
-  }
-  ion-item:has(ion-label[color="danger"]) .icon-wrapper {
-    color: var(--ion-color-danger);
-    background: rgba(var(--ion-color-danger-rgb), 0.1);
-  }
-  :host-context([dir="rtl"]) .icon-wrapper {
-    border-radius: 11px 11px 4px 11px;
-  }
-  @media (max-width: 360px) {
-    .settings-container {
-      padding-inline: 12px;
-    }
-    .premium-list ion-item {
-      --padding-start: 10px;
-      --inner-padding-end: 10px;
-    }
-    .icon-wrapper {
-      margin-inline-end: 8px;
-      width: 30px;
-    }
-    .modern-select {
-      max-width: 48%;
-      margin-inline-start: 6px;
-    }
-  }
+
+  // --- Header -------------------------------------------------------------
   .settings-header {
-    background: var(--ion-background-color);
+    background: var(--mf-bg);
     backdrop-filter: none;
+    border-bottom: 1px solid var(--mf-separator);
   }
   .settings-header ion-toolbar {
-    --background: var(--ion-background-color);
+    --background: var(--mf-bg);
     --border-width: 0;
   }
+
+  // --- Layout ---------------------------------------------------------------
   .settings-container {
-    padding: 12px 16px 20px;
     max-width: 640px;
     margin-inline: auto;
+    padding: var(--mf-space-2) var(--mf-gutter) var(--mf-space-6);
   }
   .section-label {
-    margin: 20px 4px 8px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ion-text-color);
+    margin: var(--mf-space-6) var(--mf-space-4) var(--mf-space-2);
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-semibold);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink-2);
   }
+  .section-note {
+    margin: var(--mf-space-2) var(--mf-space-4) 0;
+    font-size: var(--mf-text-footnote);
+    line-height: var(--mf-leading-body);
+    color: var(--mf-ink-3);
+  }
+
+  // --- Grouped list (one surface, inset separators) ------------------------
   .premium-list {
-    margin: 0 0 16px;
+    margin: 0;
     padding: 0;
-    border-radius: 16px;
-    background: var(--ion-item-background);
-    border: 1px solid var(--ew-wallet-line);
-    box-shadow: var(--ew-bold-shadow);
+    border: 0;
+    border-radius: var(--mf-radius-lg);
+    background: var(--mf-surface);
+    box-shadow: none;
     overflow: hidden;
   }
   .premium-list ion-item {
-    --background: transparent;
-    --min-height: 64px;
-    --padding-start: 12px;
-    --inner-padding-end: 12px;
-    border-bottom: 1px solid var(--ew-wallet-line);
-  }
-  .premium-list ion-item:last-child {
+    --background: var(--mf-surface);
+    --background-activated: var(--mf-ink);
+    --background-activated-opacity: 0.06;
+    --color: var(--mf-ink);
+    --min-height: 56px;
+    --padding-start: var(--mf-space-4);
+    --inner-padding-end: var(--mf-space-4);
+    --border-color: var(--mf-separator);
+    --inner-border-width: 0 0 1px 0;
+    --border-width: 0;
+    --detail-icon-color: var(--mf-ink-3);
+    --detail-icon-opacity: 1;
     border-bottom: 0;
+    font-family: var(--mf-font-sans);
   }
+  .premium-list ion-item:last-of-type {
+    --inner-border-width: 0;
+  }
+  .premium-list ion-label {
+    margin-block: var(--mf-space-3);
+  }
+  .premium-list h2,
   .premium-list h3 {
-    font-size: 14px;
-    font-weight: 600;
     margin: 0;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-regular);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink);
   }
   .premium-list p {
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--ew-wallet-muted);
-    margin-top: 4px;
+    margin: 2px 0 0;
+    font-size: var(--mf-text-footnote);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink-3);
   }
+  .premium-list ion-label[color="danger"] h3,
+  .premium-list ion-label[color="danger"] h2 {
+    color: var(--mf-danger);
+  }
+
+  // Icon mark: a small tinted square, the hue says what kind of setting it is.
   .icon-wrapper {
-    width: 34px;
-    height: 38px;
+    --mf-tone: var(--mf-cat-8);
     display: grid;
     place-items: center;
-    border-radius: 11px 11px 11px 4px;
-    background: var(--ew-wallet-inset);
-    color: var(--ion-color-primary);
-    margin-inline-end: 12px;
+    width: 32px;
+    height: 32px;
+    margin-inline-end: var(--mf-space-3);
+    border-radius: var(--mf-radius-sm);
+    background: color-mix(
+      in srgb,
+      var(--mf-tone) var(--mf-cat-soft-mix),
+      var(--mf-surface)
+    );
+    color: color-mix(in srgb, var(--mf-tone) 80%, var(--mf-ink));
   }
   .icon-wrapper ion-icon {
     font-size: 18px;
   }
+  .icon-wrapper.color-blue {
+    --mf-tone: var(--mf-cat-1);
+  }
+  .icon-wrapper.color-green {
+    --mf-tone: var(--mf-cat-2);
+  }
+  .icon-wrapper.color-orange {
+    --mf-tone: var(--mf-cat-3);
+  }
+  .icon-wrapper.color-purple,
+  .icon-wrapper.color-indigo {
+    --mf-tone: var(--mf-cat-4);
+  }
+  .icon-wrapper.color-red {
+    --mf-tone: var(--mf-cat-5);
+  }
+  .icon-wrapper.color-cyan {
+    --mf-tone: var(--mf-cat-6);
+  }
+  .icon-wrapper.color-dark {
+    --mf-tone: var(--mf-cat-8);
+  }
+  ion-item:has(ion-label[color="danger"]) .icon-wrapper {
+    --mf-tone: var(--mf-danger);
+  }
+
+  // --- Controls ---------------------------------------------------------------
+  ion-toggle {
+    --track-background: var(--mf-outline);
+    --track-background-checked: var(--mf-primary);
+    --handle-background: #fff;
+    --handle-background-checked: #fff;
+    flex-shrink: 0;
+    padding-inline-start: var(--mf-space-3);
+  }
   .modern-select {
     width: auto;
-    max-width: 45%;
-    color: var(--ion-text-color);
-    font-size: 13px;
+    max-width: 50%;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+    color: var(--mf-ink-3);
   }
   .right-align-input {
-    max-width: 100px;
+    max-width: 120px;
     direction: ltr;
     text-align: end;
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums lining-nums;
   }
   .action-buttons-container {
     display: grid;
-    gap: 8px;
-    padding: 8px 0;
+    gap: var(--mf-space-2);
+    padding: var(--mf-space-2) 0;
   }
 }

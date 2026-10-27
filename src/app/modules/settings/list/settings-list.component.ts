@@ -36,6 +36,33 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
 
   currentUser: User | null = null;
   profile: UserProfile | null = null;
+
+  get displayName(): string {
+    return (
+      this.profile?.username ||
+      this.currentUser?.username ||
+      this.translateService.instant('MOBILE_UI.ACCOUNT')
+    );
+  }
+
+  get displayEmail(): string {
+    return this.profile?.email || this.currentUser?.email || '';
+  }
+
+  /** One or two letters for the avatar fallback. */
+  get initials(): string {
+    const source = (
+      this.profile?.username ||
+      this.currentUser?.username ||
+      this.displayEmail ||
+      ''
+    ).trim();
+    if (!source) return '';
+    const words = source.split(/[s@._-]+/).filter(Boolean);
+    const letters =
+      words.length > 1 ? words[0][0] + words[1][0] : source.slice(0, 1);
+    return letters.toUpperCase();
+  }
   avatarFailed = false;
 
   languages = [
@@ -54,7 +81,9 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
   private pushNotificationService = inject(PushNotificationService);
   private profileService = inject(ProfileService);
 
-  constructor() { super(); }
+  constructor() {
+    super();
+  }
 
   override async ngOnInit() {
     super.ngOnInit();

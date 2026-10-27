@@ -72,3 +72,35 @@ ion-header.mf-page-header.mf-page-header {
     text-transform: none;
   }
 }
+
+// Sub-page header: back button + centered title (profile, add category, …).
+ion-header.mf-sub-header.mf-sub-header {
+  font-family: var(--mf-font-sans);
+  border-bottom: 1px solid var(--mf-separator);
+
+  ion-toolbar {
+    --background: var(--mf-bg);
+    --color: var(--mf-ink);
+    --border-width: 0;
+  }
+
+  ion-title {
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-align: center;
+    color: var(--mf-ink);
+  }
+
+  ion-button,
+  ion-back-button {
+    --color: var(--mf-primary);
+    min-width: var(--mf-touch-target);
+    min-height: var(--mf-touch-target);
+  }
+}
+
+[dir="rtl"] ion-header.mf-sub-header ion-buttons ion-button ion-icon {
+  transform: scaleX(-1);
+}
