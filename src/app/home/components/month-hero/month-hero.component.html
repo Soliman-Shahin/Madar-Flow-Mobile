@@ -1,0 +1,111 @@
+<section class="mf-hero" aria-labelledby="mf-hero-label">
+  <div class="mf-hero__top">
+    <h2 id="mf-hero-label" class="mf-hero__label">
+      @if (isCurrentMonth()) {
+      {{ "LEDGER.SPENT_THIS_MONTH" | translate }}
+      } @else {
+      {{ "LEDGER.SPENT_IN" | translate : { month: monthLabel() } }}
+      }
+    </h2>
+    <button
+      type="button"
+      class="mf-hero__mask"
+      (click)="toggleMasked()"
+      [attr.aria-pressed]="masked()"
+      [attr.aria-label]="
+        (masked() ? 'LEDGER.SHOW_AMOUNTS' : 'LEDGER.HIDE_AMOUNTS') | translate
+      "
+    >
+      <ion-icon
+        [name]="masked() ? 'eye-off-outline' : 'eye-outline'"
+        aria-hidden="true"
+      ></ion-icon>
+    </button>
+  </div>
+
+  <app-amount
+    class="mf-hero__amount"
+    size="hero"
+    kind="neutral"
+    [showSign]="false"
+    [value]="expenses()"
+    [currency]="currency()"
+    [masked]="masked()"
+    [maskedLabel]="'LEDGER.HIDDEN_AMOUNT' | translate"
+  />
+
+  @if (comparison(); as c) { @if (c.status === 'ready' && !masked()) {
+  <p
+    class="mf-hero__delta"
+    [class.mf-hero__delta--less]="c.direction === 'less'"
+    [class.mf-hero__delta--more]="c.direction === 'more'"
+  >
+    @switch (c.direction) { @case ('less') {
+    <ion-icon name="arrow-down" aria-hidden="true"></ion-icon>
+    {{ "LEDGER.LESS_THAN_LAST" | translate : { value: comparisonPercent() } }}
+    } @case ('more') {
+    <ion-icon name="arrow-up" aria-hidden="true"></ion-icon>
+    {{ "LEDGER.MORE_THAN_LAST" | translate : { value: comparisonPercent() } }}
+    } @case ('new') {
+    {{ "LEDGER.FIRST_MONTH" | translate }}
+    } @default {
+    {{ "LEDGER.SAME_AS_LAST" | translate }}
+    } }
+  </p>
+  } } @if (hasIncome()) {
+  <div
+    class="mf-hero__pace"
+    [class.mf-hero__pace--over]="isOver()"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="masked() ? null : roundedShare()"
+    [attr.aria-label]="
+      masked()
+        ? ('LEDGER.HIDDEN_AMOUNT' | translate)
+        : ('LEDGER.PACE_ARIA' | translate : { value: roundedShare() })
+    "
+  >
+    <span
+      class="mf-hero__pace-fill"
+      [style.inline-size.%]="masked() ? 0 : paceWidth()"
+    ></span>
+  </div>
+  }
+
+  <dl class="mf-hero__facts">
+    <div class="mf-hero__fact">
+      <dt>{{ "LEDGER.INCOME" | translate }}</dt>
+      <dd>
+        <app-amount
+          size="md"
+          kind="neutral"
+          [showSign]="false"
+          [value]="income()"
+          [currency]="currency()"
+          [masked]="masked()"
+          [maskedLabel]="'LEDGER.HIDDEN_AMOUNT' | translate"
+        />
+      </dd>
+    </div>
+    <div
+      class="mf-hero__fact mf-hero__fact--end"
+      [class.mf-hero__fact--over]="isOver()"
+    >
+      <dt>{{ (isOver() ? "LEDGER.OVER" : "LEDGER.LEFT") | translate }}</dt>
+      <dd>
+        <app-amount
+          size="md"
+          kind="neutral"
+          [value]="balance()"
+          [currency]="currency()"
+          [masked]="masked()"
+          [maskedLabel]="'LEDGER.HIDDEN_AMOUNT' | translate"
+        />
+      </dd>
+    </div>
+  </dl>
+  @if (!hasIncome()) {
+  <p class="mf-hero__note">{{ "LEDGER.NO_INCOME" | translate }}</p>
+  }
+</section>

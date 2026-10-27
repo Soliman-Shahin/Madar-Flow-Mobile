@@ -35,12 +35,19 @@
 
 // --- Sizes --------------------------------------------------------------
 :host(.mf-amount--hero) {
-  font-size: var(--mf-text-display);
+  // Parents may tune the hero size via --mf-amount-hero-size.
+  font-size: var(--mf-amount-hero-size, var(--mf-text-display));
   font-weight: var(--mf-weight-semibold);
   letter-spacing: -0.01em;
 
   .mf-amount__currency {
     font-size: 0.4em;
+  }
+
+  // The currency may wrap under a very large hero value.
+  .mf-amount__run {
+    flex-wrap: wrap;
+    row-gap: 0;
   }
 }
 

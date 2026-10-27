@@ -1,4 +1,8 @@
-<ion-header mode="ios" class="category-ion-header" translucent="false">
+<ion-header
+  mode="ios"
+  class="category-ion-header mf-tx-header"
+  translucent="false"
+>
   <ion-toolbar class="title-toolbar">
     <ion-title>
       <div class="header-title-container">
@@ -31,6 +35,7 @@
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
+      mode="md"
       class="modern-searchbar"
       [attr.aria-label]="'SEARCH' | translate"
       animated="true"
@@ -47,16 +52,13 @@
       (ionChange)="onFilterChange()"
       class="custom-segment"
     >
-      <ion-segment-button value="" layout="icon-start">
-        <ion-icon name="options-outline"></ion-icon>
+      <ion-segment-button value="">
         <ion-label>{{ "COMMON.ALL" | translate }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="outcome" layout="icon-start">
-        <ion-icon name="trending-up-outline"></ion-icon>
+      <ion-segment-button value="outcome">
         <ion-label>{{ "COMMON.OUTCOME" | translate }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="income" layout="icon-start">
-        <ion-icon name="trending-down-outline"></ion-icon>
+      <ion-segment-button value="income">
         <ion-label>{{ "COMMON.INCOME" | translate }}</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -255,83 +257,67 @@
 
   <!-- Content after loading -->
   @if (!contentLoading() && !state.error()) { @if (transactions().length > 0) {
-  <ion-list class="transactions-list">
+  <div class="mf-ledger transactions-ledger">
     @for (group of transactionGroups(); track group.key) {
-    <h2 class="transaction-date-group" [attr.aria-label]="group.label">
-      {{ group.label }}
-    </h2>
-    @for (t of group.items; track trackById(i, t); let i = $index) {
-    <ion-item-sliding class="transaction-sliding" [style.--animation-order]="i">
-      <ion-item
-        class="transaction-item item-card"
-        lines="none"
-        button
-        detail="false"
-        (click)="onTransactionClick(t)"
-      >
-        <div class="transaction-icon" slot="start">
-          <span
-            class="category-icon"
-            [style.background]="t.categoryColor"
-            aria-hidden="true"
+    <app-ledger-day-header
+      [label]="group.label"
+      [net]="group.net"
+      [currency]="userCurrency() || null"
+    />
+    <ion-list class="mf-ledger__group" lines="none">
+      @for (t of group.items; track trackById(i, t); let i = $index) {
+      <ion-item-sliding class="mf-ledger__sliding">
+        <ion-item
+          class="mf-ledger__item"
+          lines="none"
+          button
+          detail="false"
+          (click)="onTransactionClick(t)"
+        >
+          <app-ledger-row
+            [title]="t.title"
+            [category]="t.categoryName"
+            [color]="t.categoryColor"
+            [icon]="t.categoryIcon"
+            [amount]="t.amount"
+            [kind]="t.isIncome ? 'income' : 'expense'"
+            [currency]="
+              userCurrency() || ('MOBILE.CURRENCY_UNAVAILABLE' | translate)
+            "
+            [status]="
+              syncAttention(t.original)
+                ? (syncAttention(t.original)!.label | translate)
+                : null
+            "
+            [statusTone]="syncAttention(t.original)?.tone ?? 'pending'"
+          />
+        </ion-item>
+        <ion-item-options side="end" class="custom-item-options">
+          <ion-item-option
+            class="option-btn option-edit"
+            (click)="onEdit(t.original)"
           >
-            <ion-icon [name]="t.categoryIcon"></ion-icon>
-          </span>
-        </div>
-        <div class="transaction-content">
-          <div class="transaction-header">
-            <h3 class="transaction-title">
-              {{ t.title }}
-            </h3>
-            <div class="transaction-amount">
-              <app-amount
-                [value]="t.amount"
-                [kind]="t.isIncome ? 'income' : 'expense'"
-                [currency]="
-                  userCurrency() || ('MOBILE.CURRENCY_UNAVAILABLE' | translate)
-                "
-              />
+            <div class="option-content">
+              <ion-icon name="create-outline"></ion-icon>
+              <span>{{ "TRANSACTIONS.EDIT" | translate }}</span>
             </div>
-          </div>
-          <div class="transaction-meta">
-            @if (syncLabel(t.original); as status) {
-            <span class="transaction-status">{{ status | translate }}</span> }
-            <span class="transaction-date">
-              <ion-icon name="calendar-outline"></ion-icon>
-              {{ t.date | date : "MMM d, y" : undefined : currentLang }}
-            </span>
-            <span class="transaction-category">
-              <ion-icon name="pricetag-outline"></ion-icon>
-              {{ t.categoryName }}
-            </span>
-          </div>
-        </div>
-      </ion-item>
-      <ion-item-options side="end" class="custom-item-options">
-        <ion-item-option
-          class="option-btn option-edit"
-          (click)="onEdit(t.original)"
-        >
-          <div class="option-content">
-            <ion-icon name="create-outline"></ion-icon>
-            <span>{{ "TRANSACTIONS.EDIT" | translate }}</span>
-          </div>
-        </ion-item-option>
-        <ion-item-option
-          class="option-btn option-delete"
-          color="danger"
-          (click)="onDelete(t.original)"
-        >
-          <div class="option-content">
-            <ion-icon name="trash-outline"></ion-icon>
-            <span>{{ "TRANSACTIONS.DELETE" | translate }}</span>
-          </div>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+          </ion-item-option>
+          <ion-item-option
+            class="option-btn option-delete"
+            color="danger"
+            (click)="onDelete(t.original)"
+          >
+            <div class="option-content">
+              <ion-icon name="trash-outline"></ion-icon>
+              <span>{{ "TRANSACTIONS.DELETE" | translate }}</span>
+            </div>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      }
+    </ion-list>
     }
-    }
-  </ion-list>
+  </div>
   } @if (transactions().length === 0 && hasActiveFilters()) {
   <div class="empty-state-wrapper filtered-empty-state">
     <div class="empty-icon-glow">
@@ -369,9 +355,6 @@
   </ng-template>
   }
 </ion-content>
-
-<!-- Floating Action Button -->
-<app-add-fab-button (fabClick)="openAddTransactionModal()"></app-add-fab-button>
 
 <!-- Date Range Picker Modal -->
 <ion-modal

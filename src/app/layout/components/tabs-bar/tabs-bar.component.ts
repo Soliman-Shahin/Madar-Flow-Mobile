@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { NavigationEnd, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -8,6 +15,7 @@ import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { TABS_MENU_ITEMS } from 'src/app/core/constants';
 import { BaseComponent } from 'src/app/shared/base';
 import { Tab } from 'src/app/shared/models';
+import { QuickAddService } from 'src/app/shared/services/quick-add.service';
 
 @Component({
   standalone: true,
@@ -19,6 +27,10 @@ import { Tab } from 'src/app/shared/models';
 })
 export class TabsBarComponent extends BaseComponent implements OnInit {
   tabs: Tab[] = TABS_MENU_ITEMS;
+  readonly visibleTabs: Tab[] = this.tabs.filter((tab) => tab.visible);
+  /** The add action sits in the middle of the visible tabs. */
+  readonly addSlotIndex = Math.ceil(this.visibleTabs.length / 2);
+  private readonly quickAdd = inject(QuickAddService);
   private navigationInProgress = false;
 
   private readonly activeRoute$ = this.router.events.pipe(
@@ -45,6 +57,13 @@ export class TabsBarComponent extends BaseComponent implements OnInit {
     void this.router.navigateByUrl(link, { replaceUrl: false }).finally(() => {
       this.navigationInProgress = false;
     });
+  }
+
+  addTransaction(): void {
+    if (Capacitor.isNativePlatform()) {
+      void Haptics.impact({ style: ImpactStyle.Light }).catch(() => undefined);
+    }
+    void this.quickAdd.requestAdd();
   }
 
   isActiveTab(link: string, activeRoute: string): boolean {

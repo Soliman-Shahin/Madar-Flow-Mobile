@@ -115,7 +115,7 @@
     </div>
   </div>
   } @else {
-  <div class="dashboard">
+  <div class="dashboard mf-dash">
     <!-- ── Top Header Bar ── -->
     <div class="dash-header">
       <div class="dash-header__left">
@@ -154,12 +154,10 @@
         role="tablist"
         [attr.aria-label]="'HOME.SECTIONS' | translate"
       >
-        <ion-segment-button value="summary" layout="icon-start">
-          <ion-icon name="document-text-outline"></ion-icon>
+        <ion-segment-button value="summary">
           <ion-label>{{ "HOME.TABS.SUMMARY" | translate }}</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="charts" layout="icon-start">
-          <ion-icon name="pie-chart-outline"></ion-icon>
+        <ion-segment-button value="charts">
           <ion-label>{{ "HOME.TABS.CHARTS" | translate }}</ion-label>
         </ion-segment-button>
       </ion-segment>
@@ -362,33 +360,18 @@
     <!-- ── Summary Tab ── -->
     @if (activeTab === 'summary') {
     <div class="tab-content" [@tabAnimation]>
-      <section
-        class="card-section balance-card"
-        role="region"
-        [attr.aria-label]="'HOME.BALANCE_SUMMARY' | translate"
-        [class.interact]="cardStates['balance']"
-        (mouseenter)="onCardHover('balance', true)"
-        (mouseleave)="onCardHover('balance', false)"
-        (click)="onCardClick('balance')"
-      >
-        <div class="hero-heading">
-          <h2>{{ "TOTAL_BALANCE" | translate }}</h2>
-          <span class="hero-period">{{
-            selectedMonth.year +
-              "-" +
-              ("0" + selectedMonth.month).slice(-2) +
-              "-01" | date : "MMMM yyyy" : undefined : currentLang
-          }}</span>
-        </div>
-        @if (vm.totals; as totals) {<app-balance-card
-          [isLoading]="vm.loading"
-          [balance]="totals.balance"
+      <section class="mf-home-hero">
+        @if (vm.totals; as totals) {<app-month-hero
           [income]="totals.income"
           [expenses]="totals.expenses"
-          [percentageChange]="percentageChange"
-          [expenseComparison]="vm.expenseComparison"
+          [balance]="totals.balance"
           [currency]="vm.currency"
-        ></app-balance-card
+          [comparison]="vm.expenseComparison"
+          [isCurrentMonth]="isSelectedMonthCurrent"
+          [monthLabel]="selectedMonthLabel"
+          [masked]="amountsMasked"
+          (maskedChange)="setAmountsMasked($event)"
+        ></app-month-hero
         >} @else {
         <div class="widget-error" role="status">
           <ion-icon name="cloud-offline-outline"></ion-icon
@@ -399,18 +382,14 @@
         </div>
         }
       </section>
-      <section
-        class="card-section transactions-card"
-        role="region"
-        [attr.aria-label]="'TRANSACTIONS.RECENT' | translate"
-      >
-        <app-section-header
-          icon="list-outline"
-          [title]="'TRANSACTIONS.RECENT' | translate"
-          [ctaText]="'COMMON.VIEW_ALL' | translate"
-          ctaIcon="arrow-forward"
-          [ctaRouterLink]="'/transactions'"
-        ></app-section-header>
+      <section class="mf-home-recent" aria-labelledby="mf-home-recent-title">
+        <div class="mf-home-recent__head">
+          <h2 id="mf-home-recent-title">{{ "LEDGER.RECENT" | translate }}</h2>
+          <a class="mf-home-recent__all" routerLink="/transactions">
+            {{ "LEDGER.VIEW_ALL" | translate }}
+            <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+          </a>
+        </div>
         <app-transactions
           #transactionsComponent
           [limit]="5"
@@ -431,12 +410,3 @@
   <!-- ══ Main Content ══ -->
   }
 </ion-content>
-
-@if ((vm$ | async)?.profile) {
-<app-add-fab-button
-  [class.fab-hidden-during-chart-scroll]="
-    activeTab === 'charts' && isChartsScrolling
-  "
-  (fabClick)="openExpenseModal()"
-></app-add-fab-button>
-}

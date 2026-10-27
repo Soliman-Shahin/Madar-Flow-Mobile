@@ -1,4 +1,14 @@
-import { expenseSyncLabel } from 'src/app/shared/utils/expense-presentation';
+import {
+  expenseSyncAttention,
+  expenseSyncLabel,
+} from 'src/app/shared/utils/expense-presentation';
+import {
+  groupByLedgerDay,
+  ledgerDayLabel,
+  LedgerDayGroup,
+} from 'src/app/shared/utils/ledger-day.util';
+import { LedgerRowComponent } from 'src/app/shared/ui/ledger-row/ledger-row.component';
+import { LedgerDayHeaderComponent } from 'src/app/shared/ui/ledger-day-header/ledger-day-header.component';
 import { ExpenseDetailComponent } from 'src/app/home/components/expense-detail/expense-detail.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -29,7 +39,6 @@ import { Expense } from 'src/app/shared/models/expense.model';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 import { SkeletonBlockComponent } from 'src/app/shared/ui/skeleton-block/skeleton-block.component';
-import { AmountComponent } from 'src/app/shared/ui/amount/amount.component';
 import { ComponentStateService } from 'src/app/shared/services/component-state.service';
 import { ExpenseService } from 'src/app/core/services/expense.service';
 import { CategoryService } from 'src/app/modules/categories/services/categories.service';
@@ -44,7 +53,8 @@ import { TranslateService } from '@ngx-translate/core';
     IonicModule,
     TranslateModule,
     SkeletonBlockComponent,
-    AmountComponent,
+    LedgerRowComponent,
+    LedgerDayHeaderComponent,
   ],
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
@@ -54,6 +64,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TransactionsComponent implements OnChanges, OnDestroy {
   readonly syncLabel = expenseSyncLabel;
+  readonly syncAttention = expenseSyncAttention;
+  dayGroups: LedgerDayGroup<Expense>[] = [];
   @Input() limit: number = 5;
   @Input() month?: number;
   @Input() year?: number;
@@ -159,6 +171,7 @@ export class TransactionsComponent implements OnChanges, OnDestroy {
             0,
             Math.max(0, this.params$.value.limit || 5)
           );
+          this.rebuildDayGroups();
           this.txLoading = false;
           this.cdr.markForCheck();
         },
@@ -172,6 +185,33 @@ export class TransactionsComponent implements OnChanges, OnDestroy {
     this.expenseSvc.expenseReconciled$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.refreshTransactions());
+
+    this.translateService.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.rebuildDayGroups();
+        this.cdr.markForCheck();
+      });
+  }
+
+  private rebuildDayGroups(): void {
+    const labels = {
+      today: this.translateService.instant('TRANSACTIONS.DATE_GROUP_TODAY'),
+      yesterday: this.translateService.instant(
+        'TRANSACTIONS.DATE_GROUP_YESTERDAY'
+      ),
+    };
+    this.dayGroups = groupByLedgerDay(
+      this.transactions,
+      (t) => {
+        const d = new Date(this.getDateValue(t) ?? Date.now());
+        return isNaN(d.getTime()) ? new Date() : d;
+      },
+      (t) =>
+        (this.getCategoryType(t) === 'income' ? 1 : -1) *
+        this.getAmountValue(t),
+      (date) => ledgerDayLabel(date, this.locale, labels)
+    );
   }
 
   get locale(): string {

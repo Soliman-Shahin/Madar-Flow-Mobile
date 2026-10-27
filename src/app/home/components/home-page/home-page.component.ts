@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { IonicModule } from '@ionic/angular';
-import { AddFabButtonComponent } from 'src/app/shared/ui/add-fab-button/add-fab-button.component';
 import { SyncStatusComponent } from 'src/app/shared/components/sync-status/sync-status.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -48,7 +47,8 @@ import { User } from 'src/app/modules/auth/models';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { DashboardFacade } from 'src/app/shared/facades';
 import { Expense } from 'src/app/shared/models';
-import { BalanceCardComponent } from 'src/app/shared/components/balance-card/balance-card.component';
+import { MonthHeroComponent } from '../month-hero/month-hero.component';
+import { QuickAddService } from 'src/app/shared/services/quick-add.service';
 import { MonthsScrollHeaderComponent } from 'src/app/shared/components/months-scroll-header/months-scroll-header.component';
 import { ExpenseService } from 'src/app/core/services/expense.service';
 
@@ -66,10 +66,9 @@ import { ExpenseService } from 'src/app/core/services/expense.service';
     TranslateModule,
     TransactionsComponent,
     DateRangeSelectorComponent,
-    AddFabButtonComponent,
     SkeletonBlockComponent,
     SectionHeaderComponent,
-    BalanceCardComponent,
+    MonthHeroComponent,
     MonthsScrollHeaderComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,8 +152,39 @@ export class HomePageComponent
     recentTransactions: false,
   };
 
+  // Privacy: hide amounts on the hero (remembered per device).
+  amountsMasked = false;
+  private readonly quickAdd = inject(QuickAddService);
+  private unregisterQuickAdd?: () => void;
+
   constructor() {
     super();
+  }
+
+  get isSelectedMonthCurrent(): boolean {
+    const now = new Date();
+    return (
+      this.selectedMonth.year === now.getFullYear() &&
+      this.selectedMonth.month === now.getMonth() + 1
+    );
+  }
+
+  get selectedMonthLabel(): string {
+    return new Intl.DateTimeFormat(this.currentLang || 'en', {
+      month: 'long',
+      year: 'numeric',
+      numberingSystem: 'latn',
+    }).format(
+      new Date(this.selectedMonth.year, this.selectedMonth.month - 1, 1)
+    );
+  }
+
+  setAmountsMasked(masked: boolean): void {
+    this.amountsMasked = masked;
+    try {
+      localStorage.setItem('home.amountsMasked', masked ? '1' : '0');
+    } catch {}
+    this.cdr.markForCheck();
   }
 
   // Reactive month selection for Summary tab (current month only)
@@ -554,6 +584,13 @@ export class HomePageComponent
       this.createInjectors(vm);
       this.cdr.markForCheck();
     });
+    try {
+      this.amountsMasked = localStorage.getItem('home.amountsMasked') === '1';
+    } catch {}
+    this.destroy$.subscribe(() => this.unregisterQuickAdd?.());
+    this.quickAdd.transactionSaved$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.refreshData());
     // Restore last selected tab
     try {
       const savedTab = localStorage.getItem('home.activeTab');
@@ -579,10 +616,19 @@ export class HomePageComponent
    * Refresh data when returning to the page
    */
   ionViewWillEnter(): void {
+    this.unregisterQuickAdd?.();
+    this.unregisterQuickAdd = this.quickAdd.register(() =>
+      this.openExpenseModal()
+    );
     if (this.hasEntered) {
       this.refreshData();
     }
     this.hasEntered = true;
+  }
+
+  ionViewWillLeave(): void {
+    this.unregisterQuickAdd?.();
+    this.unregisterQuickAdd = undefined;
   }
 
   /**
