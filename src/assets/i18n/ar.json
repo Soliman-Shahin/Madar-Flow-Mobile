@@ -359,7 +359,23 @@
     "VERSION": "الإصدار",
     "BACKUP": "النسخ الاحتياطي والاستعادة",
     "MANAGE_PROFILE": "إدارة الملف الشخصي",
-    "SUBSCRIPTION": "الاشتراك"
+    "SUBSCRIPTION": "الاشتراك",
+    "DANGER_ZONE": "منطقة الخطر",
+    "DELETE_ACCOUNT": "حذف الحساب",
+    "DELETE_ACCOUNT_DESC": "احذف حسابك وكل بياناته نهائيًا",
+    "DELETE_ACCOUNT_WARNING_TITLE": "لا يمكن التراجع عن هذا الإجراء",
+    "DELETE_ACCOUNT_WARNING": "حذف الحساب يزيل نهائيًا ملفك الشخصي ومعاملاتك وتصنيفاتك وبياناتك على خوادمنا وإشعاراتك وأجهزتك. كما سيتم حذف البيانات المخزنة على هذا الجهاز.",
+    "DELETE_ACCOUNT_EXPORT_HINT": "إذا أردت الاحتفاظ بنسخة من بياناتك، أنشئ نسخة احتياطية قبل المتابعة.",
+    "DELETE_ACCOUNT_PASSWORD": "كلمة المرور الحالية",
+    "DELETE_ACCOUNT_CONFIRM_LABEL": "اكتب DELETE للتأكيد",
+    "DELETE_ACCOUNT_BUTTON": "احذف حسابي نهائيًا",
+    "DELETE_ACCOUNT_FINAL_TITLE": "حذف الحساب؟",
+    "DELETE_ACCOUNT_FINAL_MESSAGE": "سيتم حذف حسابك وكل بياناته نهائيًا.",
+    "DELETE_ACCOUNT_SUCCESS": "تم حذف حسابك.",
+    "DELETE_ACCOUNT_FAILED": "تعذّر حذف الحساب. حاول مرة أخرى.",
+    "DELETE_ACCOUNT_WRONG_PASSWORD": "كلمة المرور غير صحيحة.",
+    "DELETE_ACCOUNT_STAFF": "لا يمكن حذف حسابات فريق العمل من التطبيق. تواصل مع أحد المسؤولين.",
+    "DELETE_ACCOUNT_OFFLINE": "تحتاج إلى اتصال بالإنترنت لحذف حسابك."
   },
   "BUDGET": {
     "TITLE": "الميزانية"

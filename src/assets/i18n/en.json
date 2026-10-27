@@ -387,7 +387,23 @@
     "VERSION": "Version",
     "BACKUP": "Backup & Restore",
     "MANAGE_PROFILE": "Profile Management",
-    "SUBSCRIPTION": "Subscription"
+    "SUBSCRIPTION": "Subscription",
+    "DANGER_ZONE": "Danger Zone",
+    "DELETE_ACCOUNT": "Delete Account",
+    "DELETE_ACCOUNT_DESC": "Permanently delete your account and all of its data",
+    "DELETE_ACCOUNT_WARNING_TITLE": "This cannot be undone",
+    "DELETE_ACCOUNT_WARNING": "Deleting your account permanently removes your profile, transactions, categories, backups on our servers, notifications, and devices. Data stored on this device will also be removed.",
+    "DELETE_ACCOUNT_EXPORT_HINT": "If you want to keep a copy of your data, create a backup before continuing.",
+    "DELETE_ACCOUNT_PASSWORD": "Current password",
+    "DELETE_ACCOUNT_CONFIRM_LABEL": "Type DELETE to confirm",
+    "DELETE_ACCOUNT_BUTTON": "Delete my account permanently",
+    "DELETE_ACCOUNT_FINAL_TITLE": "Delete account?",
+    "DELETE_ACCOUNT_FINAL_MESSAGE": "Your account and all of its data will be deleted permanently.",
+    "DELETE_ACCOUNT_SUCCESS": "Your account has been deleted.",
+    "DELETE_ACCOUNT_FAILED": "Account deletion failed. Please try again.",
+    "DELETE_ACCOUNT_WRONG_PASSWORD": "The password is incorrect.",
+    "DELETE_ACCOUNT_STAFF": "Staff accounts cannot be deleted from the app. Contact an administrator.",
+    "DELETE_ACCOUNT_OFFLINE": "You need an internet connection to delete your account."
   },
   "BUDGET": {
     "TITLE": "Budget"

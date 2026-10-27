@@ -229,6 +229,26 @@
       </ion-item>
     </ion-list>
 
+    <!-- Danger Zone Section -->
+    <div class="section-label">{{ "SETTINGS.DANGER_ZONE" | translate }}</div>
+    <ion-list inset="true" class="premium-list">
+      <ion-item
+        button
+        detail="true"
+        routerLink="/settings/delete-account"
+        lines="none"
+        [attr.aria-label]="'SETTINGS.DELETE_ACCOUNT' | translate"
+      >
+        <div slot="start" class="icon-wrapper color-red">
+          <ion-icon name="person-remove-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label color="danger">
+          <h3>{{ "SETTINGS.DELETE_ACCOUNT" | translate }}</h3>
+          <p>{{ "SETTINGS.DELETE_ACCOUNT_DESC" | translate }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
     <!-- App Info Section -->
     <div class="app-info-footer">
       <div class="app-logo">
