@@ -1,155 +1,68 @@
-@use "src/theme/variables";
+// Onboarding — Calm Personal Ledger.
+// One calm page: content centered, progress and the primary action at the
+// bottom in thumb reach. No orbs, glass, or looping animation.
 
 :host {
-  display: block;
-  height: 100%;
-  width: 100%;
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  background: var(--ion-background-color);
+  inset: 0;
+  z-index: 9999; // toasts (10010) stay above
+  display: block;
   overflow: hidden;
-  font-family: var(--ew-font-family-base);
-  --onboarding-background: #f2f5fa;
-  --onboarding-foreground: #142440;
-  --onboarding-muted: rgba(20, 36, 64, 0.68);
-  --onboarding-glass: rgba(20, 36, 64, 0.08);
-  --onboarding-border: rgba(20, 36, 64, 0.14);
 }
 
-:host-context(.dark) {
-  --onboarding-background: #0d1525;
-  --onboarding-foreground: #fff;
-  --onboarding-muted: rgba(255, 255, 255, 0.7);
-  --onboarding-glass: rgba(255, 255, 255, 0.1);
-  --onboarding-border: rgba(255, 255, 255, 0.15);
-}
-
-.onboarding-page {
-  position: relative;
-  height: 100%;
-  width: 100%;
+.mf-onb {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  background: var(--mf-bg);
+  color: var(--mf-ink);
+  font-family: var(--mf-font-sans);
 }
 
-// ── Ambient Background ──────────────────────────────────────────
-.ambient-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--onboarding-background);
-
-  .dark & {
-    background: var(--onboarding-background);
-  }
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.7;
-
-  &--1 {
-    width: 350px;
-    height: 350px;
-    background: var(--ion-color-primary);
-    top: -100px;
-    right: -100px;
-    animation: drift 14s ease-in-out infinite;
-  }
-
-  &--2 {
-    width: 300px;
-    height: 300px;
-    background: var(--ion-color-secondary);
-    bottom: -50px;
-    left: -100px;
-    animation: drift 18s ease-in-out infinite reverse;
-  }
-
-  &--3 {
-    width: 250px;
-    height: 250px;
-    background: var(--ion-color-tertiary);
-    top: 40%;
-    left: 20%;
-    animation: drift 12s ease-in-out infinite 3s;
-    opacity: 0.5;
-  }
-}
-
-.noise-overlay {
-  position: absolute;
-  inset: 0;
-  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -40px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 30px) scale(0.9);
-  }
-}
-
-// ── Top Bar ───────────────────────────────────────────────────────
-.top-bar {
-  position: relative;
-  z-index: 10;
+// --- Top ------------------------------------------------------------------
+.mf-onb__top {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: calc(env(safe-area-inset-top, 20px) + 16px) 24px 0;
-  animation: fadeInDown 0.6s ease both;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-3) var(--mf-gutter);
 }
 
-.glass-pill {
-  display: flex;
+.mf-onb__lang {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--onboarding-glass);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid var(--onboarding-border);
-  border-radius: 99px;
-  padding: 8px 16px;
-  color: var(--onboarding-foreground);
-  font-size: 13px;
-  font-weight: 600;
+  gap: var(--mf-space-1);
+  min-height: 36px;
+  padding: 0 var(--mf-space-3);
+  border: 1px solid var(--mf-outline);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface);
+  font: inherit;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-2);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
 
-  ion-icon {
-    font-size: 16px;
-  }
+.mf-onb__skip {
+  min-height: var(--mf-touch-target);
+  padding: 0 var(--mf-space-2);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-primary);
+  cursor: pointer;
 
-  &:hover {
-    background: color-mix(in srgb, var(--onboarding-foreground) 20%, transparent);
-    transform: translateY(-2px);
-  }
-
-  &.hidden {
-    opacity: 0;
-    pointer-events: none;
+  &.mf-onb__skip--hidden {
+    visibility: hidden;
   }
 }
 
-// ── Slides Viewport ───────────────────────────────────────────────
+// --- Slides (scroll-snap; logic in the component) ----------------------------
 .slides-viewport {
-  position: relative;
-  z-index: 5;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -163,6 +76,7 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -171,312 +85,156 @@
 .slide {
   flex: 0 0 100%;
   width: 100%;
-  height: 100%;
-  scroll-snap-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--mf-space-6) var(--mf-space-8);
+  scroll-snap-align: center;
 }
 
-.slide-content {
-  text-align: center;
-  max-width: 340px;
+.mf-onb__slide {
   display: flex;
   flex-direction: column;
   align-items: center;
-  opacity: 0.4;
-  transform: scale(0.9) translateY(20px);
-  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  gap: var(--mf-space-4);
+  max-width: 340px;
+  text-align: center;
+  opacity: 0.35;
+  transform: translateY(8px);
+  transition: opacity var(--mf-dur-standard) var(--mf-ease-standard),
+    transform var(--mf-dur-standard) var(--mf-ease-standard);
 }
 
-.active-slide .slide-content {
+.active-slide .mf-onb__slide {
   opacity: 1;
-  transform: scale(1) translateY(0);
-
-  .app-logo-wrap {
-    animation: logoFloat 4s ease-in-out infinite;
-  }
-
-  .logo-aura {
-    animation: auraPulse 3s ease-in-out infinite;
-  }
-
-  .icon-crystal {
-    animation: crystalFloat 4s ease-in-out infinite;
-  }
+  transform: none;
 }
 
-@keyframes logoFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
+.mf-onb__logo {
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--mf-space-4);
+  border-radius: 24px;
 }
 
-@keyframes crystalFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-// ── App Logo ───────────────────────────────────────────────────
-.app-logo-wrap {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .onboarding-logo {
-    width: 130px;
-    height: 130px;
-    border-radius: 30px;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3),
-      0 4px 12px rgba(255, 255, 255, 0.1);
-  }
-
-  .logo-aura {
-    position: absolute;
-    inset: 10px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba(var(--ion-color-primary-rgb), 0.6),
-      transparent 70%
-    );
-    filter: blur(24px);
-    z-index: 1;
-    opacity: 0.6;
-  }
-}
-
-@keyframes auraPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.9;
-  }
-}
-
-// ── Icon Crystal ──────────────────────────────────────────────────
-.icon-crystal {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .crystal-inner {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.02) 100%
-    );
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2),
-      inset 0 4px 12px rgba(255, 255, 255, 0.6),
-      inset 0 -4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 2;
-    transform: rotate(-5deg);
-    transition: transform 0.5s ease;
-
-    ion-icon {
-      font-size: 64px;
-      color: var(--onboarding-foreground);
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-      transform: rotate(5deg); // Counter-rotate the icon
-    }
-  }
-
-  .crystal-glow {
-    position: absolute;
-    inset: 10px;
-    background: var(--ion-color-primary);
-    border-radius: 40px;
-    filter: blur(24px);
-    opacity: 0.6;
-    z-index: 1;
-    animation: pulseGlow 3s ease-in-out infinite;
-  }
-}
-
-@keyframes pulseGlow {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.8;
-  }
-}
-
-// ── Text ──────────────────────────────────────────────────────────
-.slide-title {
-  font-size: clamp(2rem, 8vw, 2.8rem);
-  font-weight: 800;
-  font-family: var(--ew-font-family-heading);
-  color: var(--onboarding-foreground);
-  margin: 0 0 16px;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-}
-
-.slide-desc {
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--onboarding-muted);
-  margin: 0;
-  font-weight: 400;
-  max-width: 90%;
-}
-
-// ── Floating Controls Dock ────────────────────────────────────────
-.controls-dock {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 32px calc(env(safe-area-inset-bottom, 24px) + 24px);
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--onboarding-background) 70%, transparent) 0%,
-    transparent 100%
+.mf-onb__mark {
+  --mf-onb-c: var(--mf-onb-tone, var(--mf-cat-1));
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--mf-space-4);
+  border-radius: 28px;
+  background: color-mix(
+    in srgb,
+    var(--mf-onb-c) var(--mf-cat-soft-mix),
+    var(--mf-surface)
   );
-}
+  color: color-mix(in srgb, var(--mf-onb-c) 80%, var(--mf-ink));
 
-.pagination {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .dot-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 99px;
-    background: color-mix(
-      in srgb,
-      var(--onboarding-foreground) 30%,
-      transparent
-    );
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-    &.active {
-      width: 28px;
-      background: var(--onboarding-foreground);
-      box-shadow: 0 0 12px color-mix(in srgb, var(--onboarding-foreground) 80%, transparent);
-    }
+  ion-icon {
+    font-size: 44px;
   }
 }
 
-.next-btn {
+.mf-onb__title {
+  margin: 0;
+  font-size: var(--mf-text-title-1);
+  font-weight: var(--mf-weight-bold);
+  line-height: var(--mf-leading-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: var(--mf-ink);
+}
+
+.mf-onb__desc {
+  margin: 0;
+  font-size: var(--mf-text-body);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+  text-wrap: pretty;
+}
+
+// --- Bottom -------------------------------------------------------------------
+.mf-onb__bottom {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-block: 8px;
-  padding-inline-start: 24px;
-  padding-inline-end: 8px;
-  background: var(--onboarding-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--onboarding-border);
-  border-radius: 99px;
-  color: var(--onboarding-foreground);
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 16px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--mf-space-5);
+  padding: var(--mf-space-4) var(--mf-gutter) var(--mf-space-6);
+}
+
+.mf-onb__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--mf-space-1);
+}
+
+.mf-onb__dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
 
-  .icon-circle {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--onboarding-foreground);
-    color: var(--ion-color-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    ion-icon {
-      font-size: 22px;
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border-radius: var(--mf-radius-pill);
+    background: var(--mf-outline);
+    transition: inset var(--mf-dur-quick) var(--mf-ease-standard),
+      background-color var(--mf-dur-quick) var(--mf-ease-standard);
   }
 
-  &:hover {
-    background: color-mix(in srgb, var(--onboarding-foreground) 20%, transparent);
-    transform: translateY(-2px);
+  &.mf-onb__dot--on {
+    width: 32px;
 
-    .icon-circle {
-      transform: translateX(4px);
-
-      [dir="rtl"] & {
-        transform: translateX(-4px);
-      }
-    }
-  }
-
-  &:active {
-    transform: scale(0.96);
-  }
-
-  &.start-btn {
-    background: linear-gradient(
-      135deg,
-      var(--ion-color-primary),
-      var(--ion-color-secondary)
-    );
-    border-color: transparent;
-    box-shadow: 0 12px 32px rgba(var(--ion-color-primary-rgb), 0.4);
-
-    .icon-circle {
-      color: var(--ion-color-primary);
+    &::before {
+      inset: 9px 4px;
+      background: var(--mf-primary);
     }
   }
 }
 
-// ── Animations ────────────────────────────────────────────────────
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+.mf-onb__next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  min-height: 52px;
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-primary);
+  font: inherit;
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-primary-contrast);
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+}
+
+[dir="rtl"] .mf-onb__next ion-icon[name="arrow-forward"] {
+  transform: scaleX(-1);
+}
+
+.mf-onb :is(button):focus-visible {
+  outline: 2px solid var(--mf-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-onb__slide,
+  .mf-onb__dot::before {
+    transition: none;
+  }
+
+  .slides-container {
+    scroll-behavior: auto;
   }
 }

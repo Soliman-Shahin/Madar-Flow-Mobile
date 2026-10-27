@@ -40,78 +40,85 @@
       WELCOME STATE  (Not logged in)
       ══════════════════════════════════════════════ -->
   @if (!user) {
-  <div class="welcome-page">
-    <!-- Animated mesh background -->
-    <div class="mesh-bg">
-      <div class="mesh-blob mesh-blob--1"></div>
-      <div class="mesh-blob mesh-blob--2"></div>
-      <div class="mesh-blob mesh-blob--3"></div>
+  <div class="mf-welcome">
+    <div class="mf-welcome__top">
+      <span class="mf-welcome__brand">
+        <img src="assets/icon/icon.png" alt="" />
+        {{ "APP_TITLE" | translate }}
+      </span>
+      <button type="button" class="mf-welcome__lang" (click)="toggleLanguage()">
+        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+        {{ currentLang === "ar" ? "English" : "العربية" }}
+      </button>
     </div>
-    <!-- Language toggle -->
-    <button class="lang-pill" (click)="toggleLanguage()">
-      <ion-icon name="globe-outline"></ion-icon>
-      {{ currentLang === "ar" ? "English" : "عربي" }}
-    </button>
-    <!-- Logo + Title -->
-    <div class="brand-section">
-      <div class="logo-float-wrap">
-        <img src="assets/icon/icon.png" alt="App Logo" class="brand-logo" />
-        <div class="logo-glow"></div>
-      </div>
-      <h1 class="brand-title">{{ "APP_TITLE" | translate }}</h1>
-      <p class="brand-sub">{{ "AUTH.APP_TAGLINE" | translate }}</p>
+
+    <header class="mf-welcome__heading">
+      <h1>{{ "LEDGER.WELCOME_TITLE" | translate }}</h1>
+      <p>{{ "LEDGER.WELCOME_SUBTITLE" | translate }}</p>
+    </header>
+
+    <!-- A small, clearly illustrative preview of the product -->
+    <div class="mf-welcome__preview" aria-hidden="true">
+      <span class="mf-welcome__sample">{{ "LEDGER.SAMPLE_LABEL" | translate }}</span>
+      <span class="mf-welcome__preview-label">{{
+        "LEDGER.SPENT_THIS_MONTH" | translate
+      }}</span>
+      <app-amount size="lg" kind="neutral" [showSign]="false" [value]="1240" currency="USD" />
+      <span class="mf-welcome__pace"><i></i></span>
+      <span class="mf-welcome__row">
+        <span class="mf-welcome__mark" style="--mf-w-tone: var(--mf-cat-2)">
+          <ion-icon name="cart-outline"></ion-icon>
+        </span>
+        <span class="mf-welcome__row-title">{{ "LEDGER.SAMPLE_GROCERIES" | translate }}</span>
+        <app-amount size="sm" kind="expense" [value]="84.5" />
+      </span>
+      <span class="mf-welcome__row">
+        <span class="mf-welcome__mark" style="--mf-w-tone: var(--mf-cat-6)">
+          <ion-icon name="briefcase-outline"></ion-icon>
+        </span>
+        <span class="mf-welcome__row-title">{{ "LEDGER.SAMPLE_SALARY" | translate }}</span>
+        <app-amount size="sm" kind="income" [value]="4500" />
+      </span>
     </div>
-    <!-- Feature cards — staggered slide-in -->
-    <div class="features-grid">
-      <div class="feat-card feat-card--1">
-        <div class="feat-icon">
-          <ion-icon name="trending-up-outline"></ion-icon>
-        </div>
-        <div class="feat-text">
+
+    <ul class="mf-welcome__features">
+      <li>
+        <ion-icon name="flash-outline" aria-hidden="true"></ion-icon>
+        <span>
           <strong>{{ "HOME.FEATURES.TRACKING" | translate }}</strong>
-          <span>{{ "HOME.INCOME_VS_EXPENSES" | translate }}</span>
-        </div>
-      </div>
-      <div class="feat-card feat-card--2">
-        <div class="feat-icon feat-icon--teal">
-          <ion-icon name="wallet-outline"></ion-icon>
-        </div>
-        <div class="feat-text">
+          {{ "HOME.INCOME_VS_EXPENSES" | translate }}
+        </span>
+      </li>
+      <li>
+        <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+        <span>
           <strong>{{ "HOME.FEATURES.BUDGETING" | translate }}</strong>
-          <span>{{ "HOME.MONTHLY_SUMMARY" | translate }}</span>
-        </div>
-      </div>
-      <div class="feat-card feat-card--3">
-        <div class="feat-icon feat-icon--orange">
-          <ion-icon name="pie-chart-outline"></ion-icon>
-        </div>
-        <div class="feat-text">
+          {{ "HOME.MONTHLY_SUMMARY" | translate }}
+        </span>
+      </li>
+      <li>
+        <ion-icon name="pie-chart-outline" aria-hidden="true"></ion-icon>
+        <span>
           <strong>{{ "HOME.FEATURES.INSIGHTS" | translate }}</strong>
-          <span>{{ "HOME.EXPENSE_BY_CATEGORY" | translate }}</span>
-        </div>
-      </div>
-    </div>
-    <!-- Floating CTA Dock -->
-    <div class="floating-cta">
-      <div class="cta-content">
-        <ion-button
-          routerLink="/auth/signup"
-          expand="block"
-          class="btn-primary"
-          [attr.aria-label]="'AUTH.SIGN_UP' | translate"
-        >
-          {{ "AUTH.SIGN_UP" | translate }}
-          <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-        </ion-button>
-        <div class="cta-login-row">
-          <span class="cta-text">{{
-            "AUTH.ALREADY_HAVE_ACCOUNT" | translate
-          }}</span>
-          <a routerLink="/auth/login" class="cta-link">{{
-            "AUTH.SIGN_IN" | translate
-          }}</a>
-        </div>
-      </div>
+          {{ "HOME.EXPENSE_BY_CATEGORY" | translate }}
+        </span>
+      </li>
+    </ul>
+
+    <div class="mf-welcome__cta">
+      <ion-button
+        routerLink="/auth/signup"
+        expand="block"
+        class="mf-auth__primary"
+      >
+        {{ "AUTH.SIGN_UP" | translate }}
+      </ion-button>
+      <p class="mf-auth__switch">
+        {{ "AUTH.ALREADY_HAVE_ACCOUNT" | translate }}
+        <a routerLink="/auth/login" class="mf-auth__link">{{
+          "AUTH.SIGN_IN" | translate
+        }}</a>
+      </p>
     </div>
   </div>
   } @else {
