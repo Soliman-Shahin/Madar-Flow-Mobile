@@ -1,31 +1,5 @@
 // Add/edit category — Calm Personal Ledger.
 
-ion-header.mf-sub-header {
-  font-family: var(--mf-font-sans);
-  border-bottom: 1px solid var(--mf-separator);
-
-  ion-toolbar {
-    --background: var(--mf-bg);
-    --color: var(--mf-ink);
-    --border-width: 0;
-  }
-
-  ion-title {
-    font-size: var(--mf-text-headline);
-    font-weight: var(--mf-weight-semibold);
-  }
-
-  ion-button {
-    --color: var(--mf-primary);
-    min-width: var(--mf-touch-target);
-    min-height: var(--mf-touch-target);
-  }
-}
-
-:host-context([dir="rtl"]) ion-header.mf-sub-header ion-buttons ion-icon {
-  transform: scaleX(-1);
-}
-
 ion-content.mf-cat-form {
   --background: var(--mf-bg);
   --color: var(--mf-ink);

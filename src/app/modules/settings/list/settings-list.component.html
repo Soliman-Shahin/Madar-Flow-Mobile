@@ -6,16 +6,16 @@
 
 <ion-content class="settings-content" [fullscreen]="true">
   <div class="settings-container">
-    <!-- Profile Banner -->
-    <ion-list inset="true" class="premium-list">
+    <!-- Account -->
+    <ion-list class="premium-list mf-account">
       <ion-item
         button
         detail="true"
         (click)="navigateToProfile()"
-        class="profile-item"
+        class="mf-account__item"
         lines="none"
       >
-        <ion-avatar slot="start" class="profile-avatar">
+        <span slot="start" class="mf-account__avatar" aria-hidden="true">
           @if (profile?.avatarUrl && !avatarFailed) {
           <img
             [src]="profile?.avatarUrl"
@@ -24,30 +24,37 @@
             alt=""
           />
           } @else {
-          <ion-icon name="person-outline" aria-hidden="true"></ion-icon> }
-        </ion-avatar>
+          {{ initials }}
+          }
+        </span>
         <ion-label>
-          <h2 class="profile-name">
-            {{
-              currentUser?.username ||
-                currentUser?.email ||
-                ("MOBILE_UI.ACCOUNT" | translate)
-            }}
-          </h2>
-          <p class="profile-desc">
-            {{ "SETTINGS.MANAGE_PROFILE" | translate }}
-          </p>
+          <h2 class="mf-account__name">{{ displayName }}</h2>
+          @if (displayEmail) {
+          <p class="mf-account__email" dir="ltr">{{ displayEmail }}</p>
+          }
+        </ion-label>
+      </ion-item>
+      <ion-item
+        button
+        detail="true"
+        (click)="navigateToSubscription()"
+        lines="none"
+      >
+        <div slot="start" class="icon-wrapper color-purple">
+          <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label>
+          <h3>{{ "SETTINGS.SUBSCRIPTION" | translate }}</h3>
         </ion-label>
       </ion-item>
     </ion-list>
 
-    <!-- General Settings Section -->
-    <div class="section-label">{{ "SETTINGS.GENERAL" | translate }}</div>
-    <ion-list inset="true" class="premium-list">
-      <!-- Language Setting -->
+    <!-- General -->
+    <h2 class="section-label">{{ "SETTINGS.GENERAL" | translate }}</h2>
+    <ion-list class="premium-list">
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-blue">
-          <ion-icon name="language"></ion-icon>
+          <ion-icon name="language-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.LANGUAGE" | translate }}</h3>
@@ -57,21 +64,20 @@
           [attr.aria-label]="'SETTINGS.LANGUAGE' | translate"
           [value]="currentLanguage"
           (ionChange)="onLanguageChange($event)"
-          interface="popover"
+          interface="action-sheet"
           class="modern-select"
         >
-          @for (lang of languages; track lang) {
-          <ion-select-option [value]="lang.code">
-            {{ lang.flag }} {{ lang.name }}
-          </ion-select-option>
+          @for (lang of languages; track lang.code) {
+          <ion-select-option [value]="lang.code">{{
+            lang.name
+          }}</ion-select-option>
           }
         </ion-select>
       </ion-item>
 
-      <!-- Theme Setting -->
       <ion-item lines="none">
-        <div slot="start" class="icon-wrapper color-purple">
-          <ion-icon name="color-palette"></ion-icon>
+        <div slot="start" class="icon-wrapper color-orange">
+          <ion-icon name="contrast-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.THEME" | translate }}</h3>
@@ -81,10 +87,10 @@
           [attr.aria-label]="'SETTINGS.THEME' | translate"
           [value]="selectedTheme"
           (ionChange)="onThemeChange($event)"
-          interface="popover"
+          interface="action-sheet"
           class="modern-select"
         >
-          @for (theme of themes; track theme) {
+          @for (theme of themes; track theme.value) {
           <ion-select-option [value]="theme.value">
             {{ theme.label | translate }}
           </ion-select-option>
@@ -93,20 +99,15 @@
       </ion-item>
     </ion-list>
 
-    <!-- Notifications & Security Section -->
-    <div class="section-label">
-      {{ "SETTINGS.SECURITY" | translate }} &
-      {{ "SETTINGS.NOTIFICATIONS" | translate }}
-    </div>
-    <ion-list inset="true" class="premium-list">
-      <!-- Notifications Setting -->
+    <!-- Notifications -->
+    <h2 class="section-label">{{ "SETTINGS.NOTIFICATIONS" | translate }}</h2>
+    <ion-list class="premium-list">
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-red">
-          <ion-icon name="notifications"></ion-icon>
+          <ion-icon name="notifications-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.DEVICE_PUSH_NOTIFICATIONS" | translate }}</h3>
-          <p>{{ "SETTINGS.DEVICE_PUSH_NOTIFICATIONS_DESC" | translate }}</p>
           <p>{{ notificationStatus | translate }}</p>
         </ion-label>
         <ion-toggle
@@ -114,7 +115,6 @@
           [attr.aria-label]="'SETTINGS.DEVICE_PUSH_NOTIFICATIONS' | translate"
           [checked]="notificationsEnabled"
           (ionChange)="toggleNotifications($event)"
-          color="primary"
         ></ion-toggle>
       </ion-item>
 
@@ -123,22 +123,26 @@
         detail="true"
         lines="none"
         routerLink="/settings/notification-preferences"
-        [attr.aria-label]="'SETTINGS.NOTIFICATION_PREFERENCES' | translate"
       >
         <div slot="start" class="icon-wrapper color-blue">
           <ion-icon name="options-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.NOTIFICATION_PREFERENCES" | translate }}</h3>
-          <p>{{ "SETTINGS.NOTIFICATION_PREFERENCES_DESC" | translate }}</p>
         </ion-label>
       </ion-item>
+    </ion-list>
+    <p class="section-note">
+      {{ "SETTINGS.DEVICE_PUSH_NOTIFICATIONS_DESC" | translate }}
+    </p>
 
-      <!-- Biometric Settings -->
-      @if (biometricAvailable) {
+    <!-- Security -->
+    @if (biometricAvailable) {
+    <h2 class="section-label">{{ "SETTINGS.SECURITY" | translate }}</h2>
+    <ion-list class="premium-list">
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-green">
-          <ion-icon name="finger-print"></ion-icon>
+          <ion-icon name="finger-print" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.BIOMETRIC" | translate }}</h3>
@@ -149,13 +153,12 @@
           [attr.aria-label]="'SETTINGS.BIOMETRIC' | translate"
           [checked]="biometricEnabled"
           (ionChange)="toggleBiometric($event)"
-          color="primary"
         ></ion-toggle>
       </ion-item>
       @if (biometricSignInAvailable) {
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-green">
-          <ion-icon name="finger-print"></ion-icon>
+          <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.BIOMETRIC_SIGNIN" | translate }}</h3>
@@ -166,96 +169,69 @@
           [attr.aria-label]="'SETTINGS.BIOMETRIC_SIGNIN' | translate"
           [checked]="biometricSignInEnabled"
           (ionChange)="toggleBiometricSignIn($event)"
-          color="primary"
         ></ion-toggle>
       </ion-item>
-      } }
+      }
     </ion-list>
+    }
 
-    <!-- Data & Backup Section -->
-    <div class="section-label">{{ "SETTINGS.DATA_BACKUP" | translate }}</div>
-    <ion-list inset="true" class="premium-list">
-      <!-- Sync Settings Button -->
-      <ion-item button detail="true" (click)="navigateToSync()">
+    <!-- Data -->
+    <h2 class="section-label">{{ "SETTINGS.DATA_BACKUP" | translate }}</h2>
+    <ion-list class="premium-list">
+      <ion-item button detail="true" (click)="navigateToSync()" lines="none">
         <div slot="start" class="icon-wrapper color-cyan">
-          <ion-icon name="sync"></ion-icon>
+          <ion-icon name="sync-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.SYNC_SETTINGS" | translate }}</h3>
         </ion-label>
       </ion-item>
-
-      <!-- Backup & Restore Button -->
       <ion-item button detail="true" (click)="navigateToBackup()" lines="none">
         <div slot="start" class="icon-wrapper color-indigo">
-          <ion-icon name="archive"></ion-icon>
+          <ion-icon name="archive-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label>
           <h3>{{ "SETTINGS.BACKUP_RESTORE" | translate }}</h3>
         </ion-label>
       </ion-item>
-    </ion-list>
-
-    <!-- Advanced Section -->
-    <div class="section-label">{{ "SETTINGS.ADVANCED" | translate }}</div>
-    <ion-list inset="true" class="premium-list">
-      <!-- Clear Cache Button -->
       <ion-item button detail="false" (click)="clearCache()" lines="none">
         <div slot="start" class="icon-wrapper color-dark">
-          <ion-icon name="trash"></ion-icon>
+          <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
         </div>
-        <ion-label color="danger">
+        <ion-label>
           <h3>{{ "SETTINGS.CLEAR_CACHE" | translate }}</h3>
         </ion-label>
       </ion-item>
     </ion-list>
 
-    <!-- Subscription Section -->
-    <div class="section-label">{{ "SETTINGS.SUBSCRIPTION" | translate }}</div>
-    <ion-list inset="true" class="premium-list">
-      <!-- Subscription Button -->
-      <ion-item
-        button
-        detail="true"
-        (click)="navigateToSubscription()"
-        lines="none"
-      >
-        <div slot="start" class="icon-wrapper color-purple">
-          <ion-icon name="card"></ion-icon>
-        </div>
-        <ion-label>
-          <h3>{{ "SETTINGS.SUBSCRIPTION" | translate }}</h3>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-
-    <!-- Danger Zone Section -->
-    <div class="section-label">{{ "SETTINGS.DANGER_ZONE" | translate }}</div>
-    <ion-list inset="true" class="premium-list">
+    <!-- Danger zone -->
+    <h2 class="section-label">{{ "SETTINGS.DANGER_ZONE" | translate }}</h2>
+    <ion-list class="premium-list">
       <ion-item
         button
         detail="true"
         routerLink="/settings/delete-account"
         lines="none"
-        [attr.aria-label]="'SETTINGS.DELETE_ACCOUNT' | translate"
       >
         <div slot="start" class="icon-wrapper color-red">
           <ion-icon name="person-remove-outline" aria-hidden="true"></ion-icon>
         </div>
         <ion-label color="danger">
           <h3>{{ "SETTINGS.DELETE_ACCOUNT" | translate }}</h3>
-          <p>{{ "SETTINGS.DELETE_ACCOUNT_DESC" | translate }}</p>
         </ion-label>
       </ion-item>
     </ion-list>
+    <p class="section-note">
+      {{ "SETTINGS.DELETE_ACCOUNT_DESC" | translate }}
+    </p>
 
-    <!-- App Info Section -->
-    <div class="app-info-footer">
-      <div class="app-logo">
-        <img src="assets/icon/icon.png" [alt]="brand.productName" />
-      </div>
-      <h3 class="app-name">{{ brand.productName }}</h3>
-      <p class="app-version">{{ "SETTINGS.VERSION" | translate }}: 1.0.0</p>
-    </div>
+    <!-- About -->
+    <footer class="mf-about">
+      <img src="assets/icon/icon.png" alt="" class="mf-about__logo" />
+      <p class="mf-about__name">{{ brand.productName }}</p>
+      <p class="mf-about__version">
+        {{ "SETTINGS.VERSION" | translate }} <bdi>1.0.0</bdi>
+      </p>
+    </footer>
   </div>
 </ion-content>

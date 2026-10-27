@@ -7,6 +7,8 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <!-- The review intro only makes sense when something needs review. -->
+  @if (conflicts.length > 0) {
   <section class="conflict-intro" aria-labelledby="conflict-heading">
     <div class="intro-icon">
       <ion-icon name="git-compare-outline" aria-hidden="true"></ion-icon>
@@ -16,6 +18,7 @@
       <p>{{ 'SYNC.REVIEW_DESCRIPTION' | translate }}</p>
     </div>
   </section>
+  }
   @if (conflicts.length === 0) {
   <div class="no-conflicts" role="status">
     <ion-icon

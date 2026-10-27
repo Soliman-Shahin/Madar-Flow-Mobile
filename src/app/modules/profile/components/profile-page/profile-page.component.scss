@@ -1,9 +1,6 @@
 @use "src/theme/mobile-secondary" as secondary;
 @include secondary.page;
-:host {
-  display: block;
-  height: 100%;
-}
+// The host is an Ionic .ion-page (flex column): header + scrolling content.
 .profile-main {
   max-width: 640px;
   margin-inline: auto;
@@ -600,4 +597,363 @@
   .stat-val {
     margin-inline-start: auto;
   }
+}
+
+// ===================================================================
+//  Calm Personal Ledger — profile
+// ===================================================================
+.profile-main {
+  gap: var(--mf-space-5);
+  padding: var(--mf-space-5) var(--mf-gutter) var(--mf-space-8);
+  font-family: var(--mf-font-sans);
+}
+
+// Identity: centered avatar, name, email, member since.
+.profile-identity.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mf-space-3);
+  margin: 0;
+  padding: var(--mf-space-2) 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.avatar-wrapper {
+  width: 88px;
+  height: 88px;
+}
+
+.avatar-image {
+  inset: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--mf-primary-soft);
+  color: var(--mf-primary);
+  box-shadow: none;
+
+  ion-icon {
+    font-size: 40px;
+    color: var(--mf-primary);
+  }
+}
+
+.edit-avatar-btn {
+  // 40px visible, sitting on the avatar edge; still a comfortable target.
+  inset-block-end: -4px;
+  inset-inline-end: -4px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border: 3px solid var(--mf-bg);
+  border-radius: 50%;
+  background: var(--mf-primary);
+  color: var(--mf-primary-contrast);
+  box-shadow: none;
+}
+
+.identity-text {
+  align-items: center;
+  gap: 2px;
+}
+
+.user-name {
+  margin: 0;
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--mf-ink);
+}
+
+.identity-email,
+.identity-member {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+// Completion: one quiet line with a thin bar.
+.completion-strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-4);
+  border: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: none;
+}
+
+.strip-icon {
+  display: none;
+}
+
+.strip-text strong {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink);
+}
+
+.strip-text span {
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.strip-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+}
+
+.progress-pct {
+  order: 2;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-ink-2);
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface-sunken);
+}
+
+.progress-fill {
+  border-radius: inherit;
+  background: var(--mf-primary);
+}
+
+// Sign-in method / status facts.
+.account-meta {
+  padding: 0 var(--mf-space-4);
+  border: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: none;
+}
+
+.account-meta-row {
+  min-height: 52px;
+  padding-block: var(--mf-space-3);
+}
+
+.account-meta-row + .account-meta-row {
+  border-top: 1px solid var(--mf-separator);
+}
+
+.account-meta-label {
+  color: var(--mf-ink-2);
+  font-size: var(--mf-text-callout);
+
+  ion-icon {
+    color: var(--mf-ink-3);
+  }
+}
+
+.account-meta-value {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink);
+}
+
+// Sections: one surface each, a plain section title above.
+.premium-card {
+  padding: var(--mf-space-4);
+  border: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: none;
+}
+
+.card-header {
+  gap: var(--mf-space-3);
+  margin-bottom: var(--mf-space-4);
+}
+
+.header-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-primary-soft);
+  color: var(--mf-primary);
+  box-shadow: none;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.header-titles h2 {
+  margin: 0;
+  font-size: var(--mf-text-headline);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink);
+}
+
+.header-titles p {
+  margin: 2px 0 0;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+// Income sources.
+.salary-item {
+  padding: var(--mf-space-2) 0;
+  border: 0;
+  background: transparent;
+}
+
+.salary-item + .salary-item {
+  border-top: 1px solid var(--mf-separator);
+}
+
+.input-wrapper {
+  min-height: 52px;
+  border: 1px solid var(--mf-outline);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+
+  &:focus-within {
+    border-color: var(--mf-primary);
+    box-shadow: 0 0 0 3px var(--mf-primary-soft);
+  }
+
+  > ion-icon {
+    color: var(--mf-ink-3);
+  }
+}
+
+.floating-label {
+  font-size: var(--mf-text-caption);
+  color: var(--mf-ink-3);
+}
+
+.input-content input {
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  color: var(--mf-ink);
+}
+
+.input-content input[type="number"] {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.delete-item-btn {
+  width: var(--mf-touch-target);
+  height: var(--mf-touch-target);
+  border-radius: var(--mf-radius-md);
+  background: transparent;
+  color: var(--mf-ink-3);
+
+  &:not(:disabled):hover,
+  &:not(:disabled):active {
+    background: var(--mf-danger-soft);
+    color: var(--mf-danger);
+  }
+}
+
+.add-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  min-height: var(--mf-touch-target);
+  padding: 0 var(--mf-space-3);
+  border: 1px dashed var(--mf-outline);
+  border-radius: var(--mf-radius-md);
+  background: transparent;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-primary);
+}
+
+.currency-label {
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}
+
+.currency-picker-wrap {
+  min-height: 52px;
+  border: 1px solid var(--mf-outline);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+}
+
+// Primary save buttons: solid identity blue, no gradient.
+ion-button.btn-gradient {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  min-height: 52px;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+// Security tips + sign out.
+.danger-card {
+  border: 0;
+}
+
+.security-list {
+  gap: var(--mf-space-2);
+  margin: 0 0 var(--mf-space-4);
+
+  li {
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-2);
+  }
+
+  ion-icon {
+    color: var(--mf-success);
+  }
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  box-shadow: none;
+}
+
+// Income source fields: one bordered field, no inner box.
+.input-wrapper > ion-icon {
+  display: none;
+}
+
+.input-content input {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.currency-picker-wrap {
+  min-width: 132px;
+  padding-inline: var(--mf-space-3);
 }

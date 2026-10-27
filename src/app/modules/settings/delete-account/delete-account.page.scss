@@ -5,15 +5,13 @@
   display: grid;
   gap: 16px;
   padding-block: 8px
-    calc(
-      16px + var(--ew-tab-bar-height, 72px) + env(safe-area-inset-bottom, 0px)
-    );
+    calc(var(--mf-space-6) + var(--mf-tabbar-clearance));
 }
 
 .delete-account-warning {
-  background: rgba(var(--ion-color-danger-rgb), 0.08);
-  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.3);
-  border-radius: 14px;
+  background: var(--mf-danger-soft);
+  border: 0;
+  border-radius: var(--mf-radius-lg);
   display: grid;
   gap: 12px;
   grid-template-columns: 34px minmax(0, 1fr);
@@ -28,9 +26,9 @@
     width: 30px;
   }
   h2 {
-    color: var(--ion-color-danger);
-    font-size: 16px;
-    font-weight: 700;
+    color: var(--mf-danger);
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
     margin: 0 0 6px;
   }
   p {
@@ -52,4 +50,12 @@
   ion-button {
     margin-top: 4px;
   }
+}
+
+ion-input[fill="outline"] {
+  --border-color: var(--mf-outline);
+  --border-radius: var(--mf-radius-md);
+  --highlight-color-focused: var(--mf-primary);
+  --background: var(--mf-surface);
+  font-family: var(--mf-font-sans);
 }

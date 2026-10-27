@@ -1,4 +1,16 @@
 @if (vm$ | async; as vm) {
+<ion-header mode="ios" class="mf-sub-header" translucent="false">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/settings"
+        [text]="''"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "PROFILE.TITLE" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content class="profile-content" [fullscreen]="true">
   <div class="profile-main">
     @if (vm.isLoadingProfile) {
@@ -36,8 +48,7 @@
         <span class="avatar-preparing" role="status" aria-live="polite">
           {{ "PROFILE.AVATAR_CROP.PREPARING" | translate }}
         </span>
-        }
-        @if (vm.isLoadingAvatar) {
+        } @if (vm.isLoadingAvatar) {
         <span class="avatar-loading" role="status">{{
           "COMMON.LOADING" | translate
         }}</span>
@@ -171,47 +182,6 @@
       </div>
     </div>
     }
-    <!-- ── Quick Stats Grid ── -->
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="stat-icon icon-blue">
-          <ion-icon name="trending-up-outline"></ion-icon>
-        </div>
-        <div class="stat-data">
-          <span class="stat-lbl">{{
-            "PROFILE.STATS.INCOME_SOURCES" | translate
-          }}</span>
-          <span class="stat-val">{{ details.length }}</span>
-        </div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-icon icon-teal">
-          <ion-icon name="wallet-outline"></ion-icon>
-        </div>
-        <div class="stat-data">
-          <span class="stat-lbl">{{
-            "PROFILE.STATS.TOTAL_INCOME" | translate
-          }}</span>
-          <span class="stat-val" dir="ltr"
-            >{{ totalSalary | number : "1.0-0" }}
-            {{ salaryForm.get("currency")?.value }}</span
-          >
-        </div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-icon icon-purple">
-          <ion-icon name="time-outline"></ion-icon>
-        </div>
-        <div class="stat-data">
-          <span class="stat-lbl">{{
-            "PROFILE.STATS.MEMBER_SINCE" | translate
-          }}</span>
-          @if (getMemberSince()) {
-          <span class="stat-val">{{ getMemberSince() }}</span> } @else {
-          <span class="stat-val stat-unavailable">—</span> }
-        </div>
-      </div>
-    </div>
     <!-- ── Forms Layout ── -->
     @if (vm.authMetadata.providerLabelKey || vm.authMetadata.statusLabelKey) {
     <section class="account-meta" aria-labelledby="account-meta-title">

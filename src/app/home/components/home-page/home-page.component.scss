@@ -471,14 +471,11 @@ ion-content {
   flex-direction: column;
 }
 
-// ── Header Bar ───────────────────────────────────────────────────
+// ── Header Bar (visual styles live in .dashboard.mf-dash below) ──
 .dash-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: calc(var(--ion-safe-area-top, 48px) + 20px) 20px 20px;
-  background: transparent;
-  animation: fadeDown 0.5s ease both;
 
   &__left {
     display: flex;
@@ -486,22 +483,9 @@ ion-content {
     gap: 2px;
   }
 
-  .dash-greeting {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(var(--ion-text-color-rgb), 0.5);
-    text-transform: capitalize;
-    letter-spacing: 0.02em;
-  }
-
+  .dash-greeting,
   .dash-name {
     margin: 0;
-    font-size: clamp(1.4rem, 5vw, 1.8rem);
-    font-weight: 800;
-    font-family: var(--ew-font-family-heading);
-    color: var(--ion-text-color);
-    letter-spacing: -0.5px;
   }
 
   &__date {
@@ -509,37 +493,6 @@ ion-content {
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
-    background: rgba(var(--ion-text-color-rgb), 0.04);
-    border: 1px solid rgba(var(--ion-text-color-rgb), 0.08);
-    backdrop-filter: blur(10px);
-    border-radius: 14px;
-    padding: 8px 14px;
-    animation: fadeDown 0.5s 0.1s ease both;
-
-    .dash-date-day {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(var(--ion-text-color-rgb), 0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .dash-date-full {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--ion-text-color);
-    }
-  }
-}
-
-@keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
