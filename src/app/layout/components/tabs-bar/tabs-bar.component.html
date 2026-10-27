@@ -1,21 +1,37 @@
 @if (vm$ | async; as vm) {
 <!-- Navigation is owned by the persistent outlet in LayoutComponent. -->
 @if (vm.isLoggedIn) {
-<!-- The actual tab bar -->
-<ion-tab-bar slot="bottom">
-  @for (tab of tabs; track tab) { @if (tab.visible) {
+<ion-tab-bar slot="bottom" class="mf-tabs">
+  @for (tab of visibleTabs; track tab.id; let i = $index) { @if (i ===
+  addSlotIndex) {
+  <button
+    type="button"
+    class="mf-tabs__add"
+    (click)="addTransaction()"
+    [attr.aria-label]="'LEDGER.ADD_TRANSACTION' | translate"
+  >
+    <span class="mf-tabs__add-mark" aria-hidden="true">
+      <ion-icon name="add"></ion-icon>
+    </span>
+  </button>
+  }
   <ion-tab-button
     (click)="navigateTab(tab.routerLink, $event)"
     [class.tab-selected]="isActiveTab(tab.routerLink, vm.activeRoute)"
     [attr.aria-current]="
       isActiveTab(tab.routerLink, vm.activeRoute) ? 'page' : null
     "
-    [attr.aria-label]="tab.label ?? '' | translate"
   >
-    <span class="tab-content">
-      <ion-icon [name]="tab.icon"></ion-icon>
-    </span>
+    <ion-icon
+      aria-hidden="true"
+      [name]="
+        isActiveTab(tab.routerLink, vm.activeRoute)
+          ? tab.icon
+          : tab.icon + '-outline'
+      "
+    ></ion-icon>
+    <span class="mf-tabs__label">{{ tab.label ?? "" | translate }}</span>
   </ion-tab-button>
-  } }
+  }
 </ion-tab-bar>
 } }

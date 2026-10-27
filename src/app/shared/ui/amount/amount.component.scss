@@ -1,0 +1,72 @@
+// Unified money display — Calm Personal Ledger.
+// Color inherits from context (ink on light surfaces, white on the balance
+// card); only income is tinted. Expenses are normal spending, not errors.
+
+:host {
+  display: inline-flex;
+  max-width: 100%;
+  font-family: var(--mf-font-sans);
+  font-feature-settings: var(--mf-font-numeric-features);
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: var(--mf-leading-tight);
+  white-space: nowrap;
+  color: inherit;
+}
+
+.mf-amount__run {
+  display: inline-flex;
+  align-items: baseline;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+.mf-amount__sign {
+  // A thin gap keeps the true minus readable without detaching it.
+  margin-inline-end: 0.06em;
+}
+
+.mf-amount__currency {
+  margin-inline-start: 0.3em;
+  font-size: 0.72em;
+  font-weight: var(--mf-weight-medium);
+  opacity: 0.72;
+  letter-spacing: 0.02em;
+}
+
+// --- Sizes --------------------------------------------------------------
+:host(.mf-amount--hero) {
+  // Parents may tune the hero size via --mf-amount-hero-size.
+  font-size: var(--mf-amount-hero-size, var(--mf-text-display));
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: -0.01em;
+
+  .mf-amount__currency {
+    font-size: 0.4em;
+  }
+
+  // The currency may wrap under a very large hero value.
+  .mf-amount__run {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+}
+
+:host(.mf-amount--lg) {
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-semibold);
+}
+
+:host(.mf-amount--md) {
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+}
+
+:host(.mf-amount--sm) {
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+}
+
+// --- Kinds --------------------------------------------------------------
+:host(.mf-amount--income) {
+  color: var(--mf-income);
+}

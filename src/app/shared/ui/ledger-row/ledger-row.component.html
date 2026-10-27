@@ -1,0 +1,29 @@
+<span
+  class="mf-row__mark"
+  [style.--mf-row-cat]="color() || null"
+  aria-hidden="true"
+>
+  <ion-icon [name]="icon() || 'pricetag-outline'"></ion-icon>
+</span>
+<span class="mf-row__text">
+  <span class="mf-row__title">{{ title() }}</span>
+  @if (category() || status()) {
+  <span class="mf-row__meta">
+    @if (category()) {
+    <span class="mf-row__category">{{ category() }}</span>
+    } @if (status()) {
+    <span
+      class="mf-row__status"
+      [class.mf-row__status--problem]="statusTone() === 'problem'"
+      >{{ status() }}</span
+    >
+    }
+  </span>
+  }
+</span>
+<app-amount
+  class="mf-row__amount"
+  [value]="amount()"
+  [kind]="kind()"
+  [currency]="currency()"
+/>

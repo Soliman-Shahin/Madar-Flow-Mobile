@@ -25,111 +25,66 @@
   <!-- Content after loading -->
   @if (!txLoading && (!loadError || transactions.length > 0)) { @if
   (transactions.length > 0) {
-  <ion-list class="transactions-list list-fade-in">
-    @for (t of transactions; track trackById(i, t); let i = $index) {
-    <ion-item-sliding class="transaction-sliding" [style.--animation-order]="i">
-      <ion-item
-        class="transaction-item item-card"
-        lines="none"
-        button
-        detail="false"
-        (click)="onDetail(t)"
-      >
-        <div class="transaction-icon" slot="start">
-          <span
-            class="category-icon"
-            [style.background]="getCategoryColor(t)"
-            aria-hidden="true"
-          >
-            <ion-icon [name]="getCategoryIcon(t)"></ion-icon>
-          </span>
-        </div>
-        <div class="transaction-content">
-          <div class="transaction-header">
-            <h3 class="transaction-title">
-              {{ getOperationName(t) }}
-            </h3>
-            <div class="transaction-amount">
-              <span
-                class="amount-value"
-                [ngClass]="
-                  getCategoryType(t) === 'income'
-                    ? 'amount-income'
-                    : 'amount-expense'
-                "
-              >
-                {{ getCategoryType(t) === "income" ? "+" : "-"
-                }}{{ getAmountValue(t) | number : "1.2-2" : locale }}
-                {{
-                  userCurrency || ("MOBILE.CURRENCY_UNAVAILABLE" | translate)
-                }}
-              </span>
-            </div>
-          </div>
-          <div class="transaction-meta">
-            @if (syncLabel(t); as status) {
-            <span class="transaction-status">{{ status | translate }}</span> }
-            <span class="transaction-date">
-              <ion-icon name="calendar-outline"></ion-icon>
-              {{ getDateValue(t) | date : "MMM d, y" : undefined : locale }}
-            </span>
-            @if (getCategoryName(t); as cat) {
-            <span
-              class="transaction-category"
-              [style.display]="
-                cat === '—' || cat === '-' ? 'none' : 'inline-flex'
-              "
-            >
-              <ion-icon name="pricetag-outline"></ion-icon>
-              {{ cat }}
-            </span>
-            }
-          </div>
-        </div>
-      </ion-item>
-      <ion-item-options side="end" class="custom-item-options">
-        <ion-item-option class="option-btn option-edit" (click)="onEdit(t)">
-          <div class="option-content">
-            <ion-icon name="create-outline"></ion-icon>
-            <span>{{ "Edit" | translate }}</span>
-          </div>
-        </ion-item-option>
-        <ion-item-option
-          class="option-btn option-delete"
-          color="danger"
-          (click)="onDelete(t)"
+  <div class="mf-ledger">
+    @for (group of dayGroups; track group.key) {
+    <app-ledger-day-header
+      [label]="group.label"
+      [net]="group.net"
+      [currency]="userCurrency || null"
+    />
+    <ion-list class="mf-ledger__group" lines="none">
+      @for (t of group.items; track trackById(i, t); let i = $index) {
+      <ion-item-sliding class="mf-ledger__sliding">
+        <ion-item
+          class="mf-ledger__item"
+          lines="none"
+          button
+          detail="false"
+          (click)="onDetail(t)"
         >
-          <div class="option-content">
-            <ion-icon name="trash-outline"></ion-icon>
-            <span>{{ "Delete" | translate }}</span>
-          </div>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+          <app-ledger-row
+            [title]="getOperationName(t)"
+            [category]="getCategoryName(t) === '—' ? null : getCategoryName(t)"
+            [color]="getCategoryColor(t)"
+            [icon]="getCategoryIcon(t)"
+            [amount]="getAmountValue(t)"
+            [kind]="getCategoryType(t) === 'income' ? 'income' : 'expense'"
+            [currency]="
+              userCurrency || ('MOBILE.CURRENCY_UNAVAILABLE' | translate)
+            "
+            [status]="
+              syncAttention(t) ? (syncAttention(t)!.label | translate) : null
+            "
+            [statusTone]="syncAttention(t)?.tone ?? 'pending'"
+          />
+        </ion-item>
+        <ion-item-options side="end" class="custom-item-options">
+          <ion-item-option class="option-btn option-edit" (click)="onEdit(t)">
+            <div class="option-content">
+              <ion-icon name="create-outline"></ion-icon>
+              <span>{{ "Edit" | translate }}</span>
+            </div>
+          </ion-item-option>
+          <ion-item-option
+            class="option-btn option-delete"
+            color="danger"
+            (click)="onDelete(t)"
+          >
+            <div class="option-content">
+              <ion-icon name="trash-outline"></ion-icon>
+              <span>{{ "Delete" | translate }}</span>
+            </div>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      }
+    </ion-list>
     }
-  </ion-list>
+  </div>
   } @else {
-  <div class="empty-state-wrapper">
-    <div class="empty-icon-glow">
-      <img
-        src="assets/icon/icon.png"
-        alt="App Logo"
-        class="empty-state-icon"
-        style="
-          width: 48px;
-          height: 48px;
-          filter: drop-shadow(
-            0 4px 8px rgba(var(--ion-color-primary-rgb), 0.3)
-          );
-        "
-      />
-    </div>
-    <h3 class="empty-title">
-      {{ "TRANSACTIONS.NO_RECENT" | translate }}
-    </h3>
-    <p class="empty-subtitle">
-      {{ "TRANSACTIONS.ADD_NEW" | translate }}
-    </p>
+  <div class="mf-empty" role="status">
+    <p class="mf-empty__title">{{ "TRANSACTIONS.NO_RECENT" | translate }}</p>
+    <p class="mf-empty__hint">{{ "TRANSACTIONS.ADD_NEW" | translate }}</p>
   </div>
   }
   <!-- Empty State -->

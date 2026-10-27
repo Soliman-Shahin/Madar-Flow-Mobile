@@ -1,4 +1,25 @@
 {
+  "LEDGER": {
+    "SPENT_THIS_MONTH": "Spent this month",
+    "SPENT_IN": "Spent in {{month}}",
+    "INCOME": "Income",
+    "LEFT": "Left",
+    "OVER": "Over income",
+    "PACE_ARIA": "{{value}}% of income spent",
+    "NO_INCOME": "No income recorded for this month",
+    "LESS_THAN_LAST": "{{value}}% less than last month",
+    "MORE_THAN_LAST": "{{value}}% more than last month",
+    "SAME_AS_LAST": "Same as last month",
+    "FIRST_MONTH": "First month of spending",
+    "HIDE_AMOUNTS": "Hide amounts",
+    "SHOW_AMOUNTS": "Show amounts",
+    "HIDDEN_AMOUNT": "Hidden amount",
+    "DAY_TOTAL": "Day total",
+    "ADD": "Add",
+    "ADD_TRANSACTION": "Add transaction",
+    "RECENT": "Recent",
+    "VIEW_ALL": "View all"
+  },
   "MOBILE_UI": {
     "MARK_ALL_READ": "Mark all as read",
     "MARK_ALL_READ_FAILED": "Could not mark notifications as read. Try again.",

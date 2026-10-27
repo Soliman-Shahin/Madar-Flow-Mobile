@@ -1,4 +1,25 @@
 {
+  "LEDGER": {
+    "SPENT_THIS_MONTH": "صرفت هذا الشهر",
+    "SPENT_IN": "صرفت في {{month}}",
+    "INCOME": "الدخل",
+    "LEFT": "المتبقي",
+    "OVER": "تجاوز الدخل",
+    "PACE_ARIA": "صرفت {{value}}٪ من الدخل",
+    "NO_INCOME": "لا يوجد دخل مسجل لهذا الشهر",
+    "LESS_THAN_LAST": "أقل بنسبة {{value}}٪ من الشهر الماضي",
+    "MORE_THAN_LAST": "أكثر بنسبة {{value}}٪ من الشهر الماضي",
+    "SAME_AS_LAST": "مثل الشهر الماضي",
+    "FIRST_MONTH": "أول شهر للمصروفات",
+    "HIDE_AMOUNTS": "إخفاء المبالغ",
+    "SHOW_AMOUNTS": "إظهار المبالغ",
+    "HIDDEN_AMOUNT": "مبلغ مخفي",
+    "DAY_TOTAL": "إجمالي اليوم",
+    "ADD": "إضافة",
+    "ADD_TRANSACTION": "إضافة معاملة",
+    "RECENT": "الأحدث",
+    "VIEW_ALL": "عرض الكل"
+  },
   "MOBILE_UI": {
     "MARK_ALL_READ": "تعليم الكل كمقروء",
     "MARK_ALL_READ_FAILED": "تعذر تحديد الإشعارات كمقروءة. حاول مرة أخرى.",

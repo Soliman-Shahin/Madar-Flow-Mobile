@@ -885,3 +885,139 @@ app-line-chart {
 .widget-error ion-button {
   margin: 0;
 }
+
+// ===================================================================
+//  Calm Personal Ledger — hero and recent ledger
+// ===================================================================
+.mf-home-hero {
+  margin-block: var(--mf-space-2) var(--mf-space-2);
+  padding-inline: var(--mf-space-1);
+}
+
+.mf-home-recent {
+  margin-block-start: var(--mf-space-2);
+}
+
+.mf-home-recent__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  padding-inline: var(--mf-space-1);
+
+  h2 {
+    margin: 0;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+    line-height: var(--mf-leading-snug);
+    color: var(--mf-ink);
+  }
+}
+
+.mf-home-recent__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--mf-touch-target);
+  padding-inline: var(--mf-space-2);
+  margin-inline-end: calc(var(--mf-space-2) * -1);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-primary);
+  text-decoration: none;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--mf-radius-sm);
+  }
+}
+
+:host-context([dir="rtl"]) .mf-home-recent__all ion-icon {
+  transform: scaleX(-1);
+}
+
+// Header and section switch, on Ledger tokens (overrides the legacy
+// global home rules in theme/_mobile-core and theme/_premium-showcase).
+.dashboard.mf-dash {
+  font-family: var(--mf-font-sans);
+
+  .dash-header {
+    padding: calc(var(--ion-safe-area-top, 0px) + var(--mf-space-3))
+      var(--mf-gutter) var(--mf-space-1);
+    animation: none;
+  }
+
+  .dash-greeting {
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-medium);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--mf-ink-3);
+  }
+
+  .dash-name {
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-title-2);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: -0.01em;
+    color: var(--mf-ink);
+  }
+
+  .dash-header__date {
+    padding: 0;
+    background: none;
+    border: 0;
+    backdrop-filter: none;
+    animation: none;
+
+    .dash-date-day {
+      font-size: var(--mf-text-caption);
+      font-weight: var(--mf-weight-medium);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--mf-ink-3);
+    }
+
+    .dash-date-full {
+      font-size: var(--mf-text-footnote);
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-ink-2);
+    }
+  }
+
+  .month-selector {
+    animation: none;
+  }
+
+  .tabs-row {
+    padding: var(--mf-space-2) var(--mf-gutter) 0;
+    margin-top: 0;
+    animation: none;
+  }
+
+  .custom-segment {
+    --background: var(--mf-surface-sunken);
+    border-radius: var(--mf-radius-md);
+    padding: 3px;
+  }
+
+  .custom-segment ion-segment-button {
+    --color: var(--mf-ink-2);
+    --color-checked: var(--mf-ink);
+    --indicator-color: var(--mf-surface);
+    --indicator-box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+    min-height: 36px;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}

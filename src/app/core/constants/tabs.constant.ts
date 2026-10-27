@@ -1,6 +1,12 @@
 import { Tab } from 'src/app/shared/models';
 import { APP_ROUTES } from './routes.constant';
 
+/**
+ * Bottom tab bar destinations, in visual order. The tab bar inserts the
+ * "add transaction" action between the second and third tab.
+ * `icon` is the filled (selected) name; the bar uses `<icon>-outline`
+ * for unselected tabs.
+ */
 export const TABS_MENU_ITEMS: Tab[] = [
   {
     id: APP_ROUTES.HOME,
@@ -16,29 +22,29 @@ export const TABS_MENU_ITEMS: Tab[] = [
     excludeRoles: [],
   },
   {
-    id: APP_ROUTES.CATEGORIES.INDEX,
+    id: APP_ROUTES.TRANSACTIONS.INDEX,
     order: 1,
-    label: 'SIDEBAR.CATEGORIES',
+    label: 'SIDEBAR.TRANSACTIONS',
     show_label: true,
-    routerLink: APP_ROUTES.BASE + APP_ROUTES.CATEGORIES.INDEX,
+    routerLink: APP_ROUTES.BASE + APP_ROUTES.TRANSACTIONS.INDEX,
     routerLinkActiveOptions: { exact: true },
     icon: 'list',
     visible: true,
     disabled: false,
     roles: [],
-    excludeRoles: [],
   },
   {
-    id: APP_ROUTES.TRANSACTIONS.INDEX,
+    id: APP_ROUTES.CATEGORIES.INDEX,
     order: 2,
-    label: 'SIDEBAR.EXPENSES',
+    label: 'SIDEBAR.CATEGORIES',
     show_label: true,
-    routerLink: APP_ROUTES.BASE + APP_ROUTES.TRANSACTIONS.INDEX,
+    routerLink: APP_ROUTES.BASE + APP_ROUTES.CATEGORIES.INDEX,
     routerLinkActiveOptions: { exact: true },
-    icon: 'receipt',
+    icon: 'grid',
     visible: true,
     disabled: false,
     roles: [],
+    excludeRoles: [],
   },
   {
     id: APP_ROUTES.SETTINGS.INDEX,

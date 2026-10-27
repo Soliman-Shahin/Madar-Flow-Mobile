@@ -1,4 +1,7 @@
-import { expenseSyncLabel } from 'src/app/shared/utils/expense-presentation';
+import {
+  expenseSyncAttention,
+  expenseSyncLabel,
+} from 'src/app/shared/utils/expense-presentation';
 import { ExpenseDetailComponent } from 'src/app/home/components/expense-detail/expense-detail.component';
 import {
   Component,
@@ -8,6 +11,7 @@ import {
   computed,
   effect,
   inject,
+  DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -27,8 +31,14 @@ import { ExpenseFormComponent } from 'src/app/home/components/expense-form/expen
 import { ComponentStateService } from 'src/app/shared/services/component-state.service';
 import { FormsModule } from '@angular/forms';
 import { SkeletonBlockComponent } from '../../../../shared/ui/skeleton-block/skeleton-block.component';
-import { NgClass, LowerCasePipe, DecimalPipe, DatePipe } from '@angular/common';
-import { AddFabButtonComponent } from '../../../../shared/ui/add-fab-button/add-fab-button.component';
+import { LowerCasePipe, DecimalPipe, DatePipe } from '@angular/common';
+import { LedgerRowComponent } from '../../../../shared/ui/ledger-row/ledger-row.component';
+import { LedgerDayHeaderComponent } from '../../../../shared/ui/ledger-day-header/ledger-day-header.component';
+import { QuickAddService } from '../../../../shared/services/quick-add.service';
+import {
+  groupByLedgerDay,
+  ledgerDayLabel,
+} from '../../../../shared/utils/ledger-day.util';
 import { TranslateModule } from '@ngx-translate/core';
 import { PlanService } from '../../../../core/services/plan.service';
 import { PlanLimitBannerComponent } from '../../../../shared/components/plan-limit-banner/plan-limit-banner.component';
@@ -50,6 +60,8 @@ interface TransactionItem {
 interface TransactionGroup {
   key: string;
   label: string;
+  /** Signed net for the day: income positive, expenses negative. */
+  net: number;
   items: TransactionItem[];
 }
 
@@ -64,8 +76,8 @@ interface TransactionGroup {
     IonicModule,
     FormsModule,
     SkeletonBlockComponent,
-    NgClass,
-    AddFabButtonComponent,
+    LedgerRowComponent,
+    LedgerDayHeaderComponent,
     DecimalPipe,
     DatePipe,
     TranslateModule,
@@ -74,6 +86,7 @@ interface TransactionGroup {
 })
 export class TransactionsListComponent extends BaseComponent implements OnInit {
   readonly syncLabel = expenseSyncLabel;
+  readonly syncAttention = expenseSyncAttention;
   // Signals for state management
   rawTransactions = signal<Expense[]>([]);
   transactions = computed(() => {
@@ -84,17 +97,12 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
   private readonly languageVersion = signal(0);
   transactionGroups = computed<TransactionGroup[]>(() => {
     this.languageVersion();
-    const groups = new Map<string, TransactionGroup>();
-    for (const item of this.transactions()) {
-      const key = this.localDateKey(item.date);
-      let group = groups.get(key);
-      if (!group) {
-        group = { key, label: this.getDateGroupLabel(item.date), items: [] };
-        groups.set(key, group);
-      }
-      group.items.push(item);
-    }
-    return Array.from(groups.values());
+    return groupByLedgerDay(
+      this.transactions(),
+      (item) => item.date,
+      (item) => (item.isIncome ? 1 : -1) * (Number(item.amount) || 0),
+      (date) => this.getDateGroupLabel(date)
+    );
   });
   categories = signal<Category[]>([]);
   userCurrency = signal<string>('');
@@ -138,6 +146,10 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
         this.searchTerm.set(term);
         this.loadTransactions();
       });
+    this.quickAdd.transactionSaved$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.loadTransactions());
+    inject(DestroyRef).onDestroy(() => this.unregisterQuickAdd?.());
     this.expenseService.expenseReconciled$
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
@@ -160,37 +172,29 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  private localDateKey(date: Date): string {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}-${String(date.getDate()).padStart(2, '0')}`;
-  }
-
   private getDateGroupLabel(date: Date): string {
-    const today = new Date();
-    const yesterday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() - 1
-    );
-    const dateKey = this.localDateKey(date);
-    if (dateKey === this.localDateKey(today)) {
-      return this.translateService.instant('TRANSACTIONS.DATE_GROUP_TODAY');
-    }
-    if (dateKey === this.localDateKey(yesterday)) {
-      return this.translateService.instant('TRANSACTIONS.DATE_GROUP_YESTERDAY');
-    }
-    return new Intl.DateTimeFormat(this.currentLang || 'en', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(date);
+    return ledgerDayLabel(date, this.currentLang || 'en', {
+      today: this.translateService.instant('TRANSACTIONS.DATE_GROUP_TODAY'),
+      yesterday: this.translateService.instant(
+        'TRANSACTIONS.DATE_GROUP_YESTERDAY'
+      ),
+    });
   }
 
   private hasEntered = false;
+  private readonly quickAdd = inject(QuickAddService);
+  private unregisterQuickAdd?: () => void;
+
+  ionViewWillLeave() {
+    this.unregisterQuickAdd?.();
+    this.unregisterQuickAdd = undefined;
+  }
 
   ionViewWillEnter() {
+    this.unregisterQuickAdd?.();
+    this.unregisterQuickAdd = this.quickAdd.register(() =>
+      this.openAddTransactionModal()
+    );
     this.checkPlanLimits();
     if (this.hasEntered) {
       this.loadTransactions();

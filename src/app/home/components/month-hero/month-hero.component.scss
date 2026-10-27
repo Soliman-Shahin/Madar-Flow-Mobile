@@ -1,0 +1,153 @@
+// Home hero — sits directly on the page background: no card, no gradient.
+
+:host {
+  display: block;
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+}
+
+.mf-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  padding-block: var(--mf-space-2) var(--mf-space-4);
+}
+
+.mf-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+}
+
+.mf-hero__label {
+  margin: 0;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink-2);
+}
+
+.mf-hero__mask {
+  display: grid;
+  place-items: center;
+  width: var(--mf-touch-target);
+  height: var(--mf-touch-target);
+  margin-inline-end: calc(var(--mf-space-3) * -1);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mf-ink-3);
+  cursor: pointer;
+  transition: background-color var(--mf-dur-quick) var(--mf-ease-standard);
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:active {
+    background: var(--mf-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.mf-hero__amount {
+  // Shrinks on narrow screens and very large text so it never overflows.
+  --mf-amount-hero-size: clamp(1.5rem, 11vw, var(--mf-text-display));
+  white-space: normal;
+}
+
+.mf-hero__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+  margin: 0;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-3);
+
+  ion-icon {
+    font-size: 14px;
+  }
+
+  &.mf-hero__delta--less {
+    color: var(--mf-success);
+  }
+
+  &.mf-hero__delta--more {
+    color: var(--mf-warning);
+  }
+}
+
+.mf-hero__pace {
+  position: relative;
+  height: 6px;
+  margin-block: var(--mf-space-2) var(--mf-space-1);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface-sunken);
+  overflow: hidden;
+}
+
+.mf-hero__pace-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: inherit;
+  background: var(--mf-primary);
+  transition: inline-size var(--mf-dur-emphasized) var(--mf-ease-standard);
+}
+
+.mf-hero__pace--over .mf-hero__pace-fill {
+  background: var(--mf-danger);
+}
+
+.mf-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--mf-space-2) var(--mf-space-4);
+  margin: 0;
+}
+
+.mf-hero__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  dt {
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-3);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--mf-ink);
+  }
+}
+
+.mf-hero__fact--end {
+  align-items: flex-end;
+  text-align: end;
+}
+
+.mf-hero__fact--over dd {
+  color: var(--mf-danger);
+}
+
+.mf-hero__note {
+  margin: 0;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-hero__pace-fill,
+  .mf-hero__mask {
+    transition: none;
+  }
+}

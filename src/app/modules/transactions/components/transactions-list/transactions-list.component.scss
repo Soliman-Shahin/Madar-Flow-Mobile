@@ -259,22 +259,6 @@
   align-items: center;
   justify-content: flex-end;
   min-width: max-content;
-
-  .amount-value {
-    font-family: var(--ew-font-family-heading);
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.5px;
-    white-space: nowrap;
-  }
-
-  .amount-income {
-    color: var(--ion-color-success) !important;
-  }
-
-  .amount-expense {
-    color: var(--ion-color-danger) !important;
-  }
 }
 
 .filtered-empty-state {
@@ -308,11 +292,6 @@
 
 .transactions-list {
   padding-top: 8px;
-}
-
-.transaction-item .transaction-amount .amount-value {
-  font-size: clamp(16px, 4.2vw, 19px);
-  font-variant-numeric: tabular-nums;
 }
 
 .transaction-item .transaction-meta .transaction-category {
@@ -1121,5 +1100,65 @@ ion-searchbar {
   }
   ion-content {
     --padding-bottom: var(--ew-core-bottom-clearance);
+  }
+}
+
+// ===================================================================
+//  Calm Personal Ledger — header
+// ===================================================================
+ion-header.mf-tx-header {
+  font-family: var(--mf-font-sans);
+  border-bottom: 1px solid var(--mf-separator);
+
+  ion-toolbar {
+    --background: var(--mf-bg);
+    --border-width: 0;
+  }
+
+  .header-title-container .main-title {
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-bold);
+    letter-spacing: -0.01em;
+    color: var(--mf-ink);
+  }
+
+  .header-title-container .sub-title {
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-medium);
+    letter-spacing: 0;
+    color: var(--mf-ink-3);
+  }
+
+  ion-searchbar {
+    --background: var(--mf-surface) !important;
+    --border-radius: var(--mf-radius-md) !important;
+    --box-shadow: none !important;
+    --color: var(--mf-ink) !important;
+    --placeholder-color: var(--mf-ink-3) !important;
+    --placeholder-opacity: 1;
+    --icon-color: var(--mf-ink-3) !important;
+    --clear-button-color: var(--mf-ink-3);
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+  }
+
+  .custom-segment {
+    --background: var(--mf-surface-sunken);
+    border-radius: var(--mf-radius-md);
+    padding: 3px;
+  }
+
+  .custom-segment ion-segment-button {
+    --color: var(--mf-ink-2) !important;
+    --color-checked: var(--mf-ink) !important;
+    --indicator-color: var(--mf-surface);
+    --indicator-box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
+    min-height: 36px;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    letter-spacing: 0;
+    text-transform: none;
   }
 }

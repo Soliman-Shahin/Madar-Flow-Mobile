@@ -1,0 +1,91 @@
+// Ledger row — Calm Personal Ledger.
+// Category identity is a small tinted mark, not a saturated tile; the
+// amount column stays aligned; long titles wrap to two lines, categories wrap.
+
+:host {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--mf-space-3);
+  width: 100%;
+  min-height: 56px;
+  padding-block: var(--mf-space-3);
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+}
+
+.mf-row__mark {
+  --mf-row-cat-color: var(--mf-row-cat, var(--mf-cat-8));
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--mf-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--mf-row-cat-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
+  color: color-mix(in srgb, var(--mf-row-cat-color) 78%, var(--mf-ink));
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.mf-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mf-row__title {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  line-height: var(--mf-leading-snug);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mf-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-ink-3);
+}
+
+.mf-row__category {
+  overflow-wrap: anywhere;
+}
+
+.mf-row__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mf-warning);
+  font-weight: var(--mf-weight-medium);
+
+  &::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &.mf-row__status--problem {
+    color: var(--mf-danger);
+  }
+}
+
+.mf-row__amount {
+  align-self: center;
+  justify-self: end;
+}

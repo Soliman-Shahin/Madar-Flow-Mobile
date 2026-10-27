@@ -149,22 +149,6 @@
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-
-  .amount-value {
-    font-family: var(--ew-font-family-heading) !important;
-    font-weight: 800 !important;
-    font-size: 18px !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-  }
-
-  .amount-income {
-    color: var(--ion-color-success) !important;
-  }
-
-  .amount-expense {
-    color: var(--ion-color-danger) !important;
-  }
 }
 
 /* Custom sliding action buttons layout */
