@@ -5,11 +5,17 @@ import { throwError, of } from 'rxjs';
 import { TokenService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
+import { Capacitor } from '@capacitor/core';
 
 export function isApiUrl(url: string): boolean {
   try {
     const target = new URL(url, window.location.origin);
-    const api = new URL(environment.apiUrl, window.location.origin);
+    const api = new URL(
+      Capacitor.isNativePlatform()
+        ? environment.nativeApiUrl
+        : environment.browserApiUrl,
+      window.location.origin
+    );
     return (
       target.origin === api.origin &&
       (target.pathname === api.pathname ||

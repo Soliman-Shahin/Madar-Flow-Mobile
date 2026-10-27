@@ -41,8 +41,7 @@ export class NotificationService {
     const accessToken = this.token.getAccessToken();
     if (!owner || !accessToken) return;
     if (this.socket) return;
-    const origin = environment.apiUrl.replace(/\/v1\/?$/, '');
-    this.socket = io(origin, {
+    this.socket = io(environment.backendOrigin, {
       auth: { token: String(accessToken).replace(/^"|"$/g, '') },
       transports: ['websocket'],
       reconnection: true,

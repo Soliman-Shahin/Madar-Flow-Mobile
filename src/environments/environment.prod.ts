@@ -1,5 +1,10 @@
 export const environment = {
   production: true,
+  // Production remains direct; the development /api proxy is not used.
+  browserApiUrl: 'https://expenses-wallet.up.railway.app/v1',
+  nativeApiUrl: 'https://expenses-wallet.up.railway.app/v1',
+  backendOrigin: 'https://expenses-wallet.up.railway.app',
+  /** @deprecated Use browserApiUrl, nativeApiUrl, or backendOrigin explicitly. */
   apiUrl: 'https://expenses-wallet.up.railway.app/v1',
 
   // Google OAuth

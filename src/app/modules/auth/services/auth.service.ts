@@ -196,7 +196,7 @@ export class AuthService {
     }
 
     // Web: Redirect to backend OAuth (will redirect back to /auth/callback)
-    const authUrl = `${environment.apiUrl}/user/google${
+    const authUrl = `${environment.browserApiUrl}/user/google${
       consent ? '?consent=1' : ''
     }`;
     window.location.href = authUrl;
@@ -220,7 +220,10 @@ export class AuthService {
     encrypt = true,
     expectedUserId?: string
   ): Observable<AuthResponse> {
-    const fullUrl = environment.apiUrl + path;
+    const baseUrl = Capacitor.isNativePlatform()
+      ? environment.nativeApiUrl
+      : environment.browserApiUrl;
+    const fullUrl = baseUrl + path;
     const payload = encrypt ? this.payload(credentials) : credentials;
     const nativeHttp = Capacitor.isNativePlatform()
       ? (window as any)?.Capacitor?.Plugins?.Http
@@ -292,7 +295,9 @@ export class AuthService {
       return throwError(() => new HttpErrorResponse({ status: 401 }));
     this.refreshInFlight = new HttpClient(this.httpBackend)
       .post<any>(
-        environment.apiUrl + '/user/refresh-token',
+        (Capacitor.isNativePlatform()
+          ? environment.nativeApiUrl
+          : environment.browserApiUrl) + '/user/refresh-token',
         this.payload({ refreshToken: credential })
       )
       .pipe(
@@ -352,7 +357,9 @@ export class AuthService {
           await firstValueFrom(
             new HttpClient(this.httpBackend)
               .post(
-                environment.apiUrl + '/user/logout',
+                (Capacitor.isNativePlatform()
+                  ? environment.nativeApiUrl
+                  : environment.browserApiUrl) + '/user/logout',
                 this.payload({ refreshToken })
               )
               .pipe(timeout(3000))
@@ -380,7 +387,7 @@ export class AuthService {
       return throwError(() => new Error('Invalid OAuth exchange code'));
     }
     return new HttpClient(this.httpBackend)
-      .post<any>(environment.apiUrl + '/user/auth/google/exchange', { code })
+      .post<any>(environment.browserApiUrl + '/user/auth/google/exchange', { code })
       .pipe(
         timeout(15000),
         switchMap((raw) =>
