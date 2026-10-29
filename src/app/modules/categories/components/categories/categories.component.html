@@ -156,24 +156,31 @@
     </ion-reorder-group>
   </ion-list>
   } @else if (!vm.isLoading && !vm.errorMessage && hasActiveFilters()) {
-  <div class="empty-state-wrapper filtered-empty-state">
-    <div class="empty-icon-glow">
-      <ion-icon name="search-outline"></ion-icon>
-    </div>
-    <h3 class="empty-title">{{ "NO_CATEGORIES_FOUND" | translate }}</h3>
-    <ion-button fill="outline" (click)="clearFilters()">{{
-      "FILTERS.CLEAR_FILTERS" | translate
-    }}</ion-button>
+  <div class="mf-empty mf-empty--page" role="status">
+    <ion-icon
+      class="mf-empty__icon"
+      name="search-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <p class="mf-empty__title">{{ "NO_CATEGORIES_FOUND" | translate }}</p>
+    <ion-button
+      fill="clear"
+      class="mf-empty__action mf-empty__action--quiet"
+      (click)="clearFilters()"
+      >{{ "FILTERS.CLEAR_FILTERS" | translate }}</ion-button
+    >
   </div>
   } @else if (!vm.isLoading && !vm.errorMessage) {
-  <div class="empty-state-wrapper">
-    <div class="empty-icon-glow">
-      <ion-icon name="albums-outline"></ion-icon>
-    </div>
-    <h3 class="empty-title">{{ "CATEGORIES.EMPTY_TITLE" | translate }}</h3>
-    <p class="empty-subtitle">{{ "CATEGORIES.EMPTY_MESSAGE" | translate }}</p>
-    <ion-button class="empty-create-button" (click)="navigateToAdd()">
-      <ion-icon slot="start" name="add-outline"></ion-icon>
+  <div class="mf-empty mf-empty--page" role="status">
+    <ion-icon
+      class="mf-empty__icon"
+      name="albums-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <p class="mf-empty__title">{{ "CATEGORIES.EMPTY_TITLE" | translate }}</p>
+    <p class="mf-empty__hint">{{ "CATEGORIES.EMPTY_MESSAGE" | translate }}</p>
+    <ion-button class="mf-empty__action" (click)="navigateToAdd()">
+      <ion-icon slot="start" name="add" aria-hidden="true"></ion-icon>
       {{ "CATEGORY.ADD" | translate }}
     </ion-button>
   </div>
