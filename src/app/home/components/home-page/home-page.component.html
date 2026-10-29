@@ -188,10 +188,6 @@
         role="region"
         [attr.aria-label]="'HOME.CHARTS' | translate"
       >
-        <app-section-header
-          icon="analytics-outline"
-          [title]="'HOME.CHARTS' | translate"
-        ></app-section-header>
         @if (!vm.loading || hasRenderedHomeContent) { @if (chartsError) {
         <div class="widget-error" role="status">
           <ion-icon name="warning-outline"></ion-icon

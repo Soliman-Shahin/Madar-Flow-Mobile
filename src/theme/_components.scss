@@ -568,228 +568,27 @@ body.dark .skeleton {
 }
 
 // ===================================================================
-//  DATE PICKER MODAL - Global Styles (Light + Dark)
-//  Must be global because Ionic modals are appended outside component
-// ===================================================================
-
-ion-modal.date-picker-modal {
-  --height: auto;
-  --border-radius: 24px 24px 0 0;
-  --background: #ffffff;
-
-  .modal-content {
-    background: #ffffff;
-    color: var(--ew-text-color-primary);
-    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 8px);
-  }
-
-  ion-header {
-    &::after {
-      display: none;
-    }
-  }
-
-  ion-header ion-toolbar {
-    --border-width: 0 !important;
-    --background: #ffffff !important;
-    --color: #1a1a2e !important;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    --padding-start: 24px;
-    --padding-end: 24px;
-
-    ion-title {
-      font-weight: 800;
-      font-size: 18px !important;
-      padding: 0 !important;
-      text-align: start;
-      color: #1a1a2e !important;
-    }
-
-    ion-button {
-      --background: rgba(0, 0, 0, 0.06) !important;
-      --border-radius: 50% !important;
-      --color: #1a1a2e !important;
-      --padding-start: 0 !important;
-      --padding-end: 0 !important;
-      width: 36px;
-      height: 36px;
-      margin: 0;
-
-      ion-icon {
-        font-size: 20px;
-      }
-    }
-  }
-
-  ion-datetime {
-    background: transparent !important;
-    --background: transparent !important;
-    min-width: 100%;
-    width: 100%;
-    border-radius: 16px;
-    padding: 0;
-    color: #1a1a2e;
-
-    // Wheel picker (Month/Year) variables - Light Theme
-    --wheel-fade-background-rgb: 255, 255, 255;
-    --wheel-item-color: #8e95a5;
-    --wheel-highlight-background: rgba(var(--ion-color-primary-rgb), 0.1);
-
-    &::part(title) {
-      color: #1a1a2e;
-      font-weight: 700;
-    }
-
-    &::part(weekday) {
-      color: #6b7280;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    &::part(day) {
-      color: #1a1a2e;
-      font-weight: 600;
-    }
-
-    &::part(day selected),
-    &::part(day selected)::after {
-      color: #ffffff !important;
-      border-radius: 50%;
-      font-weight: 800;
-    }
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-    padding: 0;
-
-    ion-button {
-      flex: 1;
-      --border-radius: 9999px !important;
-      height: 48px;
-      font-weight: 700;
-      font-size: 14px;
-      margin: 0;
-
-      &[fill="outline"] {
-        --background: transparent !important;
-        --color: #1a1a2e !important;
-        --border-color: rgba(0, 0, 0, 0.15) !important;
-        --border-width: 1px !important;
-      }
-
-      &:not([fill="outline"]) {
-        --color: #ffffff !important;
-      }
-    }
-  }
-}
-
-// Dark theme overrides for date picker modal
-body.dark ion-modal.date-picker-modal {
-  --background: #161b22;
-
-  .modal-content {
-    background: #161b22 !important;
-    color: #c9d1d9 !important;
-  }
-
-  ion-header ion-toolbar {
-    --background: #161b22 !important;
-    --color: #f0f6fc !important;
-
-    ion-title {
-      color: #f0f6fc !important;
-    }
-
-    ion-button {
-      --color: #f0f6fc !important;
-      --background: rgba(255, 255, 255, 0.1) !important;
-    }
-  }
-
-  ion-datetime {
-    color: #c9d1d9;
-
-    // Wheel picker (Month/Year) variables - Dark Theme
-    --wheel-fade-background-rgb: 22, 27, 34;
-    --wheel-item-color: #6e7681;
-    --wheel-highlight-background: rgba(88, 166, 255, 0.15);
-
-    &::part(title) {
-      color: #f0f6fc !important;
-    }
-
-    &::part(arrow-button) {
-      color: #58a6ff !important;
-    }
-
-    &::part(weekday) {
-      color: #6e7681 !important;
-    }
-
-    &::part(day) {
-      color: #c9d1d9 !important;
-    }
-
-    &::part(day active) {
-      color: #58a6ff !important;
-    }
-
-    &::part(day disabled) {
-      color: #484f58 !important;
-      opacity: 0.4;
-    }
-  }
-
-  .modal-actions ion-button {
-    &[fill="outline"] {
-      --color: #c9d1d9 !important;
-      --border-color: rgba(255, 255, 255, 0.15) !important;
-    }
-  }
-}
-
-// ===================================================================
-//  Category Multi-Select Popover — Global Styles
-//  (ion-popover renders outside component tree → must be global)
+//  Category popover — Calm Personal Ledger
+//  (ion-popover renders outside the component tree, so the shell is global.
+//  The date-range sheet uses the shared .mf-sheet chrome in theme/_sheets.scss.)
 // ===================================================================
 ion-popover.cat-multi-popover {
-  // Size & position
-  --width: 260px;
-  --max-height: 380px;
-  --border-radius: 16px;
-  --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(0, 0, 0, 0.1);
+  --width: min(300px, calc(100vw - 32px));
+  --max-height: 420px;
+  --background: var(--mf-surface-raised);
+  --border-radius: var(--mf-radius-lg);
+  --box-shadow: 0 12px 32px -8px rgb(16 24 40 / 0.28);
+  --backdrop-opacity: 0.2;
   --offset-y: 6px;
 
-  // Light theme glass background
-  --background: rgba(var(--ion-background-color-rgb), 0.97);
-  --backdrop-opacity: 0.25;
-
-  // Remove default padding
   &::part(content) {
-    border-radius: 16px;
-    border: 1px solid rgba(var(--ion-text-color-rgb), 0.08);
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--mf-radius-lg);
+    box-shadow: 0 12px 32px -8px rgb(16 24 40 / 0.28), inset 0 0 0 1px var(--mf-separator);
   }
 
   &::part(arrow) {
-    display: none; // No arrow — cleaner look
-  }
-}
-
-// Dark theme override
-body.dark ion-popover.cat-multi-popover {
-  --background: rgba(22, 27, 34, 0.98);
-  --box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
-
-  &::part(content) {
-    border-color: rgba(255, 255, 255, 0.1);
+    display: none;
   }
 }
 

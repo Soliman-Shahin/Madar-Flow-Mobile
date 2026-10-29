@@ -171,24 +171,22 @@ import { APP_ROUTES } from 'src/app/core/constants';
           </ion-item>
         </ion-list>
 
-        <div class="ion-padding action-buttons-container">
+        <div class="mf-sync-actions">
           <ion-button
             expand="block"
             type="submit"
-            class="action-button save-action"
+            class="mf-sync-primary"
             [disabled]="!hasUnsavedChanges"
             [attr.aria-disabled]="!hasUnsavedChanges"
           >
             <ion-icon name="save-outline" slot="start"></ion-icon>
-            <span class="action-text">
-              <span>{{ 'COMMON.SAVE' | translate }}</span>
-            </span>
+            {{ 'COMMON.SAVE' | translate }}
           </ion-button>
 
           <ion-button
             expand="block"
             type="button"
-            class="action-button sync-now-action"
+            class="mf-sync-secondary"
             (click)="forceSync()"
             [disabled]="
               !syncService.isOnlineStatus() || syncService.isSyncInProgress()
@@ -197,43 +195,44 @@ import { APP_ROUTES } from 'src/app/core/constants';
           >
             @if (syncService.isSyncInProgress()) {
             <ion-spinner name="crescent" slot="start"></ion-spinner>
-            <span class="action-text"
-              ><span>{{ 'SYNC.SYNCING' | translate }}</span></span
-            >
+            {{ 'SYNC.SYNCING' | translate }}
             } @else {
             <ion-icon name="sync-outline" slot="start"></ion-icon>
-            <span class="action-text"
-              ><span>{{ 'SYNC.SYNC_NOW' | translate }}</span></span
-            >
+            {{ 'SYNC.SYNC_NOW' | translate }}
             }
           </ion-button>
+        </div>
 
-          <ion-button
-            expand="block"
-            type="button"
-            class="action-button backup-action"
+        <ion-list inset="true" class="premium-list mf-sync-tools">
+          <ion-item
+            lines="none"
+            button="true"
+            detail="true"
             (click)="createBackup()"
           >
-            <ion-icon name="download-outline" slot="start"></ion-icon>
-            <span class="action-text">
-              <span>{{ 'SYNC.CREATE_BACKUP' | translate }}</span>
-              <small>{{ 'SYNC.CREATE_BACKUP_DESC' | translate }}</small>
-            </span>
-          </ion-button>
-
-          <ion-button
-            expand="block"
-            type="button"
-            class="action-button destructive-action"
+            <div slot="start" class="icon-wrapper color-indigo">
+              <ion-icon name="download-outline"></ion-icon>
+            </div>
+            <ion-label>
+              <h3>{{ 'SYNC.CREATE_BACKUP' | translate }}</h3>
+              <p>{{ 'SYNC.CREATE_BACKUP_DESC' | translate }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item
+            lines="none"
+            button="true"
+            detail="false"
             (click)="clearOfflineData()"
           >
-            <ion-icon name="trash-outline" slot="start"></ion-icon>
-            <span class="action-text">
-              <span>{{ 'SYNC.CLEAR_OFFLINE_DATA' | translate }}</span>
-              <small>{{ 'SYNC.CLEAR_OFFLINE_DATA_DESC' | translate }}</small>
-            </span>
-          </ion-button>
-        </div>
+            <div slot="start" class="icon-wrapper color-red">
+              <ion-icon name="trash-outline"></ion-icon>
+            </div>
+            <ion-label color="danger">
+              <h3>{{ 'SYNC.CLEAR_OFFLINE_DATA' | translate }}</h3>
+              <p>{{ 'SYNC.CLEAR_OFFLINE_DATA_DESC' | translate }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </form>
     </ion-content>
   `,

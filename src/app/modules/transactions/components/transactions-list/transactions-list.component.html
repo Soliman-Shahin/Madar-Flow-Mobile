@@ -25,6 +25,7 @@
     <ion-buttons slot="end">
       <ion-button
         (click)="toggleFilters()"
+        [class.is-active]="showFilters() || hasActiveFilters()"
         [attr.aria-label]="'TRANSACTIONS.TOGGLE_FILTERS' | translate"
       >
         <ion-icon
@@ -76,22 +77,13 @@
           (click)="openCategoryPopover($event)"
           [class.has-selection]="selectedCategories().length > 0"
         >
-          <!-- Icon squircle (shows selected category color, or default) -->
+          <!-- Icon mark (tinted with the selected category color) -->
           <span
             class="cat-trigger-icon"
-            [style.background]="
-              getSelectedCategoryColor() ||
-              'rgba(var(--ion-text-color-rgb), 0.08)'
-            "
+            [class.is-tinted]="!!getSelectedCategoryColor()"
+            [style.--mf-opt-color]="getSelectedCategoryColor() || null"
           >
-            <ion-icon
-              [name]="getSelectedCategoryIcon()"
-              [style.color]="
-                getSelectedCategoryColor()
-                  ? 'white'
-                  : 'var(--ew-text-color-muted)'
-              "
-            ></ion-icon>
+            <ion-icon [name]="getSelectedCategoryIcon()"></ion-icon>
           </span>
           <!-- Label text -->
           <span class="cat-trigger-text">{{ getSelectedCategoryText() }}</span>
@@ -117,15 +109,8 @@
           (click)="openDatePicker()"
           [class.has-selection]="startDate() || endDate()"
         >
-          <!-- Icon squircle -->
-          <span
-            class="cat-trigger-icon"
-            style="background: rgba(var(--ion-text-color-rgb), 0.08)"
-          >
-            <ion-icon
-              name="calendar-outline"
-              style="color: var(--ew-text-color-muted)"
-            ></ion-icon>
+          <span class="cat-trigger-icon">
+            <ion-icon name="calendar-outline"></ion-icon>
           </span>
           <!-- Label text -->
           <span class="cat-trigger-text">{{ getDateRangeText() }}</span>
@@ -172,14 +157,8 @@
         [class.selected]="isCategorySelected('')"
         (click)="toggleCategory('')"
       >
-        <span
-          class="cat-option-icon"
-          style="background: rgba(var(--ion-text-color-rgb), 0.07)"
-        >
-          <ion-icon
-            name="apps-outline"
-            style="color: var(--ew-text-color-muted)"
-          ></ion-icon>
+        <span class="cat-option-icon">
+          <ion-icon name="apps-outline"></ion-icon>
         </span>
         <span class="cat-option-name">{{
           "TRANSACTIONS.ALL_CATEGORIES" | translate
@@ -198,8 +177,10 @@
         [class.selected]="isCategorySelected(cat._id)"
         (click)="toggleCategory(cat._id)"
       >
-        <!-- Colored squircle icon -->
-        <span class="cat-option-icon" [style.background]="cat.color || '#888'">
+        <span
+          class="cat-option-icon is-tinted"
+          [style.--mf-opt-color]="cat.color || null"
+        >
           <ion-icon [name]="cat.icon || 'pricetag-outline'"></ion-icon>
         </span>
         <span class="cat-option-name">{{ cat.title }}</span>
@@ -371,20 +352,22 @@
 <ion-modal
   [isOpen]="showDatePicker()"
   (willDismiss)="closeDatePicker()"
-  cssClass="date-picker-modal"
+  cssClass="mf-sheet mf-sheet--auto date-picker-modal"
 >
   <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{ "TRANSACTIONS.DATE_RANGE" | translate }}</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="closeDatePicker()">
-            <ion-icon name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <div class="modal-content date-range-content">
+    <div class="mf-sheet__scroll modal-content date-range-content">
+      <div class="mf-sheet__grabber" aria-hidden="true"></div>
+      <header class="mf-range__head">
+        <h2>{{ "TRANSACTIONS.DATE_RANGE" | translate }}</h2>
+        <button
+          type="button"
+          class="mf-range__close"
+          (click)="closeDatePicker()"
+          [attr.aria-label]="'COMMON.CLOSE' | translate"
+        >
+          <ion-icon name="close" aria-hidden="true"></ion-icon>
+        </button>
+      </header>
       <!-- Custom Date Range Picker -->
       <div class="custom-calendar">
         <!-- Calendar Header -->
@@ -459,13 +442,19 @@
         </div>
       </div>
 
-      <div class="modal-actions ion-padding">
-        <ion-button expand="block" fill="outline" (click)="clearDateFilter()">
-          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+      <div class="modal-actions">
+        <ion-button
+          class="mf-range__clear"
+          expand="block"
+          (click)="clearDateFilter()"
+        >
           {{ "COMMON.CLEAR" | translate }}
         </ion-button>
-        <ion-button expand="block" (click)="applyDateFilter()">
-          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+        <ion-button
+          class="mf-range__apply"
+          expand="block"
+          (click)="applyDateFilter()"
+        >
           {{ "COMMON.APPLY" | translate }}
         </ion-button>
       </div>

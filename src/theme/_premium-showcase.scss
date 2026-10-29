@@ -481,8 +481,8 @@ app-home-page:has(.dashboard) {
 }
 app-home-page .dashboard .chart-container {
   box-shadow: none;
-  border-radius: 14px;
-  border-bottom: 1px solid var(--ew-wallet-line);
+  border-radius: 0;
+  border-bottom: 0;
 }
 
 // VD1.1 transaction-only density and picker affordances.

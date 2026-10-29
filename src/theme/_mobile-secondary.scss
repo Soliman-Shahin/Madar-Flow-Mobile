@@ -122,11 +122,9 @@
   }
   ion-button.button-disabled {
     opacity: 1;
-    --background: var(--ew-wallet-inset);
-    --color: var(--ew-wallet-muted);
-    --border-color: var(--ew-wallet-line);
-    --border-width: 1px;
-    --border-style: solid;
+    --background: var(--mf-surface-sunken);
+    --color: var(--mf-ink-3);
+    --border-width: 0;
   }
   // A disabled colored button (e.g. color="danger") must look disabled too.
   ion-button.button-disabled.ion-color {

@@ -400,16 +400,13 @@ ion-content {
 
 .charts-empty-state {
   min-height: 120px;
-  margin-top: 2rem;
   display: grid;
   place-items: center;
-  padding: var(--ew-space-6);
-  color: var(--ew-color-gray-500);
-  font-size: var(--ew-font-size-sm);
+  padding: var(--mf-space-6) var(--mf-space-4);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
   text-align: center;
-  border: 1px dashed rgba(var(--ion-text-color-rgb), 0.12);
-  border-radius: var(--ew-radius-md);
-  background: rgba(var(--ion-text-color-rgb), 0.02);
+  color: var(--mf-ink-3);
 }
 
 .chart-accessible-block {
@@ -417,10 +414,11 @@ ion-content {
 }
 
 .chart-summary {
-  margin: 6px 0 0;
-  color: var(--ew-text-color-muted);
-  font-size: 12px;
-  line-height: 1.4;
+  margin: var(--mf-space-2) 0 0;
+  color: var(--mf-ink-3);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
   text-align: start;
 }
 
@@ -715,4 +713,28 @@ app-line-chart {
     letter-spacing: 0;
     text-transform: none;
   }
+}
+
+// Charts tab — one quiet surface; the charts inside are flat, separated by
+// hairlines instead of nested cards.
+.tab-content > app-date-range-selector {
+  margin-top: var(--mf-space-2);
+}
+
+.card-section.charts-card,
+.dark .card-section.charts-card {
+  margin: var(--mf-space-3) 0 var(--mf-space-6);
+  padding: var(--mf-space-4);
+  border: 0;
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: inset 0 0 0 1px var(--mf-separator);
+  animation: none;
+  transition: none;
+}
+
+.charts-card .chart-accessible-block + .chart-accessible-block {
+  margin-top: var(--mf-space-5);
+  padding-top: var(--mf-space-5);
+  border-top: 1px solid var(--mf-separator);
 }

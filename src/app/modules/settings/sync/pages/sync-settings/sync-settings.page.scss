@@ -1,113 +1,61 @@
 @use "src/theme/mobile-secondary" as secondary;
 @include secondary.settings;
 
-.action-buttons-container {
-  gap: 12px;
-}
+// Sync settings — Calm Personal Ledger. Rows come from the shared settings
+// list; the two actions are the only filled controls.
 
 .conflict-navigation-row {
-  --detail-icon-color: var(--ew-wallet-muted);
-  --detail-icon-opacity: 0.8;
   min-height: 72px;
 }
 
 .conflict-navigation-row:focus-visible {
-  outline: 2px solid var(--ion-color-primary);
+  outline: 2px solid var(--mf-focus-ring);
   outline-offset: -2px;
 }
 
-// The global form submit rule gives every submit button a 60px height and top
-// margin. Settings actions are a compact, shared action family instead.
-.action-buttons-container ion-button.action-button.save-action,
-.action-buttons-container ion-button.action-button.sync-now-action {
-  height: 48px;
-  min-height: 48px;
+.mf-sync-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-6) 0 var(--mf-space-2);
+}
+
+// The global form submit rule gives every submit button a 60px height and a
+// top margin, so these are scoped tightly.
+.mf-sync-actions ion-button.mf-sync-primary,
+.mf-sync-actions ion-button.mf-sync-secondary {
+  height: 52px;
+  min-height: 52px;
   margin: 0;
   --padding-top: 0;
   --padding-bottom: 0;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --border-radius: 16px;
-  font-size: 14px;
+  --border-radius: var(--mf-radius-md);
+  --box-shadow: none;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-.action-text {
-  display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  text-align: start;
-  white-space: normal;
+.mf-sync-actions ion-button.mf-sync-primary {
+  --background: var(--mf-primary);
+  --background-activated: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
 }
 
-.action-text > span {
-  display: block;
-  font-weight: 700;
-  line-height: 1.25;
+.mf-sync-actions ion-button.mf-sync-secondary {
+  --background: var(--mf-primary-soft);
+  --background-activated: var(--mf-primary-soft);
+  --color: var(--mf-primary);
 }
 
-.action-text small {
-  display: block;
-  color: var(--ew-wallet-muted);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.35;
-  white-space: normal;
-}
-
-.sync-now-action .action-text small {
-  color: rgba(var(--ion-color-primary-contrast-rgb), 0.78);
-}
-
-.sync-now-action {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
-  --border-radius: 16px;
-  min-height: 48px;
-  font-weight: 700;
-}
-
-.save-action {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
-  --border-radius: 16px;
-  min-height: 48px;
-  font-weight: 700;
-}
-
-.save-action.button-disabled {
-  --background: var(--ew-wallet-inset);
-  --color: var(--ew-wallet-muted);
+.mf-sync-actions ion-button.button-disabled {
   opacity: 1;
+  --background: var(--mf-surface-sunken);
+  --color: var(--mf-ink-3);
 }
 
-.backup-action,
-.destructive-action {
-  min-height: 46px;
-}
-
-.backup-action {
-  --background: var(--ew-wallet-inset);
-  --color: var(--ion-text-color);
-  --border-color: var(--ew-wallet-line);
-  --border-width: 1px;
-  --border-style: solid;
-  --border-radius: 14px;
-}
-
-.destructive-action {
-  --background: rgba(var(--ion-color-danger-rgb), 0.08);
-  --color: var(--ion-color-danger);
-  --border-color: rgba(var(--ion-color-danger-rgb), 0.35);
-  --border-width: 1px;
-  --border-style: solid;
-  --border-radius: 14px;
-}
-
-.sync-now-action.button-disabled {
-  --background: var(--ew-wallet-inset);
-  --color: var(--ew-wallet-muted);
-  opacity: 1;
+.mf-sync-tools {
+  margin-top: var(--mf-space-4);
 }

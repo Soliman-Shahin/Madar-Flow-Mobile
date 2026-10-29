@@ -1,50 +1,50 @@
+// Date range selector — Calm Personal Ledger segmented control (same grammar
+// as the Summary/Charts switch: a sunken track and a raised active pill).
+
+:host {
+  display: block;
+}
+
 .date-range-selector {
   display: flex;
-  gap: var(--ew-space-2);
-  background-color: var(--ion-card-background);
-  padding: var(--ew-space-2);
-  border-radius: var(--ew-radius-pill);
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface-sunken);
+  font-family: var(--mf-font-sans);
 
   button {
-    flex: 1;
-    padding: var(--ew-space-2) var(--ew-space-2);
-    border: none;
-    background-color: transparent;
-    color: var(--ion-color-medium-shade);
-    font-weight: var(--ew-font-weight-semibold);
-    border-radius: var(--ew-radius-pill);
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 var(--mf-space-2);
+    border: 0;
+    border-radius: calc(var(--mf-radius-md) - 3px);
+    background: transparent;
+    font: inherit;
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-semibold);
+    white-space: nowrap;
+    color: var(--mf-ink-2);
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    transition: background-color var(--mf-dur-quick) var(--mf-ease-standard),
+      color var(--mf-dur-quick) var(--mf-ease-standard);
 
     &.selected {
-      background-color: var(--ion-background-color, #fff);
-      color: var(--ion-color-primary);
-      box-shadow: var(--ew-shadow-xs);
+      background: var(--mf-surface);
+      box-shadow: 0 1px 2px rgb(16 24 40 / 0.1);
+      color: var(--mf-ink);
     }
 
-    &:not(.selected):hover {
-      background-color: var(--ion-color-light-shade);
-      color: var(--ion-text-color);
+    &:focus-visible {
+      outline: 2px solid var(--mf-focus-ring);
+      outline-offset: 1px;
     }
   }
 }
 
-body.dark {
-  .date-range-selector {
-    background-color: var(--ion-color-step-150, #2a2a2a);
-
-    button {
-      color: var(--ion-text-color);
-
-      &.selected {
-        background-color: var(--ion-color-step-250, #333333);
-        color: var(--ion-color-primary-tint);
-      }
-
-      &:not(.selected):hover {
-        background-color: var(--ion-color-step-200, #2e2e2e);
-        color: var(--ion-text-color);
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  .date-range-selector button {
+    transition: none;
   }
 }

@@ -1,4 +1,4 @@
-<div class="date-range-selector" role="group" aria-label="Select a date range">
+<div class="date-range-selector" role="radiogroup" aria-label="Select a date range">
   @for (range of ranges; track range) {
     <button
       [class.selected]="range.value === selectedRange"
