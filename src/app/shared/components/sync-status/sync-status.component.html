@@ -109,7 +109,8 @@
     <div class="conn-row">
       <span
         class="conn-dot"
-        [class.online]="conn.online"
+        [class.online]="conn.online && conn.backendReachable"
+        [class.degraded]="conn.online && !conn.backendReachable"
         [class.offline]="!conn.online"
       ></span>
       <span class="conn-label">
