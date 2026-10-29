@@ -1,8 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
+import { TranslateService } from '@ngx-translate/core';
+import { map, startWith } from 'rxjs';
+import {
+  AppSettingsService,
+  parseLegalText,
+  pickLocalized,
+} from 'src/app/core/services/app-settings.service';
 @Component({
   standalone: true,
   imports: [IonicModule, TranslateModule],
@@ -19,6 +27,26 @@ import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
       </ion-toolbar>
     </ion-header>
     <ion-content class="mf-doc">
+      @if (remote(); as doc) {
+      <article class="mf-doc__body">
+        <header class="mf-doc__head">
+          <h1>{{ doc.title || (titleKey | translate) }}</h1>
+          <p>
+            {{ 'LEGAL.VERSION_LABEL' | translate }} <bdi>{{ doc.version }}</bdi
+            >@if (doc.updatedLabel) { · <bdi>{{ doc.updatedLabel }}</bdi>}
+          </p>
+        </header>
+        @for (section of doc.sections; track $index) {
+        <section class="mf-doc__section">
+          @if (section.title) {
+          <h2>{{ section.title }}</h2>
+          } @for (paragraph of section.paragraphs; track $index) {
+          <p>{{ paragraph }}</p>
+          }
+        </section>
+        }
+      </article>
+      } @else {
       <article class="mf-doc__body">
         <header class="mf-doc__head">
           <h1>{{ titleKey | translate }}</h1>
@@ -33,6 +61,7 @@ import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
         </section>
         }
       </article>
+      }
     </ion-content>`,
   styles: [
     `
@@ -73,6 +102,7 @@ import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
         line-height: var(--mf-leading-snug);
       }
       .mf-doc__section p {
+        white-space: pre-line;
         margin: 0 0 var(--mf-space-3);
         font-size: var(--mf-text-body);
         line-height: 1.65;
@@ -84,9 +114,40 @@ import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
 export class LegalPageComponent {
   readonly brandParams = BRAND_TRANSLATION_PARAMS;
   titleKey = '';
+  private readonly appSettings = inject(AppSettingsService);
+  private readonly translate = inject(TranslateService);
+  private readonly lang = toSignal(
+    this.translate.onLangChange.pipe(
+      map((event) => event.lang),
+      startWith(this.translate.currentLang || 'en')
+    ),
+    { initialValue: 'en' }
+  );
+  private kind: 'terms' | 'privacy' = 'terms';
+
+  /** The dashboard-managed document for this route, when one is configured. */
+  readonly remote = computed(() => {
+    const doc = this.appSettings.legal()?.[this.kind];
+    if (!doc) return null;
+    const lang = this.lang();
+    const body = pickLocalized(doc.body, lang);
+    if (!body) return null;
+    const updated = doc.updatedAt ? new Date(doc.updatedAt) : null;
+    return {
+      title: pickLocalized(doc.title, lang),
+      version: doc.version,
+      updatedLabel:
+        updated && !isNaN(updated.getTime())
+          ? new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(updated)
+          : '',
+      sections: parseLegalText(body),
+    };
+  });
   sections: { title: string; body: string[] }[] = [];
   constructor(route: ActivatedRoute) {
     const privacy = route.snapshot.routeConfig?.path === 'privacy';
+    this.kind = privacy ? 'privacy' : 'terms';
+    void this.appSettings.refresh();
     this.titleKey = privacy ? 'LEGAL.PRIVACY_TITLE' : 'LEGAL.TERMS_TITLE';
     this.sections = privacy
       ? [
