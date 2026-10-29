@@ -149,16 +149,6 @@ ion-reorder {
   padding: 8px;
   background: var(--ion-item-background);
 }
-.empty-create-button {
-  margin-top: 18px;
-  --border-radius: 12px;
-  min-height: 44px;
-}
-.empty-state-wrapper {
-  max-width: 420px;
-  margin: 40px auto 0;
-  text-align: center;
-}
 .content-list-loading {
   display: grid;
   gap: 4px;
@@ -185,9 +175,6 @@ ion-reorder {
   }
 }
 
-.filtered-empty-state {
-  padding-top: 28px;
-}
 
 :host ::ng-deep app-add-fab-button ion-fab {
   bottom: calc(81px + env(safe-area-inset-bottom, 0px));

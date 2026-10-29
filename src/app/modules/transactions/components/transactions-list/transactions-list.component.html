@@ -300,30 +300,30 @@
     }
   </div>
   } @if (transactions().length === 0 && hasActiveFilters()) {
-  <div class="mf-empty mf-tx-empty" role="status">
+  <div class="mf-empty mf-empty--page" role="status">
     <ion-icon
-      class="mf-tx-empty__icon"
+      class="mf-empty__icon"
       name="search-outline"
       aria-hidden="true"
     ></ion-icon>
     <p class="mf-empty__title">{{ "TRANSACTIONS.NONE_FOUND" | translate }}</p>
     <ion-button
       fill="clear"
-      class="mf-tx-empty__action mf-tx-empty__action--quiet"
+      class="mf-empty__action mf-empty__action--quiet"
       (click)="clearAllFilters()"
       >{{ "FILTERS.CLEAR_FILTERS" | translate }}</ion-button
     >
   </div>
   } @if (transactions().length === 0 && !hasActiveFilters()) {
-  <div class="mf-empty mf-tx-empty" role="status">
+  <div class="mf-empty mf-empty--page" role="status">
     <ion-icon
-      class="mf-tx-empty__icon"
+      class="mf-empty__icon"
       name="receipt-outline"
       aria-hidden="true"
     ></ion-icon>
     <p class="mf-empty__title">{{ "TRANSACTIONS.EMPTY_TITLE" | translate }}</p>
     <p class="mf-empty__hint">{{ "TRANSACTIONS.EMPTY_MESSAGE" | translate }}</p>
-    <ion-button class="mf-tx-empty__action" (click)="openAddTransactionModal()">
+    <ion-button class="mf-empty__action" (click)="openAddTransactionModal()">
       <ion-icon slot="start" name="add" aria-hidden="true"></ion-icon>
       {{ "TRANSACTIONS.ADD" | translate }}
     </ion-button>
@@ -331,9 +331,9 @@
   }
   <!-- Empty State -->
   <ng-template #empty>
-    <div class="mf-empty mf-tx-empty" role="status">
+    <div class="mf-empty mf-empty--page" role="status">
       <ion-icon
-        class="mf-tx-empty__icon"
+        class="mf-empty__icon"
         name="receipt-outline"
         aria-hidden="true"
       ></ion-icon>
