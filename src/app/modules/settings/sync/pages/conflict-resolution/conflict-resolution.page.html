@@ -1,7 +1,12 @@
-<ion-header>
+<ion-header mode="ios" class="settings-header" translucent="false">
   <ion-toolbar>
     <ion-buttons slot="start"
-      ><ion-back-button defaultHref="/settings"></ion-back-button
+      ><ion-back-button
+        defaultHref="/settings/sync"
+        text=""
+        icon="chevron-back"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      ></ion-back-button
     ></ion-buttons>
     <ion-title>{{ 'SYNC.CONFLICT_RESOLUTION' | translate }}</ion-title>
   </ion-toolbar>

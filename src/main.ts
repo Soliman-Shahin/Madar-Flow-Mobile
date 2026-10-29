@@ -49,9 +49,38 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app/app.component';
 import { provideServiceWorker } from '@angular/service-worker';
 import { ThemeService } from './app/shared/services/themeToggle.service';
+import { Capacitor } from '@capacitor/core';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+/**
+ * The native app already ships its assets inside the APK/IPA, so the Angular
+ * service worker only adds a stale-cache layer: after an update the WebView
+ * keeps serving the previous bundle until a second launch. The web/PWA build
+ * keeps its service worker; on native we make sure none is registered (this
+ * also retires workers registered by earlier versions).
+ */
+async function retireNativeServiceWorker(): Promise<void> {
+  try {
+    if (!('serviceWorker' in navigator)) return;
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((r) => r.unregister()));
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.filter((k) => k.startsWith('ngsw:')).map((k) => caches.delete(k))
+      );
+    }
+  } catch {
+    // Best effort: a leftover worker only costs the old update delay.
+  }
+}
+
+const isNativeApp = Capacitor.isNativePlatform();
+if (isNativeApp) {
+  void retireNativeServiceWorker();
 }
 
 if (environment.production) {
@@ -141,7 +170,7 @@ if (!(window as any).__appBootstrapped) {
       },
       provideAnimations(),
       provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
+        enabled: !isDevMode() && !isNativeApp,
         registrationStrategy: 'registerWhenStable:30000',
       }),
     ],

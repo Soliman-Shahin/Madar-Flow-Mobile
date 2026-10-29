@@ -40,10 +40,7 @@ import {
   DateRangeSelectorComponent,
 } from 'src/app/shared/components/ui/date-range-selector/date-range-selector.component';
 import { BaseComponent } from 'src/app/shared/base';
-import {
-  SectionHeaderComponent,
-  SkeletonBlockComponent,
-} from 'src/app/shared/ui';
+import { SkeletonBlockComponent } from 'src/app/shared/ui';
 import { User } from 'src/app/modules/auth/models';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { DashboardFacade } from 'src/app/shared/facades';
@@ -69,7 +66,6 @@ import { ExpenseService } from 'src/app/core/services/expense.service';
     TransactionsComponent,
     DateRangeSelectorComponent,
     SkeletonBlockComponent,
-    SectionHeaderComponent,
     MonthHeroComponent,
     AmountComponent,
     MonthsScrollHeaderComponent,

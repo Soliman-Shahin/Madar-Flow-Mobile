@@ -10,9 +10,41 @@ ion-header.mf-page-header.mf-page-header {
   font-family: var(--mf-font-sans);
   border-bottom: 1px solid var(--mf-separator);
 
+  &::after {
+    display: none;
+  }
+
   ion-toolbar {
     --background: var(--mf-bg);
     --border-width: 0;
+    --padding-start: var(--mf-gutter);
+    --padding-end: var(--mf-gutter);
+    --padding-top: 0;
+    --padding-bottom: 0;
+  }
+
+  .title-toolbar {
+    --min-height: 64px;
+    padding-top: var(--ion-safe-area-top, 0px);
+  }
+
+  ion-title {
+    position: relative;
+    width: auto;
+    padding: 10px 0 !important;
+    text-align: start;
+  }
+
+  .header-title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    line-height: 1.15;
+  }
+
+  .segment-toolbar {
+    padding: var(--mf-space-2) 0 !important;
   }
 
   .header-title-container .main-title {
@@ -32,6 +64,7 @@ ion-header.mf-page-header.mf-page-header {
 
   ion-buttons ion-button {
     --color: var(--mf-primary) !important;
+    min-width: 44px;
     min-height: var(--mf-touch-target);
     font-family: var(--mf-font-sans);
     font-size: var(--mf-text-body);
@@ -40,7 +73,15 @@ ion-header.mf-page-header.mf-page-header {
     text-transform: none;
   }
 
+  // A header action that reflects state (e.g. the filter toggle).
+  ion-buttons ion-button.is-active {
+    --background: var(--mf-primary-soft);
+    --border-radius: var(--mf-radius-pill);
+  }
+
   ion-searchbar {
+    margin: var(--mf-space-2) 0;
+    padding: 0 !important;
     --background: var(--mf-surface) !important;
     --border-radius: var(--mf-radius-md) !important;
     --box-shadow: none !important;
@@ -55,8 +96,20 @@ ion-header.mf-page-header.mf-page-header {
 
   .custom-segment {
     --background: var(--mf-surface-sunken);
-    border-radius: var(--mf-radius-md);
+    width: 100%;
     padding: 3px;
+    border: 0;
+    border-radius: var(--mf-radius-md);
+    background: var(--mf-surface-sunken);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .custom-segment ion-segment-button::part(indicator-background) {
+    border-radius: calc(var(--mf-radius-md) - 3px);
+    background: var(--mf-surface);
+    box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
   }
 
   .custom-segment ion-segment-button {

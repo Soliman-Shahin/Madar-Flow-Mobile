@@ -250,3 +250,32 @@
   color: var(--mf-ink-2);
   overflow-wrap: anywhere;
 }
+
+// ===================================================================
+//  Calm Personal Ledger — flat chart container
+//  The page's chart card is the only surface; the chart sits flat on it.
+// ===================================================================
+:host {
+  --ion-border-color: var(--mf-separator);
+}
+
+.chart-container {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.chart-title {
+  margin: 0 0 var(--mf-space-4);
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-headline);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink);
+}

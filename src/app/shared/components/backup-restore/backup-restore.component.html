@@ -1,28 +1,28 @@
-<div class="backup-container">
-  <div class="header-section">
-    <p>{{ "BACKUP.SUBTITLE" | translate }}</p>
-  </div>
+<div class="mf-bk">
+  <p class="mf-bk__intro">{{ "BACKUP.SUBTITLE" | translate }}</p>
 
-  <!-- Google Drive Section -->
-  <div class="google-drive-section">
-    @if (!hasDrivePermission) {
-    <app-upgrade-prompt
-      title="SUBSCRIPTION.FEATURE_LOCKED"
-      message="BACKUP.GDRIVE_LOCKED_MSG"
-      icon="logo-google"
-      [requiredPlan]="PlanSlug.PRO"
-    ></app-upgrade-prompt>
-    } @else {
-    <div class="section-header">
-      <div class="header-content">
+  @if (!hasDrivePermission) {
+  <app-upgrade-prompt
+    title="SUBSCRIPTION.FEATURE_LOCKED"
+    message="BACKUP.GDRIVE_LOCKED_MSG"
+    icon="logo-google"
+    [requiredPlan]="PlanSlug.PRO"
+  ></app-upgrade-prompt>
+  }
+
+  <!-- Destinations -->
+  <section class="mf-bk__group">
+    @if (hasDrivePermission) {
+    <div class="mf-bk__row">
+      <span class="mf-bk__icon" aria-hidden="true">
         <ion-icon name="logo-google"></ion-icon>
-        <div>
-          <h3>{{ "BACKUP.GOOGLE_DRIVE" | translate }}</h3>
-          <p>{{ "BACKUP.GOOGLE_DRIVE_DESC" | translate }}</p>
-          @if (googleDriveEmail) {
-          <span class="email-badge">{{ googleDriveEmail }}</span>
-          }
-        </div>
+      </span>
+      <div class="mf-bk__text">
+        <h3>{{ "BACKUP.GOOGLE_DRIVE" | translate }}</h3>
+        <p>{{ "BACKUP.GOOGLE_DRIVE_DESC" | translate }}</p>
+        @if (googleDriveEmail) {
+        <span class="mf-bk__chip" dir="ltr">{{ googleDriveEmail }}</span>
+        }
       </div>
       <ion-toggle
         [attr.aria-label]="'BACKUP.GOOGLE_DRIVE' | translate"
@@ -31,17 +31,14 @@
       ></ion-toggle>
     </div>
     }
-  </div>
 
-  <!-- Auto Backup Section -->
-  <div class="auto-backup-section">
-    <div class="section-header">
-      <div class="header-content">
+    <div class="mf-bk__row">
+      <span class="mf-bk__icon" aria-hidden="true">
         <ion-icon name="sync-outline"></ion-icon>
-        <div>
-          <h3>{{ "BACKUP.AUTO_BACKUP" | translate }}</h3>
-          <p>{{ "BACKUP.AUTO_BACKUP_DESC" | translate }}</p>
-        </div>
+      </span>
+      <div class="mf-bk__text">
+        <h3>{{ "BACKUP.AUTO_BACKUP" | translate }}</h3>
+        <p>{{ "BACKUP.AUTO_BACKUP_DESC" | translate }}</p>
       </div>
       <ion-toggle
         [attr.aria-label]="'BACKUP.AUTO_BACKUP' | translate"
@@ -51,211 +48,186 @@
     </div>
 
     @if (autoBackupEnabled) {
-    <div class="auto-backup-settings">
-      <div class="setting-item">
-        <label>{{ "BACKUP.FREQUENCY" | translate }}</label>
-        <ion-select
-          [attr.aria-label]="'BACKUP.FREQUENCY' | translate"
-          [value]="autoBackupFrequency"
-          (ionChange)="updateAutoBackupFrequency($event)"
-          interface="popover"
-        >
-          <ion-select-option [value]="6">{{
-            "BACKUP.EVERY_6_HOURS" | translate
-          }}</ion-select-option>
-          <ion-select-option [value]="12">{{
-            "BACKUP.EVERY_12_HOURS" | translate
-          }}</ion-select-option>
-          <ion-select-option [value]="24">{{
-            "BACKUP.EVERY_24_HOURS" | translate
-          }}</ion-select-option>
-          <ion-select-option [value]="48">{{
-            "BACKUP.EVERY_48_HOURS" | translate
-          }}</ion-select-option>
-          <ion-select-option [value]="168">{{
-            "BACKUP.EVERY_WEEK" | translate
-          }}</ion-select-option>
-        </ion-select>
-      </div>
-      @if (lastAutoBackup) {
-      <div class="last-backup-info">
-        <ion-icon name="checkmark-circle-outline"></ion-icon>
-        <div>
-          <span class="label"
-            >{{ "BACKUP.LAST_AUTO_BACKUP" | translate }}:</span
-          >
-          <span class="value">{{
-            lastAutoBackup.timestamp | date : "short"
-          }}</span>
-          <span class="size">({{ formatSize(lastAutoBackup.size) }})</span>
-        </div>
-      </div>
-      }
+    <div class="mf-bk__row mf-bk__row--setting">
+      <span class="mf-bk__setting-label">{{
+        "BACKUP.FREQUENCY" | translate
+      }}</span>
+      <ion-select
+        class="mf-bk__select"
+        [attr.aria-label]="'BACKUP.FREQUENCY' | translate"
+        [value]="autoBackupFrequency"
+        (ionChange)="updateAutoBackupFrequency($event)"
+        interface="popover"
+      >
+        <ion-select-option [value]="6">{{
+          "BACKUP.EVERY_6_HOURS" | translate
+        }}</ion-select-option>
+        <ion-select-option [value]="12">{{
+          "BACKUP.EVERY_12_HOURS" | translate
+        }}</ion-select-option>
+        <ion-select-option [value]="24">{{
+          "BACKUP.EVERY_24_HOURS" | translate
+        }}</ion-select-option>
+        <ion-select-option [value]="48">{{
+          "BACKUP.EVERY_48_HOURS" | translate
+        }}</ion-select-option>
+        <ion-select-option [value]="168">{{
+          "BACKUP.EVERY_WEEK" | translate
+        }}</ion-select-option>
+      </ion-select>
     </div>
-    }
-  </div>
+    @if (lastAutoBackup) {
+    <div class="mf-bk__row mf-bk__row--setting">
+      <span class="mf-bk__setting-label">{{
+        "BACKUP.LAST_AUTO_BACKUP" | translate
+      }}</span>
+      <span class="mf-bk__setting-value">
+        <bdi>{{ lastAutoBackup.timestamp | date : "short" }}</bdi>
+        <bdi class="mf-bk__muted">({{ formatSize(lastAutoBackup.size) }})</bdi>
+      </span>
+    </div>
+    } }
+  </section>
 
-  <div class="actions-grid">
-    <div
-      class="action-card create"
-      role="button"
-      tabindex="0"
-      (keydown.enter)="createBackup()"
-      (keydown.space)="$event.preventDefault(); createBackup()"
-      (click)="createBackup()"
-    >
-      <div class="icon-box">
+  <!-- Actions -->
+  <section class="mf-bk__group mf-bk__group--spaced">
+    <button class="mf-bk__row mf-bk__row--action" type="button" (click)="createBackup()">
+      <span class="mf-bk__icon mf-bk__icon--accent" aria-hidden="true">
         <ion-icon name="cloud-upload-outline"></ion-icon>
-      </div>
-      <h3>{{ "BACKUP.CREATE_NEW" | translate }}</h3>
-      <p>{{ "BACKUP.CREATE_DESC" | translate }}</p>
-    </div>
+      </span>
+      <span class="mf-bk__text">
+        <h3>{{ "BACKUP.CREATE_NEW" | translate }}</h3>
+        <p>{{ "BACKUP.CREATE_DESC" | translate }}</p>
+      </span>
+      <ion-icon class="mf-bk__chevron" name="chevron-forward" aria-hidden="true"></ion-icon>
+    </button>
 
-    <div
-      class="action-card restore"
-      role="button"
-      tabindex="0"
-      (keydown.enter)="triggerImport()"
-      (keydown.space)="$event.preventDefault(); triggerImport()"
-      (click)="triggerImport()"
-    >
-      <div class="icon-box">
+    <button class="mf-bk__row mf-bk__row--action" type="button" (click)="triggerImport()">
+      <span class="mf-bk__icon" aria-hidden="true">
         <ion-icon name="cloud-download-outline"></ion-icon>
-      </div>
-      <h3>{{ "BACKUP.RESTORE" | translate }}</h3>
-      <p>{{ "BACKUP.RESTORE_DESC" | translate }}</p>
-      <input
-        type="file"
-        #fileInput
-        (change)="onFileSelected($event)"
-        accept=".json"
-        style="display: none"
-      />
-    </div>
-  </div>
+      </span>
+      <span class="mf-bk__text">
+        <h3>{{ "BACKUP.RESTORE" | translate }}</h3>
+        <p>{{ "BACKUP.RESTORE_DESC" | translate }}</p>
+      </span>
+      <ion-icon class="mf-bk__chevron" name="chevron-forward" aria-hidden="true"></ion-icon>
+    </button>
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept=".json"
+      hidden
+    />
+  </section>
 
-  <div class="history-section">
-    <div class="section-title">
-      <h3>{{ "BACKUP.HISTORY" | translate }}</h3>
-      @if (backupHistory.length > 0) {
-      <span class="badge">{{ backupHistory.length }}</span>
-      }
-    </div>
-
-    @if (backupHistory.length === 0) {
-    <div class="empty-state">
-      <ion-icon name="time-outline"></ion-icon>
-      <p>{{ "BACKUP.NO_HISTORY" | translate }}</p>
-    </div>
-    } @if (backupHistory.length > 0) {
-    <div class="history-list">
-      @for (backup of backupHistory; track backup) {
-      <div class="history-item">
-        <div class="item-icon">
-          <ion-icon name="document-text-outline"></ion-icon>
-        </div>
-        <div class="item-details">
-          <h4>
-            {{ "BACKUP.RECORD" | translate }}
-            <span class="record-time">{{
-              backup.timestamp | date : "shortTime"
-            }}</span>
-          </h4>
-          <div class="meta">
-            <span class="date">{{ backup.timestamp | date : "medium" }}</span>
-            <span class="separator">•</span>
-            <span class="size">{{ formatSize(backup.size) }}</span>
-          </div>
-          <div class="tags">
-            @if (backup.encrypted) {
-            <span class="tag encrypted">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              {{ "BACKUP.ENCRYPTED" | translate }}
-            </span>
-            }
-            <span class="tag items" [class.zero-items]="backup.itemCount === 0"
-              >{{ backup.itemCount }} {{ "BACKUP.ITEMS" | translate }}</span
-            >
-          </div>
-        </div>
-      </div>
-      }
-    </div>
+  <!-- History -->
+  <h2 class="mf-bk__label">
+    {{ "BACKUP.HISTORY" | translate }}
+    @if (backupHistory.length > 0) {
+    <span class="mf-bk__count">{{ backupHistory.length }}</span>
     }
+  </h2>
+  @if (backupHistory.length === 0) {
+  <div class="mf-empty" role="status">
+    <ion-icon class="mf-bk__empty-icon" name="time-outline" aria-hidden="true"></ion-icon>
+    <p class="mf-empty__title">{{ "BACKUP.NO_HISTORY" | translate }}</p>
   </div>
-</div>
+  } @else {
+  <ul class="mf-bk__group mf-bk__list">
+    @for (backup of backupHistory; track backup) {
+    <li class="mf-bk__row">
+      <span class="mf-bk__icon" aria-hidden="true">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </span>
+      <div class="mf-bk__text">
+        <h3>
+          {{ "BACKUP.RECORD" | translate }}
+          <span class="mf-bk__muted"
+            ><bdi>{{ backup.timestamp | date : "shortTime" }}</bdi></span
+          >
+        </h3>
+        <p>
+          <bdi>{{ backup.timestamp | date : "medium" }}</bdi> ·
+          <bdi>{{ formatSize(backup.size) }}</bdi>
+        </p>
+        <div class="mf-bk__tags">
+          @if (backup.encrypted) {
+          <span class="mf-bk__tag">
+            <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+            {{ "BACKUP.ENCRYPTED" | translate }}
+          </span>
+          }
+          <span class="mf-bk__tag" [class.mf-bk__tag--warn]="backup.itemCount === 0"
+            ><bdi>{{ backup.itemCount }}</bdi> {{ "BACKUP.ITEMS" | translate }}</span
+          >
+        </div>
+      </div>
+    </li>
+    }
+  </ul>
+  }
 
-<!-- Google Drive Backups Section -->
-@if (isSignedInToGoogleDrive) {
-<div class="history-section drive-history">
-  <div class="section-title">
-    <h3>
-      <ion-icon
-        name="logo-google"
-        style="margin-inline-end: 8px; color: var(--ion-color-danger)"
-      ></ion-icon>
-      Google Drive Backups
-    </h3>
-    <ion-button
-      fill="clear"
-      (click)="loadGoogleDriveBackups()"
-      [disabled]="isLoadingDriveBackups"
-    >
-      <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-    </ion-button>
+  <!-- Google Drive backups -->
+  @if (isSignedInToGoogleDrive) {
+  <h2 class="mf-bk__label">
+    {{ "BACKUP.DRIVE_BACKUPS" | translate }}
     @if (!isLoadingDriveBackups && googleDriveBackups.length > 0) {
-    <span class="badge">{{ googleDriveBackups.length }}</span>
+    <span class="mf-bk__count">{{ googleDriveBackups.length }}</span>
     }
-  </div>
+    <button
+      class="mf-bk__icon-btn"
+      type="button"
+      [attr.aria-label]="'BACKUP.REFRESH' | translate"
+      [disabled]="isLoadingDriveBackups"
+      (click)="loadGoogleDriveBackups()"
+    >
+      <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
+    </button>
+  </h2>
   @if (!isLoadingDriveBackups && googleDriveBackups.length === 0) {
-  <div class="empty-state">
-    <ion-icon name="cloud-offline-outline"></ion-icon>
-    <p>No backups found on Google Drive</p>
+  <div class="mf-empty" role="status">
+    <ion-icon class="mf-bk__empty-icon" name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+    <p class="mf-empty__title">{{ "BACKUP.NO_DRIVE_BACKUPS" | translate }}</p>
   </div>
   } @if (!isLoadingDriveBackups && googleDriveBackups.length > 0) {
-  <div class="history-list">
+  <ul class="mf-bk__group mf-bk__list">
     @for (backup of googleDriveBackups; track backup) {
-    <div class="history-item">
-      <div class="item-icon">
-        <ion-icon name="cloud-done-outline" color="primary"></ion-icon>
-      </div>
-      <div
-        class="item-details"
-        style="flex: 1; cursor: pointer"
+    <li class="mf-bk__row">
+      <button
+        class="mf-bk__row-main"
+        type="button"
         (click)="restoreFromDrive(backup.id)"
       >
-        <h4 style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px">
-          {{ backup.name }}
-        </h4>
-        <div
-          class="meta"
-          style="font-size: 0.8rem; color: var(--ion-color-medium)"
-        >
-          <span class="date">{{ backup.modifiedTime | date : "medium" }}</span>
-          <span class="separator" style="margin: 0 4px">•</span>
-          <span class="size">{{ formatSize(backup.size) }}</span>
-        </div>
-      </div>
-      <div class="item-actions">
-        <button
-          class="btn-icon"
-          (click)="deleteFromDrive(backup.id, $event)"
-          color="danger"
-        >
-          <ion-icon name="trash-outline" color="danger"></ion-icon>
-        </button>
-      </div>
-    </div>
+        <span class="mf-bk__icon" aria-hidden="true">
+          <ion-icon name="cloud-done-outline"></ion-icon>
+        </span>
+        <span class="mf-bk__text">
+          <h3>{{ backup.name }}</h3>
+          <p>
+            <bdi>{{ backup.modifiedTime | date : "medium" }}</bdi> ·
+            <bdi>{{ formatSize(backup.size) }}</bdi>
+          </p>
+        </span>
+      </button>
+      <button
+        class="mf-bk__icon-btn mf-bk__icon-btn--danger"
+        type="button"
+        [attr.aria-label]="'BACKUP.DELETE' | translate"
+        (click)="deleteFromDrive(backup.id, $event)"
+      >
+        <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </li>
     }
-  </div>
-  }
+  </ul>
+  } }
 </div>
-}
 
-<!-- Loading Overlay -->
+<!-- Loading overlay -->
 @if (isLoading) {
-<div class="loading-overlay">
-  <div class="spinner"></div>
+<div class="mf-bk__loading" role="status" aria-live="polite">
+  <ion-spinner name="crescent"></ion-spinner>
   <p>{{ loadingMessage }}</p>
 </div>
 }

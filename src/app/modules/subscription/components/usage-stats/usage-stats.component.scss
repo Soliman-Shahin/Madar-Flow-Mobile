@@ -1,486 +1,249 @@
-@use "src/theme/mobile-secondary" as secondary;
-@include secondary.page;
-.usage-stats-container {
-  padding: 12px 16px 24px;
-}
-
-.text-danger {
-  color: var(--ion-color-danger) !important;
-}
-
-ion-card {
-  margin-bottom: 12px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.plan-info-card {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--ion-color-primary-rgb), 0.12),
-    var(--ion-item-background)
-  );
-  border-color: rgba(var(--ion-color-primary-rgb), 0.28);
-
-  ion-card-header {
-    padding: 16px 16px 8px;
-
-    ion-card-title {
-      font-size: 23px;
-      font-weight: 700;
-      color: var(--ion-color-primary);
-    }
-  }
-
-  .summary-heading {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .summary-heading ion-card-subtitle {
-    margin-bottom: 4px;
-  }
-  .summary-heading ion-badge {
-    flex: 0 0 auto;
-    border-radius: 999px;
-    padding: 6px 9px;
-    font-size: 10px;
-  }
-
-  ion-list {
-    background: transparent;
-    padding: 0;
-  }
-
-  ion-item {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --background: transparent;
-    margin-bottom: 12px;
-
-    ion-icon {
-      font-size: 24px;
-      margin-inline-end: 12px;
-    }
-
-    ion-label {
-      p {
-        font-size: 12px;
-        opacity: 0.6;
-        margin-bottom: 4px;
-      }
-
-      h3 {
-        font-size: 16px;
-        font-weight: 600;
-      }
-    }
-  }
-}
-
-.usage-card {
-  ion-card-header {
-    padding: 16px 16px 8px;
-  }
-  ion-card-content {
-    padding: 8px 16px 16px;
-  }
-  .usage-item {
-    margin-bottom: 16px;
-    padding: 12px;
-    border: 1px solid var(--ew-wallet-line);
-    border-radius: 12px;
-    background: var(--ew-wallet-inset);
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .usage-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-
-      .usage-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 600;
-        font-size: 14px;
-
-        ion-icon {
-          font-size: 20px;
-        }
-      }
-
-      .usage-count {
-        font-weight: 700;
-        font-size: 16px;
-
-        .used {
-          color: var(--ion-color-primary);
-        }
-
-        .separator {
-          margin: 0 4px;
-          opacity: 0.5;
-        }
-
-        .limit {
-          opacity: 0.7;
-        }
-      }
-    }
-
-    ion-progress-bar {
-      height: 6px;
-      border-radius: 999px;
-      margin: 10px 0 8px;
-    }
-
-    .usage-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-
-      .percentage {
-        font-weight: 700;
-        color: var(--ion-color-primary);
-      }
-
-      .remaining {
-        opacity: 0.6;
-      }
-    }
-  }
-
-  .limits-info {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--ion-color-light);
-
-    h4 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: var(--ion-color-dark);
-    }
-
-    ion-list {
-      background: transparent;
-      padding: 0;
-    }
-
-    ion-item {
-      --padding-start: 0;
-      --inner-padding-end: 0;
-      --background: transparent;
-      margin-bottom: 4px;
-
-      ion-icon {
-        font-size: 20px;
-        margin-inline-end: 12px;
-        opacity: 0.7;
-      }
-
-      ion-label {
-        p {
-          font-size: 12px;
-          opacity: 0.6;
-          margin-bottom: 4px;
-        }
-
-        h3 {
-          font-size: 18px;
-          font-weight: 700;
-          color: var(--ion-color-primary);
-        }
-      }
-    }
-  }
-}
-
-.history-card {
-  ion-card-header {
-    padding: 16px 16px 8px;
-  }
-  ion-card-content {
-    padding: 8px 16px 12px;
-  }
-  ion-list {
-    padding: 0;
-    background: transparent;
-  }
-
-  ion-item {
-    --padding-start: 8px;
-    --inner-padding-end: 8px;
-    margin-bottom: 6px;
-    border-radius: 8px;
-    background: var(--ew-wallet-inset);
-    --background: var(--ew-wallet-inset);
-
-    ion-icon {
-      font-size: 21px;
-      margin-inline-end: 12px;
-    }
-
-    ion-label {
-      h3 {
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-
-      p {
-        font-size: 12px;
-        opacity: 0.6;
-      }
-    }
-
-    ion-badge {
-      font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 12px;
-    }
-  }
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .limits-info {
-    h4 {
-      color: var(--ion-color-light);
-    }
-  }
-
-  .history-card {
-    ion-item {
-      background: rgba(var(--ion-color-light-rgb), 0.1);
-    }
-  }
-}
-
-// Responsive
-@media (min-width: 768px) {
-  .usage-stats-container {
-    padding: 24px;
-  }
-
-  ion-card {
-    margin-bottom: 24px;
-  }
-}
-
-ion-card-subtitle {
-  color: var(--ion-color-medium);
-  opacity: 0.9;
-  font-weight: 500;
-}
-
-.limits-info h4 {
-  opacity: 1;
-}
+// Usage tab — Calm Personal Ledger. One surface per group, hairline
+// separators instead of nested cards, and a quiet meter that only warms up
+// as a limit gets close.
 
 :host {
-  ion-card {
-    background: var(--ion-item-background);
-    border: 1px solid var(--ew-wallet-line);
-    border-radius: 12px;
-    box-shadow: none;
-    margin: 0 0 16px;
-  }
-  .usage-stats-container {
-    padding: 12px 16px 24px;
-  }
-  .plan-info-card ion-card-title {
-    font-size: 20px;
-  }
-  .usage-item {
-    font-variant-numeric: tabular-nums;
-  }
+  display: block;
 }
 
-:host {
-  ion-card {
-    border-radius: 16px;
-  }
-  .plan-info-card ion-card-header ion-card-title {
-    color: var(--ion-text-color);
-  }
-  .plan-info-card ion-item ion-label p,
-  .usage-card .limits-info ion-item ion-label p,
-  .history-card ion-item ion-label p,
-  .usage-card .usage-item .usage-footer .remaining,
-  .usage-card .usage-item .usage-header .usage-count .limit,
-  .usage-card .usage-item .usage-header .usage-count .separator {
-    color: var(--ew-wallet-muted);
-    opacity: 1;
-  }
-  .usage-card .usage-item .usage-header {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .usage-card .usage-item .usage-header .usage-title {
-    min-width: 0;
-    font-size: 13px;
-  }
-  .usage-count {
-    direction: ltr;
-    unicode-bidi: isolate;
-    flex-shrink: 0;
-  }
-  .usage-card .usage-item .usage-footer {
-    flex-wrap: wrap;
-    gap: 4px 8px;
-  }
-  .usage-card .limits-info {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-color: var(--ew-wallet-line);
-  }
-  .usage-card .limits-info h4 {
-    color: var(--ion-text-color);
-  }
-  .history-card ion-item {
-    background: var(--ew-wallet-inset);
-    --background: var(--ew-wallet-inset);
-  }
-  .history-entry ion-label {
-    min-width: 0;
-  }
-  .history-entry ion-label h3,
-  .history-entry ion-label p {
-    overflow-wrap: anywhere;
-  }
-}
-
-/* Usage dashboard rhythm: one strong surface per section, with compact
-   supporting rows and a neutral zero-state progress track. */
-:host .usage-stats-container {
-  padding: 8px 16px 40px;
-}
-:host .plan-info-card ion-card-header {
-  padding: 10px 16px 2px;
-}
-:host .plan-info-card ion-card-content {
-  padding: 0 16px 8px;
-}
-:host .summary-details {
+.mf-use {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-}
-:host .summary-details ion-item {
-  min-height: 32px;
-  margin: 0;
-}
-:host .usage-card ion-card-header,
-:host .history-card ion-card-header {
-  padding: 14px 16px 6px;
-}
-:host .usage-card ion-card-content,
-:host .history-card ion-card-content {
-  padding: 6px 16px 10px;
-}
-:host .usage-card .usage-item {
-  margin-bottom: 10px;
-  padding: 9px 10px;
-}
-:host .usage-card .usage-item ion-progress-bar {
-  --background: var(--ew-wallet-line);
-  --progress-background: var(--ion-color-primary);
-  height: 6px;
-  margin: 8px 0 6px;
-}
-:host .usage-card .limits-info {
-  margin-top: 12px;
-  padding-top: 10px;
-}
-:host .usage-card .limits-info h4 {
-  margin-bottom: 6px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-:host .usage-card .limits-info ion-item {
-  min-height: 36px;
-  margin: 0;
-}
-:host .usage-card .limits-info ion-item ion-icon {
-  font-size: 17px;
-}
-:host .usage-card .limits-info ion-item ion-label p {
-  margin: 0;
-}
-:host .usage-card .limits-info ion-item ion-label h3 {
-  font-size: 16px;
-}
-:host .history-card ion-item {
-  --min-height: 50px;
-  margin-bottom: 2px;
-  border-radius: 0;
-  border-bottom: 1px solid var(--ew-wallet-line);
-  background: transparent;
-  --background: transparent;
-}
-:host .history-card ion-item:last-child {
-  border-bottom: 0;
-}
-:host .history-card .timeline-marker {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  margin-inline-end: 10px;
-  background: var(--ion-color-medium);
-}
-:host .history-card .history-entry:first-child .timeline-marker {
-  background: var(--ion-color-success);
-  box-shadow: 0 0 0 4px rgba(var(--ion-color-success-rgb), 0.12);
-}
-:host .history-card .history-entry ion-label {
-  margin: 6px 0;
-}
-
-@media (max-width: 360px) {
-  :host .usage-card .usage-item {
-    padding: 8px;
-  }
-  :host .usage-card .usage-header .usage-title {
-    font-size: 12px;
-  }
-  :host .usage-card .limits-info ion-item ion-label h3 {
-    font-size: 15px;
-  }
-}
-
-// ===================================================================
-//  Calm Personal Ledger — usage
-// ===================================================================
-ion-card {
-  margin: 0 0 var(--mf-space-4);
-  border-radius: var(--mf-radius-lg);
-  background: var(--mf-surface);
-  box-shadow: none !important;
+  flex-direction: column;
   font-family: var(--mf-font-sans);
-}
-
-ion-card-title {
-  font-family: var(--mf-font-sans);
-  font-size: var(--mf-text-title-2);
-  font-weight: var(--mf-weight-semibold);
-  letter-spacing: -0.01em;
   color: var(--mf-ink);
 }
 
-ion-card-subtitle {
-  font-family: var(--mf-font-sans);
+.mf-use__card {
+  margin: 0;
+  padding: var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: inset 0 0 0 1px var(--mf-separator);
+  list-style: none;
+}
+
+.mf-use__label {
+  margin: var(--mf-space-6) var(--mf-space-1) var(--mf-space-2);
   font-size: var(--mf-text-footnote);
-  font-weight: var(--mf-weight-medium);
-  letter-spacing: 0;
-  text-transform: none;
+  font-weight: var(--mf-weight-semibold);
+  letter-spacing: 0.02em;
   color: var(--mf-ink-3);
+}
+
+// --- Plan summary ----------------------------------------------------------
+.mf-use__plan-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+}
+
+.mf-use__plan-name {
+  min-width: 0;
+
+  h2 {
+    margin: var(--mf-space-1) 0 0;
+    font-size: var(--mf-text-title-1);
+    font-weight: var(--mf-weight-semibold);
+    line-height: var(--mf-leading-tight);
+  }
+}
+
+.mf-use__eyebrow {
+  margin: 0;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+
+.mf-use__pill {
+  flex: 0 0 auto;
+  padding: 4px var(--mf-space-3);
+  border-radius: var(--mf-radius-pill);
+  background: color-mix(in srgb, var(--mf-success) 14%, transparent);
+  font-size: var(--mf-text-caption);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-success);
+
+  &.mf-use__pill--danger {
+    background: var(--mf-danger-soft);
+    color: var(--mf-danger);
+  }
+
+  &.mf-use__pill--quiet {
+    background: var(--mf-surface-sunken);
+    color: var(--mf-ink-2);
+  }
+}
+
+.mf-use__notice {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  margin: var(--mf-space-3) 0 0;
+  padding: var(--mf-space-3);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-danger-soft);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-danger);
+
+  ion-icon {
+    flex: 0 0 auto;
+    font-size: 20px;
+  }
+}
+
+// --- Label / value rows ----------------------------------------------------
+.mf-use__facts {
+  margin: var(--mf-space-3) 0 0;
+  padding: 0;
+
+  div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--mf-space-3);
+    padding-block: var(--mf-space-3);
+    border-top: 1px solid var(--mf-separator);
+  }
+
+  dt {
+    font-size: var(--mf-text-callout);
+    color: var(--mf-ink-2);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    color: var(--mf-ink);
+  }
+
+  &.mf-use__facts--flush {
+    margin: 0;
+    padding: var(--mf-space-1) var(--mf-space-4);
+
+    div:first-child {
+      border-top: 0;
+    }
+  }
+}
+
+.mf-use__danger {
+  color: var(--mf-danger) !important;
+}
+
+// --- Meters ----------------------------------------------------------------
+.mf-use__meter {
+  & + & {
+    margin-top: var(--mf-space-5);
+    padding-top: var(--mf-space-5);
+    border-top: 1px solid var(--mf-separator);
+  }
+}
+
+.mf-use__meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+}
+
+.mf-use__meter-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-medium);
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--mf-ink-3);
+  }
+}
+
+.mf-use__count {
+  font-size: var(--mf-text-callout);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-ink-3);
+
+  strong {
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink);
+  }
+}
+
+.mf-use__bar {
+  height: 6px;
+  margin-top: var(--mf-space-3);
+  overflow: hidden;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface-sunken);
+}
+
+.mf-use__bar-fill {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: var(--mf-primary);
+  transition: width var(--mf-dur-standard) var(--mf-ease-standard);
+
+  &[data-level="warn"] {
+    background: var(--mf-warning);
+  }
+
+  &[data-level="high"] {
+    background: var(--mf-danger);
+  }
+}
+
+.mf-use__meter-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  margin-top: var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-ink-3);
+}
+
+// --- History ---------------------------------------------------------------
+.mf-use__history {
+  padding-block: var(--mf-space-1);
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mf-space-3);
+    padding-block: var(--mf-space-3);
+
+    & + li {
+      border-top: 1px solid var(--mf-separator);
+    }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-medium);
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: var(--mf-text-footnote);
+    font-variant-numeric: tabular-nums;
+    color: var(--mf-ink-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-use__bar-fill {
+    transition: none;
+  }
 }

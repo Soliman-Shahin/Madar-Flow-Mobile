@@ -1,348 +1,33 @@
+// Transactions list — Calm Personal Ledger.
+// Header typography and colors come from theme/_page-header.scss. This file
+// owns layout, the filter panel, swipe actions, and the two overlays whose
+// markup lives in this template (category popover, date-range sheet).
+
 :host {
-  ion-header {
-    &::after {
-      display: none;
-    }
-    background: transparent !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    .title-toolbar {
-      --background: rgba(var(--ion-background-color-rgb), 0.8) !important;
-      --padding-start: var(--ew-space-4);
-      --padding-end: var(--ew-space-4);
-      --padding-top: 0 !important;
-      --padding-bottom: 0 !important;
-    }
-
-    ion-toolbar {
-      --background: rgba(var(--ion-background-color-rgb), 0.8) !important;
-      --padding-start: var(--ew-space-4);
-      --padding-end: var(--ew-space-4);
-      --padding-top: 0;
-      --padding-bottom: 0;
-      --border-width: 0;
-    }
-
-    ion-title {
-      font-family: var(--ew-font-family-heading);
-      padding-top: calc(
-        var(--ion-safe-area-top, 48px) + var(--ew-space-4)
-      ) !important;
-      padding-bottom: var(--ew-space-4) !important;
-      padding-inline-start: var(--ew-space-4) !important;
-      padding-inline-end: var(--ew-space-4) !important;
-      text-align: start;
-    }
-  }
-
-  .header-title-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.15;
-    padding: 0;
-
-    .main-title {
-      font-size: 28px;
-      font-weight: 900;
-      color: var(--ew-text-color-primary);
-      letter-spacing: -0.8px;
-    }
-
-    .sub-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ew-text-color-muted);
-      margin-top: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-
-  ion-searchbar {
-    --background: transparent;
-    --border-radius: var(--ew-radius-pill) !important;
-    --box-shadow: none;
-    --color: var(--ew-text-color-primary);
-    --placeholder-color: var(--ew-text-color-muted);
-    --icon-color: var(--ew-text-color-muted);
-    --clear-button-color: var(--ew-text-color-muted);
-    padding: 0 !important;
-    margin: var(--ew-space-2) 0;
-
-    &::part(container) {
-      border: 1px solid rgba(var(--ion-text-color-rgb), 0.08);
-      border-radius: var(--ew-radius-pill);
-      background: rgba(var(--ion-text-color-rgb), 0.03) !important;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    &.searchbar-has-focus::part(container) {
-      border-color: var(--ion-color-primary);
-      background: var(--ion-item-background) !important;
-      box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.15);
-    }
+  ion-content {
+    --background: var(--mf-bg);
+    --padding-bottom: var(--ew-core-bottom-clearance, var(--mf-tabbar-clearance));
   }
 }
 
-// ===================================================================
-//  Segment (Filter) Overhaul - Full Width Sliding Line (matches Categories page)
-// ===================================================================
-.segment-toolbar {
-  --padding-start: 0px !important;
-  --padding-end: 0px !important;
-  padding: 0 !important;
-}
-
-/* Spacing and margins for the main transactions container */
-.transactions-list {
-  background: transparent;
-  padding: 0; // Content clearance belongs to ion-content, outside the list surface.
-}
-
-.transaction-date-group {
-  margin: 18px 4px 8px;
-  color: var(--ew-text-color-muted);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-}
-
-.transactions-list > .transaction-date-group:first-child {
-  margin-top: 4px;
-}
-
-/* Spacing and margins for the sliding wrapper */
-.transaction-sliding {
-  margin: 0 0 14px 0 !important;
-  background: transparent !important;
-  border-radius: 20px;
-
-  // Physics-based staggered entrance animation applied to the sliding wrapper
-  // to avoid locking the transform property on the inner ion-item (which breaks swipe gestures)
-  animation: itemAppear var(--ew-animation-duration-slow, 400ms)
-    cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: calc(var(--animation-order, 0) * 45ms);
-}
-
-/* Redesigned transaction card item */
-.transaction-item {
-  --background: var(--ion-item-background);
-  border-radius: 20px; // Premium rounded corners
-  margin: 0 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --min-height: 78px;
-
-  // Transition only shadows/borders by default so swipe gestures remain completely hardware-accelerated and instant
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-
-  --ripple-color: rgba(var(--ion-color-primary-rgb), 0.1);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    border-color: rgba(var(--ion-color-primary-rgb), 0.25);
-    // Apply transform transition only on hover
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-      box-shadow 0.3s ease, border-color 0.3s ease;
-  }
-
-  &:active {
-    transform: scale(0.985);
-    transition: transform 0.1s ease;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Squircle category icon with customized glow */
-.category-icon {
-  height: 46px !important;
-  width: 46px !important;
-  min-width: 46px !important;
-  border-radius: 14px; // Squircle design
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-inline-end: var(--ew-space-4);
-  color: white;
-  flex-shrink: 0;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-  // Dynamic glow effect behind the icon
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    border-radius: inherit;
-    filter: blur(8px);
-    opacity: 0.45;
-    z-index: -1;
-    transform: translateY(3px) scale(0.9);
-  }
-
-  ion-icon {
-    font-size: 24px;
-  }
-}
-
-.transaction-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 4px 0;
-}
-
-.transaction-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.transaction-title {
-  color: var(--ion-text-color);
-  font-weight: 600;
-  font-size: 16px;
-  margin: 0;
-  line-height: 1.3;
-  letter-spacing: -0.3px;
-  flex: 1;
-  overflow-wrap: anywhere;
-}
-
-.transaction-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  font-size: 13px;
-  color: var(--ion-color-medium);
-  line-height: 1.4;
-
-  .transaction-date,
-  .transaction-category {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-
-    ion-icon {
-      font-size: 14px;
-      opacity: 0.7;
-    }
-  }
-
-  .transaction-category {
-    &::before {
-      content: "•";
-      display: inline-block;
-      margin: 0 4px;
-      opacity: 0.5;
-    }
-  }
-}
-
-/* Premium transaction amount typography matching home page style */
-.transaction-amount {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: max-content;
-}
-
-.filtered-empty-state {
-  padding-top: 32px;
-}
-
-.transaction-item {
-  border: 1px solid rgba(var(--ion-text-color-rgb), 0.06);
-  --padding-start: 16px;
-  --inner-padding-end: 12px;
-}
-
-.transaction-title {
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.transaction-meta {
-  flex-wrap: wrap;
-  gap: 6px 10px;
-}
-
-.transaction-status {
-  padding: 3px 7px;
-  border-radius: 999px;
-  background: rgba(var(--ion-color-primary-rgb), 0.08);
-  color: var(--ion-color-primary);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.transactions-list {
-  padding-top: 8px;
-}
-
-.transaction-item .transaction-meta .transaction-category {
-  max-width: 46%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .transaction-item {
-    transition: none !important;
-  }
-}
-
-.transactions-list + .empty-state-wrapper {
-  max-width: 420px;
-  margin-inline: auto;
-  text-align: center;
-}
-
-@keyframes itemAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Filters toolbar styling */
+// --- Filter panel ----------------------------------------------------------
 .filters-toolbar {
-  --background: var(--ion-background-color) !important;
+  --background: var(--mf-bg) !important;
   --min-height: auto;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
   padding: 0;
-  border-bottom: 1px solid rgba(var(--ion-text-color-rgb), 0.06);
+  border-top: 1px solid var(--mf-separator);
 }
 
 .filters-anim {
-  animation: filtersFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: opacity 0.3s, transform 0.3s;
-  opacity: 1;
-  transform: translateY(0);
+  animation: mf-filters-in var(--mf-dur-standard) var(--mf-ease-enter);
 }
 
-@keyframes filtersFadeIn {
+@keyframes mf-filters-in {
   from {
     opacity: 0;
-    transform: translateY(-16px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -350,281 +35,236 @@
   }
 }
 
+// One column on phones (labels stay readable), two when there is room.
 .filters-container {
-  display: flex;
-  gap: var(--ew-space-3) !important;
-  padding: var(--ew-space-2) var(--ew-space-4) var(--ew-space-3) !important;
-  align-items: flex-start !important;
-  flex-wrap: nowrap !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--mf-space-3);
   width: 100%;
-
-  .modern-input-item {
-    margin: 4px 0 !important;
-    --min-height: 44px !important;
-    --padding-top: 0 !important;
-    --padding-bottom: 0 !important;
-    --padding-start: 12px !important;
-    --padding-end: 12px !important;
-    border: 1px solid rgba(var(--ion-text-color-rgb), 0.08) !important;
-    background: rgba(var(--ion-text-color-rgb), 0.03) !important;
-    box-shadow: none !important;
-
-    &.ion-focused,
-    &:hover {
-      border-color: var(--ion-color-primary) !important;
-      background: var(--ion-item-background) !important;
-    }
-  }
-
-  .modern-input {
-    --min-height: 44px !important;
-    --padding-bottom: 0 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-
-    ion-icon[slot="start"] {
-      font-size: 16px !important;
-      margin-inline-end: 8px !important;
-      color: var(--ew-text-color-muted) !important;
-    }
-  }
-
-  ion-select {
-    width: 100%;
-    --padding-start: 0 !important;
-    --padding-end: 0 !important;
-
-    &::part(container) {
-      padding-inline-end: 24px !important;
-    }
-
-    &::part(icon) {
-      inset-inline-end: 0 !important;
-      font-size: 14px !important;
-      opacity: 0.6;
-    }
-  }
-
-  .modern-input-item[button] {
-    cursor: pointer;
-
-    ion-input {
-      pointer-events: none !important;
-    }
-  }
+  padding: var(--mf-space-3) var(--mf-gutter);
 }
 
 .filter-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
+  gap: var(--mf-space-1);
   min-width: 0;
 
   ion-label {
-    font-size: 11px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--ew-text-color-muted) !important;
-    margin: 0 0 2px 0 !important;
-    padding-inline-start: 4px;
+    margin: 0 var(--mf-space-1);
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink-3);
   }
 }
 
-.category-option,
-.type-option {
+.cat-select-trigger {
   display: flex;
   align-items: center;
-  gap: var(--ew-space-2);
+  gap: var(--mf-space-2);
+  width: 100%;
+  min-height: var(--mf-touch-target);
+  padding: 0 var(--mf-space-3);
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+  box-shadow: inset 0 0 0 1px transparent;
+  font: inherit;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
+  text-align: start;
+  color: var(--mf-ink);
+  cursor: pointer;
+  transition: box-shadow var(--mf-dur-quick) var(--mf-ease-standard);
+
+  &.has-selection {
+    box-shadow: inset 0 0 0 1px var(--mf-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.cat-trigger-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-count-badge {
+  flex: 0 0 auto;
+  padding: 1px var(--mf-space-2);
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-primary-soft);
+  font-size: var(--mf-text-caption);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-primary);
+}
+
+.cat-trigger-arrow {
+  flex: 0 0 auto;
+  font-size: 16px;
+  color: var(--mf-ink-3);
+}
+
+// Category mark: quiet by default, tinted with the category's own color.
+.cat-trigger-icon,
+.cat-option-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-surface-sunken);
+  color: var(--mf-ink-3);
+
+  &.is-tinted {
+    --mf-opt-resolved: var(--mf-opt-color, var(--mf-cat-8));
+    background: color-mix(
+      in srgb,
+      var(--mf-opt-resolved) var(--mf-cat-soft-mix),
+      var(--mf-surface)
+    );
+    color: color-mix(in srgb, var(--mf-opt-resolved) 78%, var(--mf-ink));
+  }
+}
+
+.cat-trigger-icon {
+  width: 28px;
+  height: 28px;
 
   ion-icon {
-    font-size: var(--ew-font-size-md);
-  }
-
-  span {
-    font-size: var(--ew-font-size-sm);
+    font-size: 16px;
   }
 }
 
-/* FAB styling */
-ion-fab-button {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
-  --box-shadow: var(--ew-shadow-lg);
-}
+.cat-option-icon {
+  width: 36px;
+  height: 36px;
 
-/* Date picker modal styles are now global in src/theme/_components.scss */
-/* (Moved to fix dark theme - Ionic modals render outside the component tree) */
-
-/* Header & Toolbar styling with notch alignment */
-.category-ion-header {
-  background: transparent !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(var(--ion-text-color-rgb), 0.05);
-
-  ion-toolbar:first-child {
-    --background: rgba(var(--ion-background-color-rgb), 0.8) !important;
-    --padding-start: var(--ew-space-4);
-    --padding-end: var(--ew-space-4);
-    --padding-top: 0 !important;
-    --padding-bottom: 0 !important;
-  }
-
-  ion-toolbar {
-    --background: rgba(var(--ion-background-color-rgb), 0.8) !important;
-    --padding-start: var(--ew-space-4);
-    --padding-end: var(--ew-space-4);
-    --padding-top: 0;
-    --padding-bottom: 0;
-
-    ion-title {
-      font-family: var(--ew-font-family-heading);
-      padding-top: calc(
-        var(--ion-safe-area-top, 48px) + var(--ew-space-4)
-      ) !important;
-      padding-bottom: var(--ew-space-4) !important;
-      padding-inline-start: var(
-        --ew-space-4
-      ) !important; // Align perfectly with search bar and list card edges
-      padding-inline-end: var(--ew-space-4) !important;
-      text-align: start;
-    }
-
-    // Toggle filter button styling
-    ion-buttons[slot="end"] ion-button {
-      --border-radius: var(--ew-radius-full);
-      --background: rgba(var(--ion-text-color-rgb), 0.05);
-      --color: var(--ew-text-color-primary);
-      height: 38px;
-      width: 38px;
-      transition: all 0.3s ease;
-      margin: 0;
-
-      ion-icon {
-        font-size: 20px;
-      }
-
-      &:hover,
-      &:focus-visible {
-        --background: rgba(var(--ion-color-primary-rgb), 0.15);
-        --color: var(--ion-color-primary);
-      }
-    }
+  ion-icon {
+    font-size: 18px;
   }
 }
 
-.header-title-container {
+// --- Category popover content ---------------------------------------------
+.cat-popover-inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.15;
-  padding: 0;
+  max-height: 420px;
+  padding: var(--mf-space-2) 0;
+  overflow-y: auto;
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+}
 
-  .main-title {
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--ew-text-color-primary);
-    letter-spacing: -0.8px;
-  }
+.cat-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--mf-space-2) var(--mf-space-4) var(--mf-space-1);
+}
 
-  .sub-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ew-text-color-muted);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.cat-popover-title {
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-3);
+}
+
+.cat-clear-btn {
+  min-height: 32px;
+  padding: 0 var(--mf-space-2);
+  border: 0;
+  border-radius: var(--mf-radius-sm);
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-primary);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
   }
 }
 
-/* Search bar styling (Fixed double border) */
-ion-searchbar {
-  --background: transparent;
-  --border-radius: var(--ew-radius-pill) !important;
-  --box-shadow: none;
-  --color: var(--ew-text-color-primary);
-  --placeholder-color: var(--ew-text-color-muted);
-  --icon-color: var(--ew-text-color-muted);
-  --clear-button-color: var(--ew-text-color-muted);
-  padding: 0 !important;
-  margin: var(--ew-space-2) 0;
+.cat-divider {
+  height: 1px;
+  margin: var(--mf-space-1) var(--mf-space-4);
+  background: var(--mf-separator);
+}
 
-  // Apply single border to the inner searchbar wrapper
-  &::part(container) {
-    border: 1px solid rgba(var(--ion-text-color-rgb), 0.08);
-    border-radius: var(--ew-radius-pill);
-    background: rgba(var(--ion-text-color-rgb), 0.03) !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+.cat-option {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--mf-space-4);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    background: var(--mf-surface-sunken);
   }
 
-  &.searchbar-has-focus::part(container) {
-    border-color: var(--ion-color-primary);
-    background: var(--ion-item-background) !important;
-    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.15);
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: -2px;
   }
 }
 
-/* Segment toolbar styling */
-.segment-toolbar {
-  --padding-start: var(--ew-space-4) !important;
-  --padding-end: var(--ew-space-4) !important;
-  padding: var(--ew-space-2) 0 !important;
-  --background: rgba(var(--ion-background-color-rgb), 0.8) !important;
+.cat-option-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
 }
 
-@media (prefers-color-scheme: dark) {
-  ion-searchbar,
-  .segment-toolbar {
-    border-color: var(--ion-color-step-250);
-  }
+.cat-option.selected .cat-option-name {
+  color: var(--mf-primary);
 }
 
-/* Date picker and select elements coloring overrides */
-@media (prefers-color-scheme: dark) {
-  .filters-toolbar,
-  ion-searchbar {
-    border-color: var(--ion-color-step-250);
-  }
-
-  .filter-select {
-    border-color: var(--ion-color-step-250);
-
-    &:hover {
-      border-color: var(--ion-color-step-450);
-    }
-  }
+.cat-check-icon,
+.cat-uncheck-icon {
+  flex: 0 0 auto;
+  font-size: 22px;
 }
 
-/* Custom sliding action buttons layout */
+.cat-check-icon {
+  color: var(--mf-primary);
+}
+
+.cat-uncheck-icon {
+  color: var(--mf-outline);
+}
+
+// --- Swipe actions ---------------------------------------------------------
 .custom-item-options {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 6px;
-  height: 100%;
+  border: 0;
+  background: transparent;
 }
 
 .option-btn {
-  --background: rgba(var(--ion-color-primary-rgb), 0.08);
-  --color: var(--ion-color-primary) !important;
-  --ripple-color: rgba(var(--ion-color-primary-rgb), 0.15);
-
-  border: 1px solid rgba(var(--ion-color-primary-rgb), 0.15);
-  border-radius: 16px !important;
-  margin: 0 6px;
-  height: calc(100% - 16px);
-  max-height: 62px;
-  min-width: 68px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  align-self: center;
-  padding: 0;
-
-  &::part(native) {
-    border-radius: 16px !important;
-    padding: 0;
-  }
+  --background: var(--mf-surface-sunken);
+  --color: var(--mf-ink-2);
+  --padding-start: 0;
+  --padding-end: 0;
+  min-width: 76px;
+  font-family: var(--mf-font-sans);
 
   .option-content {
     display: flex;
@@ -634,337 +274,137 @@ ion-searchbar {
     gap: 4px;
     width: 100%;
     height: 100%;
+    color: inherit;
 
     ion-icon {
-      font-size: 20px;
       margin: 0;
+      font-size: 20px;
       color: inherit;
     }
 
     span {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-      text-transform: uppercase;
+      font-size: var(--mf-text-caption);
+      font-weight: var(--mf-weight-semibold);
+      letter-spacing: 0;
+      text-transform: none;
       color: inherit;
     }
   }
+}
 
-  &:hover {
-    transform: scale(1.05);
-    --background: rgba(var(--ion-color-primary-rgb), 0.15);
-    border-color: rgba(var(--ion-color-primary-rgb), 0.3);
-    box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.12);
-  }
-
-  &:active {
-    transform: scale(0.96);
-  }
+.option-edit {
+  --background: var(--mf-primary-soft);
+  --color: var(--mf-primary);
 }
 
 .option-delete {
-  --background: rgba(var(--ion-color-danger-rgb), 0.08) !important;
-  --color: var(--ion-color-danger) !important;
-  --ripple-color: rgba(var(--ion-color-danger-rgb), 0.15);
-  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.15) !important;
-
-  &:hover {
-    --background: rgba(var(--ion-color-danger-rgb), 0.15) !important;
-    border-color: rgba(var(--ion-color-danger-rgb), 0.3) !important;
-    box-shadow: 0 6px 16px rgba(var(--ion-color-danger-rgb), 0.12) !important;
-  }
+  --background: var(--mf-danger) !important;
+  --color: var(--ion-color-danger-contrast, #fff) !important;
 }
 
-// ===================================================================
-//  Custom Category Multi-Select Popover
-// ===================================================================
-
-// â”€â”€ Trigger Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-.cat-select-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-height: 44px;
-  padding: 0 10px 0 6px;
-  background: rgba(var(--ion-text-color-rgb), 0.03);
-  border: 1px solid rgba(var(--ion-text-color-rgb), 0.08);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  margin: 4px 0;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--ion-color-primary);
-    background: var(--ion-item-background);
-    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.12);
-  }
-
-  &.has-selection {
-    border-color: rgba(var(--ion-color-primary-rgb), 0.4);
-    background: rgba(var(--ion-color-primary-rgb), 0.04);
-  }
-
-  // â”€â”€ Mini icon squircle inside trigger
-  .cat-trigger-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    transition: background 0.25s ease;
-
-    ion-icon {
-      font-size: 16px;
-    }
-  }
-
-  // â”€â”€ Label text
-  .cat-trigger-text {
-    flex: 1;
-    font-family: var(--ew-font-family-base);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ew-text-color-primary);
-    text-align: start;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  // â”€â”€ Count badge
-  .cat-count-badge {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-    background: var(--ion-color-primary);
-    color: white;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  // â”€â”€ Chevron arrow
-  .cat-trigger-arrow {
-    flex-shrink: 0;
-    font-size: 14px;
-    color: var(--ew-text-color-muted);
-    transition: transform 0.2s ease;
-  }
+// --- Date range sheet ------------------------------------------------------
+.date-range-content {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--mf-space-4));
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
 }
 
-// â”€â”€ Popover container (global styles via _components.scss too)
-// These styles target the popover content rendered inside ion-popover
-.cat-popover-inner {
-  padding: 6px 0 8px;
-  min-width: 230px;
-  max-height: 340px;
-  overflow-y: auto;
-  // Custom scrollbar
-  scrollbar-width: thin;
-  scrollbar-color: rgba(var(--ion-text-color-rgb), 0.15) transparent;
-
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(var(--ion-text-color-rgb), 0.15);
-    border-radius: 4px;
-  }
-}
-
-.cat-popover-header {
+.mf-range__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px 6px;
+  padding: var(--mf-space-3) var(--mf-gutter) var(--mf-space-2);
 
-  .cat-popover-title {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--ew-text-color-muted);
-  }
-
-  .cat-clear-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--ion-color-primary);
-    padding: 2px 6px;
-    border-radius: 6px;
-    transition: background 0.2s ease;
-    outline: none;
-
-    &:hover {
-      background: rgba(var(--ion-color-primary-rgb), 0.1);
-    }
+  h2 {
+    margin: 0;
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink);
   }
 }
 
-.cat-divider {
-  height: 1px;
-  background: rgba(var(--ion-text-color-rgb), 0.07);
-  margin: 4px 0;
-}
-
-// â”€â”€ Individual category option row
-.cat-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 8px 16px;
-  background: transparent;
-  border: none;
+.mf-range__close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-surface-sunken);
+  color: var(--mf-ink-2);
   cursor: pointer;
-  transition: background 0.15s ease;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
 
-  &:hover {
-    background: rgba(var(--ion-text-color-rgb), 0.05);
-  }
-
-  &.selected {
-    background: rgba(var(--ion-color-primary-rgb), 0.07);
-
-    .cat-option-name {
-      color: var(--ion-color-primary);
-      font-weight: 700;
-    }
-  }
-
-  &:active {
-    background: rgba(var(--ion-text-color-rgb), 0.09);
-  }
-
-  // â”€â”€ Colored squircle icon
-  .cat-option-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    position: relative;
-
-    // Subtle glow behind icon
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: inherit;
-      filter: blur(6px);
-      opacity: 0.35;
-      z-index: -1;
-      transform: translateY(2px) scale(0.85);
-    }
-
-    ion-icon {
-      font-size: 18px;
-      color: white;
-      position: relative;
-      z-index: 1;
-    }
-  }
-
-  // â”€â”€ Category name
-  .cat-option-name {
-    flex: 1;
-    font-family: var(--ew-font-family-base);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ew-text-color-primary);
-    text-align: start;
-  }
-
-  // â”€â”€ Check/uncheck icons
-  .cat-check-icon {
-    flex-shrink: 0;
+  ion-icon {
     font-size: 20px;
-    color: var(--ion-color-primary);
   }
 
-  .cat-uncheck-icon {
-    flex-shrink: 0;
-    font-size: 20px;
-    color: rgba(var(--ion-text-color-rgb), 0.2);
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
   }
 }
 
-/* --- Custom Date Range Picker Styles --- */
 .custom-calendar {
-  background: rgba(var(--ion-background-color-rgb), 1);
-  border-radius: 16px;
+  --mf-band-dir: 90deg;
+  margin: 0 var(--mf-gutter);
   overflow: hidden;
-  font-family: var(--ew-font-family-base);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  box-shadow: inset 0 0 0 1px var(--mf-separator);
+}
+
+:host-context([dir="rtl"]) .custom-calendar {
+  --mf-band-dir: 270deg;
 }
 
 .calendar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-
-  .current-month {
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--ew-text-color-primary);
-  }
+  padding: var(--mf-space-1) var(--mf-space-2);
 
   ion-button {
-    --color: var(--ion-color-primary);
+    --color: var(--mf-primary);
+  }
+
+  .current-month {
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink);
   }
 }
 
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  padding: var(--mf-space-2) 0;
+  border-bottom: 1px solid var(--mf-separator);
   text-align: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(var(--ion-text-color-rgb), 0.05);
 
   .weekday {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ew-text-color-muted);
-    text-transform: uppercase;
+    font-size: var(--mf-text-caption);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink-3);
   }
 }
 
 .calendar-grid {
-  padding: 8px;
+  padding: var(--mf-space-2);
 
   .calendar-row {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   .calendar-day {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px;
-    position: relative;
     cursor: pointer;
-    z-index: 1;
 
     span {
       display: flex;
@@ -973,66 +413,55 @@ ion-searchbar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--ew-text-color-primary);
-      transition: all 0.2s ease;
+      font-size: var(--mf-text-callout);
+      font-weight: var(--mf-weight-medium);
+      font-variant-numeric: tabular-nums;
+      color: var(--mf-ink);
     }
 
     &.not-current-month span {
-      color: rgba(var(--ion-text-color-rgb), 0.3);
+      color: var(--mf-ink-3);
+      opacity: 0.55;
     }
 
     &.is-today span {
-      color: var(--ion-color-primary);
-      font-weight: 700;
+      font-weight: var(--mf-weight-bold);
+      color: var(--mf-primary);
     }
 
-    /* Range Highlights */
     &.in-range {
-      background: rgba(var(--ion-color-primary-rgb), 0.1);
+      background: var(--mf-primary-soft);
     }
 
     &.selected-start {
       background: linear-gradient(
-        90deg,
+        var(--mf-band-dir),
         transparent 50%,
-        rgba(var(--ion-color-primary-rgb), 0.1) 50%
+        var(--mf-primary-soft) 50%
       );
-
-      span {
-        background: var(--ion-color-primary);
-        color: white;
-        box-shadow: 0 4px 10px rgba(var(--ion-color-primary-rgb), 0.4);
-      }
     }
 
     &.selected-end {
       background: linear-gradient(
-        90deg,
-        rgba(var(--ion-color-primary-rgb), 0.1) 50%,
+        var(--mf-band-dir),
+        var(--mf-primary-soft) 50%,
         transparent 50%
       );
-
-      span {
-        background: var(--ion-color-primary);
-        color: white;
-        box-shadow: 0 4px 10px rgba(var(--ion-color-primary-rgb), 0.4);
-      }
     }
 
     &.selected-start.selected-end {
       background: transparent;
+    }
 
-      span {
-        background: var(--ion-color-primary);
-        color: white;
-        box-shadow: 0 4px 10px rgba(var(--ion-color-primary-rgb), 0.4);
-      }
+    &.selected-start span,
+    &.selected-end span {
+      background: var(--mf-primary);
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-primary-contrast);
     }
 
     &:hover:not(.selected-start):not(.selected-end) span {
-      background: rgba(var(--ion-text-color-rgb), 0.05);
+      background: var(--mf-surface-sunken);
     }
   }
 }
@@ -1040,66 +469,61 @@ ion-searchbar {
 .selection-summary {
   display: flex;
   justify-content: space-between;
-  padding: 16px;
-  border-top: 1px solid rgba(var(--ion-text-color-rgb), 0.05);
-  background: rgba(var(--ion-text-color-rgb), 0.02);
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-top: 1px solid var(--mf-separator);
+  background: var(--mf-surface-sunken);
 
   .summary-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 
     .label {
-      font-size: 12px;
-      color: var(--ew-text-color-muted);
-      font-weight: 600;
-      text-transform: uppercase;
+      font-size: var(--mf-text-caption);
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-ink-3);
     }
 
     .value {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ion-color-primary);
+      font-size: var(--mf-text-callout);
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-ink);
     }
   }
 }
 
-:host {
-  .category-ion-header {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  .category-ion-header ion-toolbar {
-    --background: var(--ion-background-color) !important;
-  }
-  .category-ion-header .title-toolbar {
-    --min-height: 64px;
-    padding-top: var(--ion-safe-area-top);
-  }
-  .category-ion-header ion-toolbar ion-title {
-    position: relative;
-    padding: 10px 0 !important;
-    width: auto;
-  }
-  .header-title-container .main-title {
-    font-size: 22px;
-    font-weight: 700;
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-4) var(--mf-gutter) 0;
+
+  ion-button {
+    --border-radius: var(--mf-radius-md);
+    --box-shadow: none;
+    height: 52px;
+    margin: 0;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
     letter-spacing: 0;
+    text-transform: none;
   }
-  .header-title-container .sub-title {
-    color: var(--ew-wallet-muted);
-  }
-  .category-ion-header ion-toolbar ion-buttons[slot="end"] ion-button {
-    width: 44px;
-    height: 44px;
-  }
-  ion-searchbar {
-    --background: var(--ion-item-background);
-    --border-radius: 12px !important;
-    --placeholder-color: var(--ew-wallet-muted);
-  }
-  ion-content {
-    --padding-bottom: var(--ew-core-bottom-clearance);
+}
+
+ion-button.mf-range__clear {
+  --background: var(--mf-surface-sunken);
+  --color: var(--mf-ink-2);
+}
+
+ion-button.mf-range__apply {
+  --background: var(--mf-primary);
+  --color: var(--mf-primary-contrast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters-anim {
+    animation: none;
   }
 }
 
