@@ -1,3 +1,4 @@
+import { AppNoticeComponent } from 'src/app/shared/components/app-notice/app-notice.component';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,6 +23,7 @@ import { SyncIndicatorComponent } from 'src/app/shared/components/sync-indicator
     AsyncPipe,
     TranslateModule,
     SyncIndicatorComponent,
+    AppNoticeComponent,
   ],
 })
 export class LayoutComponent extends BaseComponent implements OnInit {

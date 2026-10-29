@@ -851,6 +851,11 @@
     "START": "Start Now",
     "SKIP": "Skip"
   },
+  "APP_NOTICE": {
+    "UPDATE_ACTION": "Update",
+    "UPDATE_REQUIRED": "A newer version of the app is required for the best experience.",
+    "UPDATE_AVAILABLE": "A new version of the app is available."
+  },
   "BACKUP": {
     "TITLE": "Backup & Restore",
     "SUBTITLE": "Keep your data safe and restore it anytime",
@@ -908,6 +913,7 @@
     "TERMS_TITLE": "Terms & Conditions",
     "PRIVACY_TITLE": "Privacy Policy",
     "LAST_UPDATED": "Last updated: September 16, 2026",
+    "VERSION_LABEL": "Version",
     "TERMS_SERVICE_TITLE": "The service",
     "TERMS_SERVICE_BODY": "{{ productName }} helps you record transactions, organize categories, review summaries, and manage your personal financial records.",
     "TERMS_FINANCIAL_BODY": "The app is a record-management tool. It does not provide financial, investment, tax, legal, or other professional advice.",

@@ -28,7 +28,7 @@
         </span>
         <ion-label>
           <h3>{{ "HELP_PAGE.EMAIL" | translate }}</h3>
-          <p dir="ltr">support&#64;expenses-wallet.com</p>
+          <p dir="ltr">{{ support().email }}</p>
         </ion-label>
       </ion-item>
       <ion-item
@@ -47,7 +47,7 @@
         </span>
         <ion-label>
           <h3>{{ "HELP_PAGE.WHATSAPP" | translate }}</h3>
-          <p>{{ "HELP_PAGE.REPLY_FAST" | translate }}</p>
+          <p>{{ support().hours ?? ("HELP_PAGE.REPLY_FAST" | translate) }}</p>
         </ion-label>
       </ion-item>
       <ion-item
@@ -66,23 +66,43 @@
         </span>
         <ion-label>
           <h3>{{ "HELP_PAGE.WEBSITE" | translate }}</h3>
-          <p dir="ltr">www.expenses-wallet.com</p>
+          <p dir="ltr">{{ support().websiteLabel }}</p>
         </ion-label>
       </ion-item>
+      @for (link of support().links; track link.url) {
+      <ion-item
+        button
+        detail="true"
+        (click)="openLink(link.url)"
+        class="mf-help__row"
+      >
+        <span
+          class="mf-help__mark"
+          slot="start"
+          style="--mf-h-tone: var(--mf-cat-6)"
+          aria-hidden="true"
+        >
+          <ion-icon name="link-outline"></ion-icon>
+        </span>
+        <ion-label>
+          <h3>{{ link.label }}</h3>
+        </ion-label>
+      </ion-item>
+      }
     </ion-list>
 
     <!-- FAQ -->
     <h2 class="mf-help__label">{{ "HELP_PAGE.FAQ_TITLE" | translate }}</h2>
     <ion-accordion-group class="mf-help__faq">
-      @for (faq of faqs; track faq; let i = $index) {
+      @for (faq of faqs(); track $index; let i = $index) {
       <ion-accordion [value]="'faq-' + i">
         <ion-item slot="header" lines="none" class="mf-help__q">
           <ion-label class="ion-text-wrap"
-            >{{ faq.question | translate }}</ion-label
+            >{{ faq.translated ? (faq.question | translate) : faq.question }}</ion-label
           >
         </ion-item>
         <div class="mf-help__a" slot="content">
-          <p>{{ faq.answer | translate }}</p>
+          <p>{{ faq.translated ? (faq.answer | translate) : faq.answer }}</p>
         </div>
       </ion-accordion>
       }

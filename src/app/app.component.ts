@@ -12,6 +12,7 @@ import { BaseComponent } from './shared/base/base.component';
 import { DirectionService } from './core/services/direction.service';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { OnboardingService } from './core/services/onboarding.service';
+import { AppSettingsService } from './core/services/app-settings.service';
 import { BiometricService } from './core/services/biometric.service';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { BackupService } from './core/services/backup.service';
@@ -39,6 +40,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   private isAuthenticating = false;
   private deviceLockUnsubscribe?: () => Promise<void>;
   private backgroundedAt: number | null = null;
+  private readonly appSettings = inject(AppSettingsService);
 
   constructor(
     private zone: NgZone,
@@ -60,6 +62,8 @@ export class AppComponent extends BaseComponent implements OnInit {
   override ngOnInit(): void {
     super.ngOnInit();
     this.connectionService.initialize();
+    // Dashboard-managed content (support, legal, notices). Never blocks startup.
+    void this.appSettings.refresh();
     this.authService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
         this.notificationService.startRealtime();
@@ -120,6 +124,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     // Check on resume
     App.addListener('resume', () => {
+      void this.appSettings.refresh();
       if (this.isAuthenticating) return;
       // Ignore resume if it happened within 2 seconds of a biometric prompt finishing.
       // This prevents the infinite loop caused by the biometric dialog itself triggering a pause/resume cycle.
