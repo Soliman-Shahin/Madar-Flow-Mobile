@@ -1,501 +1,284 @@
-// ════════════════════════════════════════════════
-// Sync Status Component – Premium Glassmorphism UI
-// ════════════════════════════════════════════════
+// Sync status — Calm Personal Ledger. A single row (icon, status, counts)
+// that expands into a quiet details panel. Color carries state only:
+// success when current, warm when pending, red for conflicts/errors.
 
 :host {
   display: block;
-  font-family: var(--ion-font-family, "Inter", sans-serif);
+  font-family: var(--mf-font-sans);
 }
 
-// ── Status-based CSS variables ──────────────────
 .sync-wrapper {
-  --status-color: hsl(217, 91%, 60%);
-  --status-bg: hsla(217, 91%, 60%, 0.12);
-  --status-border: hsla(217, 91%, 60%, 0.28);
-  --status-glow: hsla(217, 91%, 60%, 0.2);
+  --sync-tone: var(--mf-ink-3);
 
-  &.state-offline {
-    --status-color: hsl(220, 13%, 60%);
-    --status-bg: hsla(220, 13%, 60%, 0.1);
-    --status-border: hsla(220, 13%, 60%, 0.22);
-    --status-glow: transparent;
+  &.state-synced {
+    --sync-tone: var(--mf-success);
   }
 
   &.state-syncing {
-    --status-color: hsl(204, 94%, 52%);
-    --status-bg: hsla(204, 94%, 52%, 0.12);
-    --status-border: hsla(204, 94%, 52%, 0.3);
-    --status-glow: hsla(204, 94%, 52%, 0.25);
+    --sync-tone: var(--mf-primary);
   }
 
   &.state-pending {
-    --status-color: hsl(38, 92%, 50%);
-    --status-bg: hsla(38, 92%, 50%, 0.12);
-    --status-border: hsla(38, 92%, 50%, 0.28);
-    --status-glow: hsla(38, 92%, 50%, 0.18);
+    --sync-tone: var(--mf-warning);
   }
 
   &.state-conflict,
   &.state-error {
-    --status-color: hsl(0, 84%, 60%);
-    --status-bg: hsla(0, 84%, 60%, 0.12);
-    --status-border: hsla(0, 84%, 60%, 0.28);
-    --status-glow: hsla(0, 84%, 60%, 0.18);
-  }
-
-  &.state-synced {
-    --status-color: hsl(142, 70%, 45%);
-    --status-bg: hsla(142, 70%, 45%, 0.12);
-    --status-border: hsla(142, 70%, 45%, 0.28);
-    --status-glow: hsla(142, 70%, 45%, 0.18);
+    --sync-tone: var(--mf-danger);
   }
 }
 
-// ── Pill Button ─────────────────────────────────
+// --- Row -------------------------------------------------------------------
 .sync-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--mf-space-3);
   width: 100%;
-  padding: 9px 14px;
-  border: 1px solid var(--status-border);
-  border-radius: 14px;
-  background: var(--status-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 0 16px var(--status-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  color: var(--ion-text-color);
-  font-size: 0.82rem;
-  font-weight: 500;
+  min-height: 52px;
+  padding: 0 var(--mf-space-4);
+  border: 0;
+  background: transparent;
+  font: inherit;
   text-align: start;
-
-  &:hover {
-    background: color-mix(in srgb, var(--status-bg) 140%, transparent);
-    box-shadow: 0 0 24px var(--status-glow),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(-1px);
-  }
+  color: var(--mf-ink);
+  cursor: pointer;
 
   &:active {
-    transform: translateY(0);
+    background: var(--mf-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: -2px;
   }
 }
 
-// ── Icon ────────────────────────────────────────
 .pill-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--status-color);
-  color: #fff;
-  font-size: 13px;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px var(--status-glow);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 22px;
+  color: var(--sync-tone);
 
   &.spin ion-icon {
-    animation: spin 1.4s linear infinite;
+    animation: mf-sync-spin 1.2s linear infinite;
   }
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// ── Label ───────────────────────────────────────
 .pill-label {
-  flex: 1;
-  color: var(--status-color);
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-medium);
 }
 
-// ── Badges ──────────────────────────────────────
 .pill-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 9px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1;
+  flex: 0 0 auto;
+  padding: 1px var(--mf-space-2);
+  border-radius: var(--mf-radius-pill);
+  font-size: var(--mf-text-caption);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums;
 
   &.pending {
-    background: hsl(38, 92%, 50%);
-    color: #fff;
+    background: color-mix(in srgb, var(--mf-warning) 16%, transparent);
+    color: var(--mf-warning);
   }
 
   &.conflict {
-    background: hsl(0, 84%, 60%);
-    color: #fff;
+    background: var(--mf-danger-soft);
+    color: var(--mf-danger);
   }
 }
 
-.pill-progress {
-  font-size: 0.75rem;
-  color: var(--status-color);
-  font-weight: 700;
-}
-
+.pill-progress,
 .pill-time {
-  font-size: 0.72rem;
-  color: var(--ion-color-medium);
-  font-weight: 500;
+  flex: 0 0 auto;
+  font-size: var(--mf-text-footnote);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-ink-3);
 }
 
 .pill-chevron {
-  color: var(--ion-color-medium);
-  font-size: 14px;
-  margin-inline-start: auto;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  font-size: 16px;
+  color: var(--mf-ink-3);
 }
 
-// ── Expanded Panel ──────────────────────────────
+// --- Details panel ---------------------------------------------------------
 .sync-panel {
-  margin-top: 6px;
-  padding: 14px 16px;
-  border: 1px solid var(--status-border);
-  border-radius: 14px;
-  background: rgba(var(--ion-background-color-rgb, 255, 255, 255), 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// ── Progress Bar ────────────────────────────────
-.panel-progress {
-  margin-bottom: 14px;
-}
-
-.progress-track {
-  height: 4px;
-  background: rgba(var(--ion-color-medium-rgb, 128, 128, 128), 0.2);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--status-color);
-  border-radius: 2px;
-  transition: width 0.4s ease;
-}
-
-.progress-label {
-  margin: 6px 0 0;
-  font-size: 0.75rem;
-  color: var(--ion-color-medium);
-  text-align: center;
-}
-
-// ── Stats Grid ──────────────────────────────────
-.panel-stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 14px;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-3) var(--mf-space-4) var(--mf-space-4);
+  border-top: 1px solid var(--mf-separator);
+  background: var(--mf-surface-sunken);
+}
+
+.panel-progress {
+  .progress-track {
+    height: 6px;
+    overflow: hidden;
+    border-radius: var(--mf-radius-pill);
+    background: var(--mf-surface);
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--mf-primary);
+    transition: width var(--mf-dur-standard) var(--mf-ease-standard);
+  }
+
+  .progress-label {
+    margin: var(--mf-space-2) 0 0;
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-3);
+  }
+}
+
+.panel-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--mf-space-3);
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 90px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(var(--ion-color-medium-rgb, 128, 128, 128), 0.06);
-  border: 1px solid rgba(var(--ion-color-medium-rgb, 128, 128, 128), 0.12);
+  gap: var(--mf-space-2);
+  min-width: 0;
 }
 
 .stat-icon {
-  font-size: 18px;
+  flex: 0 0 auto;
+  font-size: 20px;
+  color: var(--mf-ink-3);
 
   &.synced {
-    color: hsl(142, 70%, 45%);
+    color: var(--mf-success);
   }
+
   &.pending {
-    color: hsl(38, 92%, 50%);
+    color: var(--mf-warning);
   }
+
   &.conflict,
   &.error {
-    color: hsl(0, 84%, 60%);
+    color: var(--mf-danger);
   }
 }
 
 .stat-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .stat-val {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--ion-text-color);
-  line-height: 1.2;
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--mf-ink);
 }
 
 .stat-key {
-  font-size: 0.68rem;
-  color: var(--ion-color-medium);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: var(--mf-text-caption);
+  color: var(--mf-ink-3);
 }
 
-// ── Connection Row ──────────────────────────────
 .conn-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 0.78rem;
-  color: var(--ion-color-medium);
+  gap: var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
 }
 
 .conn-dot {
+  flex: 0 0 auto;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  flex-shrink: 0;
+  background: var(--mf-ink-3);
 
   &.online {
-    background: hsl(142, 70%, 45%);
-    box-shadow: 0 0 6px hsla(142, 70%, 45%, 0.6);
-    animation: pulse 2s ease-in-out infinite;
+    background: var(--mf-success);
+  }
+
+  &.degraded {
+    background: var(--mf-warning);
   }
 
   &.offline {
-    background: hsl(220, 13%, 55%);
+    background: var(--mf-danger);
   }
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 4px hsla(142, 70%, 45%, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 10px hsla(142, 70%, 45%, 0.9);
-  }
-}
-
-.conn-label {
-  flex: 1;
-}
-
-// ── Action Buttons ──────────────────────────────
-.panel-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+.panel-actions:empty {
+  display: none;
 }
 
 .action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--status-border);
-  font-size: 0.8rem;
-  font-weight: 600;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  width: 100%;
+  min-height: var(--mf-touch-target);
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: var(--status-bg);
-  color: var(--status-color);
 
-  ion-icon {
-    font-size: 15px;
+  &.primary {
+    background: var(--mf-primary-soft);
+    color: var(--mf-primary);
   }
 
-  &:hover {
-    background: var(--status-color);
-    color: #fff;
-    border-color: var(--status-color);
-    box-shadow: 0 4px 14px var(--status-glow);
-  }
-
-  &:active {
-    transform: scale(0.97);
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
   }
 }
 
-// ── Errors ──────────────────────────────────────
 .panel-errors {
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--mf-space-2);
 }
 
 .error-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: hsla(0, 84%, 60%, 0.1);
-  border: 1px solid hsla(0, 84%, 60%, 0.22);
-  color: hsl(0, 84%, 60%);
-  font-size: 0.75rem;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-2) var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-danger-soft);
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-snug);
+  color: var(--mf-danger);
 
   ion-icon {
-    flex-shrink: 0;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    font-size: 16px;
   }
 }
 
-// Status text and icons retain the existing sync semantics; remove glass/glow.
-.sync-wrapper {
-  --status-color: var(--ion-color-primary);
-  --status-border: var(--ew-wallet-line);
-  --status-bg: var(--ew-wallet-inset);
-  --status-glow: transparent;
-}
-.sync-wrapper.state-offline {
-  --status-color: var(--ew-wallet-muted);
-}
-.sync-wrapper.state-syncing {
-  --status-color: var(--ion-color-primary);
-}
-.sync-wrapper.state-pending {
-  --status-color: #8b5a0a;
-}
-.sync-wrapper.state-conflict,
-.sync-wrapper.state-error {
-  --status-color: #b83243;
-}
-.sync-wrapper.state-synced {
-  --status-color: #137956;
-}
-:host-context(.dark) {
-  .sync-wrapper.state-pending {
-    --status-color: #efc478;
-  }
-  .sync-wrapper.state-conflict,
-  .sync-wrapper.state-error {
-    --status-color: #ffb1bb;
-  }
-  .sync-wrapper.state-synced {
-    --status-color: #75dcbc;
+@keyframes mf-sync-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
-.sync-pill,
-.sync-pill:hover {
-  min-height: 48px;
-  padding: 10px 12px;
-  background: var(--ion-item-background);
-  border-color: var(--ew-wallet-line);
-  border-inline-start: 3px solid var(--status-color);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
-  transform: none;
-}
-.pill-label {
-  min-width: 0;
-  line-height: 1.5;
-}
-.pill-icon {
-  background: transparent;
-  color: var(--status-color);
-  box-shadow: none;
-  font-size: 20px;
-}
-.pill-time,
-.pill-chevron,
-.conn-row,
-.stat-key,
-.progress-label {
-  color: var(--ew-wallet-muted);
-}
-.pill-time {
-  unicode-bidi: isolate;
-}
-.pill-badge.pending {
-  background: var(--ew-wallet-inset);
-  color: var(--ion-text-color);
-}
-.pill-badge.conflict {
-  background: #b83243;
-  color: #fff;
-}
-.sync-panel {
-  background: var(--ion-item-background);
-  border-color: var(--ew-wallet-line);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
-  padding: 12px;
-}
-.stat {
-  background: var(--ew-wallet-inset);
-  border: 0;
-}
-.stat-info {
-  min-width: 0;
-}
-.stat-key {
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1.5;
-}
-.stat-val,
-.pill-progress,
-.pill-badge {
-  font-variant-numeric: tabular-nums;
-}
-.conn-dot.online {
-  animation: none;
-  box-shadow: none;
-}
-.action-btn,
-.action-btn:hover {
-  min-height: 44px;
-  background: var(--ew-wallet-inset);
-  color: var(--ion-text-color);
-  box-shadow: none;
-  border-color: var(--ew-wallet-line);
-}
-.error-row {
-  color: var(--ion-text-color);
-  background: rgba(var(--ion-color-danger-rgb), 0.08);
-  overflow-wrap: anywhere;
-}
-:is(.sync-pill, .action-btn):focus-visible {
-  outline: 2px solid var(--ion-color-primary);
-  outline-offset: 2px;
-}
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
+  .pill-icon.spin ion-icon {
+    animation: none;
+  }
+
+  .progress-fill {
+    transition: none;
   }
 }

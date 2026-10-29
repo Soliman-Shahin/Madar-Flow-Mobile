@@ -27,7 +27,7 @@ export const MENU_ITEMS: MenuItem[] = [
     requiresAuth: true,
   },
   {
-    title: 'Settings',
+    title: 'SIDEBAR.SETTINGS',
     icon: 'settings-outline',
     link: APP_ROUTES.BASE + APP_ROUTES.SETTINGS.INDEX,
     requiresAuth: true,
