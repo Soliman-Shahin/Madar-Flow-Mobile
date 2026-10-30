@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { BiometricService } from 'src/app/core/services/biometric.service';
+import { TelemetryService } from 'src/app/core/services/telemetry.service';
 import { BiometricSignInService } from 'src/app/modules/auth/services/biometric-signin.service';
 import { IonicModule, IonSelect } from '@ionic/angular';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
@@ -86,6 +87,8 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
   ];
 
   private biometricService = inject(BiometricService);
+  private telemetry = inject(TelemetryService);
+  telemetryEnabled = false;
   private biometricSignInService = inject(BiometricSignInService);
   private pushNotificationService = inject(PushNotificationService);
   private profileService = inject(ProfileService);
@@ -126,6 +129,7 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     this.biometricSignInAvailable =
       await this.biometricSignInService.isAvailable();
     this.biometricEnabled = this.biometricService.isEnabled;
+    this.telemetryEnabled = this.telemetry.isEnabled;
     this.lockTimeoutMs = this.biometricService.lockTimeoutMs;
     this.biometricSignInEnabled = this.biometricSignInAvailable
       ? await this.biometricSignInService.hasEnrollment()
@@ -160,6 +164,7 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
       if (verified) {
         await this.biometricService.setEnabled(true);
         this.biometricEnabled = true;
+        this.telemetry.track('biometric_enabled');
       } else {
         event.target.checked = false;
         this.biometricEnabled = false;
@@ -277,6 +282,14 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
         );
       }
     }
+    this.cdr.markForCheck();
+  }
+
+  async toggleTelemetry(event: any): Promise<void> {
+    const enabled = !!event.detail.checked;
+    if (enabled === this.telemetry.isEnabled) return;
+    await this.telemetry.setConsent(enabled);
+    this.telemetryEnabled = this.telemetry.isEnabled;
     this.cdr.markForCheck();
   }
 

@@ -19,7 +19,7 @@ import { BackupService } from './core/services/backup.service';
 import { environment } from '../environments/environment';
 import { LayoutComponent } from './layout/pages/layout-component/layout.component';
 import { OnboardingComponent } from './shared/components/onboarding/onboarding.component';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { ConnectionService } from './core/services/connection.service';
@@ -27,6 +27,7 @@ import { DeviceLockService } from './core/services/device-lock.service';
 import { NotificationService } from './core/services/notification.service';
 import { NotificationPreferenceService } from './core/services/notification-preference.service';
 import { debugLog } from 'src/app/shared/utils/debug-log.util';
+import { TelemetryService } from './core/services/telemetry.service';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,9 @@ export class AppComponent extends BaseComponent implements OnInit {
   private deviceLockUnsubscribe?: () => Promise<void>;
   private backgroundedAt: number | null = null;
   private readonly appSettings = inject(AppSettingsService);
+  private readonly telemetry = inject(TelemetryService);
+  private readonly alertController = inject(AlertController);
+  private consentPromptScheduled = false;
 
   constructor(
     private zone: NgZone,
@@ -67,6 +71,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     void this.appSettings.refresh();
     this.authService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
+        this.telemetry.trackAppOpen();
+        void this.telemetry.flush();
+        this.scheduleTelemetryConsentPrompt();
         this.notificationService.startRealtime();
         void this.notificationPreferenceService
           .load()
@@ -121,11 +128,13 @@ export class AppComponent extends BaseComponent implements OnInit {
     // can emit pause/resume; those must not start or reset the grace period.
     App.addListener('pause', () => {
       if (!this.isAuthenticating) this.backgroundedAt = Date.now();
+      void this.telemetry.flush();
     });
 
     // Check on resume
     App.addListener('resume', () => {
       void this.appSettings.refresh();
+      this.telemetry.trackAppOpen();
       if (this.isAuthenticating) return;
       // Ignore resume if it happened within 2 seconds of a biometric prompt finishing.
       // This prevents the infinite loop caused by the biometric dialog itself triggering a pause/resume cycle.
@@ -215,6 +224,38 @@ export class AppComponent extends BaseComponent implements OnInit {
     } catch (error) {
       console.error('❌ Failed to initialize Google Drive:', error);
     }
+  }
+
+  /**
+   * Ask once, after sign-in, whether the user wants to share anonymous usage
+   * data. Either answer is final until they change it in Settings.
+   */
+  private scheduleTelemetryConsentPrompt(): void {
+    if (this.consentPromptScheduled || !this.telemetry.needsPrompt) return;
+    this.consentPromptScheduled = true;
+    setTimeout(async () => {
+      if (!this.telemetry.needsPrompt || this.isLocked || !this.authService.isLoggedIn) {
+        this.consentPromptScheduled = false;
+        return;
+      }
+      const alert = await this.alertController.create({
+        header: this.translate.instant('TELEMETRY.PROMPT_TITLE'),
+        message: this.translate.instant('TELEMETRY.PROMPT_MESSAGE'),
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: this.translate.instant('TELEMETRY.PROMPT_DECLINE'),
+            role: 'cancel',
+            handler: () => void this.telemetry.setConsent(false),
+          },
+          {
+            text: this.translate.instant('TELEMETRY.PROMPT_ALLOW'),
+            handler: () => void this.telemetry.setConsent(true),
+          },
+        ],
+      });
+      await alert.present();
+    }, 4000);
   }
 
   async checkBiometric() {

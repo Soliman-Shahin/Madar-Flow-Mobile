@@ -1,3 +1,4 @@
+import { TelemetryService } from 'src/app/core/services/telemetry.service';
 import { Injectable, inject } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -12,6 +13,7 @@ import { OfflineStorageService } from 'src/app/core/services/offline-storage.ser
 })
 export class CategoryService {
   private apiService = inject(ApiService);
+  private readonly telemetry = inject(TelemetryService);
   private offlineStorage = inject(OfflineStorageService);
   private connectionService = inject(ConnectionService);
 
@@ -190,6 +192,14 @@ export class CategoryService {
   }
 
   createCategory(categoryData: Partial<Category>): Observable<Category> {
+    return this.createCategoryInternal(categoryData).pipe(
+      tap(() => this.telemetry.track('category_added'))
+    );
+  }
+
+  private createCategoryInternal(
+    categoryData: Partial<Category>
+  ): Observable<Category> {
     return this.offlineStorage.getEntities<any>('category').pipe(
       take(1),
       switchMap((existing) => {
