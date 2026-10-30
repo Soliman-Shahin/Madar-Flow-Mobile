@@ -34,6 +34,11 @@ export const routes: Routes = [
       import('./backup/backup.page').then((m) => m.BackupSettingsPage),
   },
   {
+    path: APP_ROUTES.SETTINGS.EXPORT,
+    loadComponent: () =>
+      import('./export/data-export.page').then((m) => m.DataExportPage),
+  },
+  {
     path: APP_ROUTES.SETTINGS.NOTIFICATION_PREFERENCES,
     loadComponent: () =>
       import('./notification-preferences/notification-preferences.page').then(

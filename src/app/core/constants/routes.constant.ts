@@ -28,6 +28,7 @@ export const APP_ROUTES = {
     SYNC: 'sync',
     CONFLICTS: 'conflicts',
     BACKUP: 'backup',
+    EXPORT: 'export',
     NOTIFICATION_PREFERENCES: 'notification-preferences',
     DELETE_ACCOUNT: 'delete-account',
   },
