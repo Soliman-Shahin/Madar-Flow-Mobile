@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, firstValueFrom, of, timeout } from 'rxjs';
 import { SyncService } from 'src/app/core/services/sync.service';
+import { TelemetryService } from 'src/app/core/services/telemetry.service';
 import { OfflineStorageService } from 'src/app/core/services/offline-storage.service';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { BRAND } from 'src/app/config/brand.config';
@@ -35,6 +36,7 @@ export class DataExportService {
   private readonly translate = inject(TranslateService);
   private readonly share = inject(FileShareService);
   private readonly sync = inject(SyncService);
+  private readonly telemetry = inject(TelemetryService);
 
   /**
    * Build and hand over an export from this device's data (works offline and
@@ -63,11 +65,13 @@ export class DataExportService {
         income: t('EXPORT.TYPE_INCOME'),
         expense: t('EXPORT.TYPE_EXPENSE'),
       });
-      return this.share.deliver(
-        exportFileName('csv', period),
-        'text/csv;charset=utf-8',
-        csv,
-        title
+      return this.counted(
+        this.share.deliver(
+          exportFileName('csv', period),
+          'text/csv;charset=utf-8',
+          csv,
+          title
+        )
       );
     }
 
@@ -100,12 +104,21 @@ export class DataExportService {
         page: (n, total) => t('EXPORT.PAGE_OF', { n, total }),
       },
     });
-    return this.share.deliver(
-      exportFileName('pdf', period),
-      'application/pdf',
-      buildPdf(pages),
-      title
+    return this.counted(
+      this.share.deliver(
+        exportFileName('pdf', period),
+        'application/pdf',
+        buildPdf(pages),
+        title
+      )
     );
+  }
+
+  /** Count a finished export (not one the user dismissed) for opted-in analytics. */
+  private async counted(delivery: Promise<ExportOutcome>): Promise<ExportOutcome> {
+    const outcome = await delivery;
+    if (outcome !== 'cancelled') this.telemetry.track('export_completed');
+    return outcome;
   }
 
   /**
