@@ -1134,6 +1134,7 @@
     "COL_AMOUNT": "المبلغ",
     "TYPE_INCOME": "الدخل",
     "TYPE_EXPENSE": "المصروفات"
+  },
   "TELEMETRY": {
     "SECTION": "الخصوصية",
     "TOGGLE": "مشاركة بيانات الاستخدام المجهولة",

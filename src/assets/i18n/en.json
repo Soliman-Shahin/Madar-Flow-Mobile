@@ -1133,6 +1133,7 @@
     "COL_AMOUNT": "Amount",
     "TYPE_INCOME": "Income",
     "TYPE_EXPENSE": "Expenses"
+  },
   "TELEMETRY": {
     "SECTION": "Privacy",
     "TOGGLE": "Share anonymous usage data",
