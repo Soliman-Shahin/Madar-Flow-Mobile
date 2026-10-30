@@ -124,6 +124,11 @@ export interface MyPlanResponse {
   context: UserPlanContext;
   usage: UsageStats;
   subscriptionHistory: Subscription[];
+  /**
+   * False while paid plans cannot be purchased (no payment provider yet).
+   * Missing on older servers, which behave as available.
+   */
+  upgradeAvailable?: boolean;
 }
 
 export interface UpgradePlanRequest {

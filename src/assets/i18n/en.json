@@ -1013,7 +1013,9 @@
     "FAQ": "Frequently Asked Questions",
     "CONTACT_SUPPORT": "Contact Support",
     "UNKNOWN_PLAN": "Unknown Plan",
-    "ONGOING": "Ongoing"
+    "ONGOING": "Ongoing",
+    "UPGRADE_UNAVAILABLE": "Paid plans are not available yet. Everything else in the app stays free.",
+    "COMING_SOON": "Coming soon"
   },
   "PLAN_FEATURES": {
     "CATEGORY_CREATE": "Create categories",

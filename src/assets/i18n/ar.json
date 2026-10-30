@@ -1014,7 +1014,9 @@
     "FAQ": "الأسئلة الشائعة",
     "CONTACT_SUPPORT": "تواصل مع الدعم",
     "UNKNOWN_PLAN": "خطة غير معروفة",
-    "ONGOING": "مستمر"
+    "ONGOING": "مستمر",
+    "UPGRADE_UNAVAILABLE": "الباقات المدفوعة مش متاحة لسه. باقي التطبيق يفضل مجاني.",
+    "COMING_SOON": "قريبًا"
   },
   "PLAN_FEATURES": {
     "CATEGORY_CREATE": "إنشاء الأقسام",

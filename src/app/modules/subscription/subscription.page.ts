@@ -125,6 +125,16 @@ export class SubscriptionPage implements OnInit {
 
   async onUpgrade(plan: Plan) {
     if (this.isChangingPlan || this.isLoading) return;
+    // The server closes purchases until a payment provider is connected.
+    if (this.currentPlan?.upgradeAvailable === false) {
+      await this.toastService.show({
+        message: 'SUBSCRIPTION.UPGRADE_UNAVAILABLE',
+        color: 'medium',
+        duration: 3500,
+        position: 'bottom',
+      });
+      return;
+    }
     // Don't allow downgrade to free
     if (plan.slug === PlanSlug.FREE) {
       await this.toastService.show({
