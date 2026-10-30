@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { PlanService } from 'src/app/core/services/plan.service';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,6 +22,7 @@ import { PlanSlug } from '../../models/plan.model';
             <p>{{ message | translate }}</p>
           </div>
           <div class="action-section">
+            @if (upgradeAvailable()) {
             <ion-button
               [color]="buttonColor"
               size="small"
@@ -27,6 +31,9 @@ import { PlanSlug } from '../../models/plan.model';
               <ion-icon name="arrow-up-circle" slot="start"></ion-icon>
               {{ 'SUBSCRIPTION.UPGRADE_NOW' | translate }}
             </ion-button>
+            } @else {
+            <ion-note>{{ 'SUBSCRIPTION.COMING_SOON' | translate }}</ion-note>
+            }
           </div>
         </div>
       </ion-card-content>
@@ -105,6 +112,14 @@ export class UpgradePromptComponent {
   @Input() color: 'primary' | 'warning' | 'danger' = 'warning';
   @Input() buttonColor = 'primary';
   @Input() requiredPlan?: PlanSlug;
+
+  private readonly planService = inject(PlanService);
+
+  /** Paid plans cannot be bought yet when the server says so. */
+  readonly upgradeAvailable = toSignal(
+    this.planService.currentPlan$.pipe(map((p) => p?.upgradeAvailable !== false)),
+    { initialValue: true }
+  );
 
   constructor(private router: Router) {}
 
