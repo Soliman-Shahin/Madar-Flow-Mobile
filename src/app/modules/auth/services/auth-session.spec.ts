@@ -72,6 +72,8 @@ describe('AUTH.1 consumer sessions', () => {
       navigateByUrl: jasmine.createSpy().and.resolveTo(true),
     };
     TestBed.configureTestingModule({
+      // errorInterceptor -> ToastService needs the translation service.
+      imports: [TranslateModule.forRoot()],
       providers: [
         provideHttpClient(
           withInterceptors([errorInterceptor, authInterceptor])
@@ -88,7 +90,12 @@ describe('AUTH.1 consumer sessions', () => {
         },
         {
           provide: ToastController,
-          useValue: { create: async () => ({ present: async () => {} }) },
+          useValue: {
+            create: async () => ({
+              present: async () => {},
+              setAttribute: () => {},
+            }),
+          },
         },
       ],
     });

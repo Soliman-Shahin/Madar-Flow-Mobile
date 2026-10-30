@@ -49,14 +49,14 @@ describe('OfflineStorageService restore merge boundary', () => {
       service.replaceEntitiesAtomically(
         [
           { _id: 'current', ownerUserId: 'spoofed', amount: 1 },
-          { _id: 'offline-new', amount: 2 },
+          { _id: 'offline_new', amount: 2 },
         ],
         []
       )
     );
 
     expect(expenses.rows).toContain(jasmine.objectContaining({ _id: 'current', amount: 99 }));
-    expect(expenses.rows).toContain(jasmine.objectContaining({ _id: 'offline-new', ownerUserId: owner, _syncStatus: SyncStatus.PENDING }));
+    expect(expenses.rows).toContain(jasmine.objectContaining({ _id: 'offline_new', ownerUserId: owner, _syncStatus: SyncStatus.PENDING }));
     expect(expenses.rows).toContain(jasmine.objectContaining({ _id: 'other', ownerUserId: 'account-b' }));
     expect(queued.length).toBe(1);
     expect(queued[0][0]).toBe('CREATE');

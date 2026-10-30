@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -87,8 +88,11 @@ describe('AUTH.1 post-QA regressions', () => {
     online = true;
     spyOn(console, 'log');
     spyOnProperty(navigator, 'onLine', 'get').and.returnValue(true);
-    toast = jasmine.createSpy().and.resolveTo({ present: async () => {} });
+    toast = jasmine
+      .createSpy()
+      .and.resolveTo({ present: async () => {}, setAttribute: () => {} });
     TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot()],
       providers: [
         provideRouter([
           { path: 'home', component: LoginDestination },
@@ -169,6 +173,13 @@ describe('AUTH.1 post-QA regressions', () => {
         home.state = state;
         home.destroy$ = new Subject<void>();
         home.cdr = { markForCheck: () => {} };
+        home.quickAdd = {
+          transactionSaved$: new Subject<void>(),
+          register: () => () => {},
+        };
+        home.homeExpenseService = { expenseReconciled$: new Subject<void>() };
+        home.summaryRefresh$ = new BehaviorSubject(0);
+        home.chartsMonthSelection$ = new BehaviorSubject({});
         home.createInjectors = () => {};
         home.setupRouteDataSubscription = () => {};
         home.vm$ = combineLatest({
@@ -329,11 +340,24 @@ describe('AUTH.1 post-QA regressions', () => {
       'Google callback persists despite password Remember Me = ' + remember,
       fakeAsync(() => {
         sessionStorage.setItem('madarflow_oauth_persistent', String(remember));
+        // Persistent sessions are written through SecureStorageService, whose real
+        // storage is asynchronous beyond fakeAsync; keep it in memory like the native test.
+        const secure = TestBed.inject(SecureStorageService);
+        let saved: string | null = null;
+        spyOn(secure, 'write').and.callFake(async (value) => {
+          saved = value;
+        });
+        spyOn(secure, 'read').and.callFake(async () => saved);
+        spyOn(secure, 'clear').and.callFake(async () => {
+          saved = null;
+        });
         auth.exchangeGoogleCode('a'.repeat(64)).subscribe();
         flushMicrotasks();
         const exchange = requests.expectOne(url('/user/auth/google/exchange'));
         expect(exchange.request.body).toEqual({ code: 'a'.repeat(64) });
-        exchange.flush({ data: payload() });
+        // The exchange response nests the tokens under `tokens`.
+        const { user: exchangedUser, ...tokens } = payload();
+        exchange.flush({ data: { user: exchangedUser, tokens } });
         flushMicrotasks();
         expect(coldSession().getRefreshToken()).toBe('synthetic-refresh');
       })
@@ -366,7 +390,7 @@ describe('AUTH.1 post-QA regressions', () => {
           login.signInWithGoogle();
           flushMicrotasks();
           requests
-            .expectOne(url('/user/auth/google/native'))
+            .expectOne(environment.nativeApiUrl + '/user/auth/google/native')
             .flush({ data: payload() });
           flushMicrotasks();
           expect(saved).not.toBeNull();
@@ -429,6 +453,17 @@ describe('AUTH.1 post-QA regressions', () => {
 });
 
 describe('AUTH.2 offline cold start', () => {
+  // The restore policy lives in localStorage: start every test from a clean slate
+  // so results do not depend on test order.
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
   it('resolves logged-out startup without protected-storage or network dependency', async () => {
     const secure = {
       read: jasmine.createSpy().and.returnValue(new Promise(() => {})),
