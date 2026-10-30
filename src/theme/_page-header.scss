@@ -112,6 +112,12 @@ ion-header.mf-page-header.mf-page-header {
     box-shadow: 0 1px 2px rgb(16 24 40 / 0.08);
   }
 
+  // Ionic iOS draws a hairline between buttons; the sunken track + raised
+  // indicator already separate them, so hide it.
+  .custom-segment ion-segment-button::before {
+    display: none;
+  }
+
   .custom-segment ion-segment-button {
     --color: var(--mf-ink-2) !important;
     --color-checked: var(--mf-ink) !important;

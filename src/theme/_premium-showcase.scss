@@ -82,28 +82,6 @@ app-home-page .dashboard {
     border-radius: 50%;
     pointer-events: none;
   }
-  .hero-heading {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding-inline-end: 44px;
-  }
-  .hero-heading h2 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-    color: #dce7ff;
-  }
-  .hero-period {
-    font-size: 12px;
-    color: #b9cefa;
-    unicode-bidi: isolate;
-  }
-  .card-section.transactions-card {
-    background: var(--ion-item-background);
-    box-shadow: var(--ew-bold-shadow);
-    border-radius: 18px;
-  }
   .charts-card {
     background: var(--ion-item-background);
     box-shadow: var(--ew-bold-shadow);
@@ -201,46 +179,6 @@ app-transactions-list {
     overflow: hidden;
     box-shadow: var(--ew-bold-shadow);
   }
-  .transaction-item {
-    --min-height: 82px;
-    --padding-start: 14px;
-    --padding-end: 14px;
-  }
-  .transaction-icon .category-icon {
-    width: 38px !important;
-    min-width: 38px !important;
-    height: 42px !important;
-    border-radius: 12px 12px 12px 4px;
-    box-shadow: inset 0 0 0 1px #ffffff20;
-  }
-  .transaction-icon .category-icon::after {
-    display: none;
-  }
-  .transaction-content {
-    gap: 5px !important;
-  }
-  .transaction-header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px !important;
-    align-items: baseline !important;
-  }
-  .transaction-title {
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0 !important;
-  }
-  .transaction-meta {
-    font-size: 11px !important;
-    gap: 4px 8px !important;
-    color: var(--ew-wallet-muted) !important;
-  }
-  .transaction-category::before {
-    display: none;
-  }
-  .transaction-meta ion-icon {
-    display: none !important;
-  }
   .empty-state-wrapper {
     padding: 36px 24px;
   }
@@ -276,135 +214,6 @@ app-transactions-list {
     outline-offset: -3px;
   }
 }
-app-expense-form .expense-modal-content {
-  .top-hero {
-    background: var(--ion-item-background);
-    color: var(--ion-text-color);
-    border: 0;
-    position: relative;
-    border-bottom: 1px solid var(--ew-wallet-line);
-    border-radius: 0;
-  }
-  .transparent-header ion-toolbar {
-    --color: var(--ion-text-color);
-  }
-  .close-btn {
-    --color: var(--ion-text-color);
-  }
-  .hero-body {
-    padding: 4px 20px 16px;
-  }
-  .custom-segment {
-    background: var(--ew-wallet-inset);
-    border: 1px solid var(--ew-wallet-line);
-    border-radius: 14px;
-  }
-  .segment-btn {
-    color: var(--ew-wallet-muted);
-    font-weight: 500;
-    border-radius: 10px;
-  }
-  .segment-btn.active {
-    color: var(--ion-color-primary);
-    background: var(--ion-item-background);
-    box-shadow: 0 3px 12px #07152f25;
-  }
-  .amount-label {
-    color: var(--ew-wallet-muted);
-    margin-top: 16px;
-    font-size: 13px;
-  }
-  .currency-symbol {
-    color: var(--ew-wallet-muted);
-    font-size: 15px;
-    padding: 0;
-    border: 0;
-    border-radius: 7px;
-  }
-  .huge-amount-input {
-    color: var(--ion-text-color);
-    font-size: 36px;
-    font-weight: 500;
-    --placeholder-color: var(--ew-wallet-muted);
-    --placeholder-opacity: 1;
-    caret-color: var(--ion-text-color);
-  }
-  .bottom-sheet {
-    padding: 16px 20px max(20px, env(safe-area-inset-bottom));
-  }
-  .grouped-fields-list {
-    background: var(--ion-item-background);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--ew-bold-shadow);
-  }
-  .form-field {
-    --min-height: 72px;
-    --padding-start: 14px;
-    --inner-padding-end: 14px;
-  }
-  .icon-box {
-    width: 38px;
-    height: 42px;
-    border-radius: 12px 12px 12px 4px;
-  }
-  .field-caption {
-    font-size: 12px;
-  }
-  .premium-label,
-  .premium-input {
-    font-weight: 500;
-  }
-  .submit-btn:not(.button-disabled) {
-    --background: linear-gradient(110deg, #2855e8, #376aff) !important;
-    --color: #fff !important;
-    --box-shadow: 0 5px 14px #2855e82b;
-  }
-  .submit-btn {
-    font-size: 16px;
-    font-weight: 700;
-    min-height: 54px;
-  }
-  .submit-btn.button-disabled {
-    --background: var(--ew-wallet-inset) !important;
-    --color: var(--ew-wallet-muted) !important;
-    --box-shadow: none;
-  }
-  .segment-btn:focus-visible,
-  .popover-item:focus-visible {
-    outline: 2px solid #1374e2;
-    outline-offset: 2px;
-  }
-  .huge-amount-input:focus-within {
-    box-shadow: 0 2px 0 #a9c1ff;
-  }
-}
-@media (max-width: 360px) {
-  app-home-page .transaction-header,
-  app-transactions-list .transaction-header {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 3px !important;
-  }
-  app-home-page .transaction-amount,
-  app-transactions-list .transaction-amount {
-    margin-inline-start: 0;
-    justify-self: start;
-  }
-  app-expense-form .huge-amount-input {
-    font-size: 38px;
-  }
-}
-@media (max-height: 560px) {
-  app-expense-form .hero-body {
-    padding-block: 6px 12px;
-  }
-  app-expense-form .amount-label {
-    margin-top: 8px;
-  }
-  app-expense-form .huge-amount-input {
-    font-size: 32px;
-  }
-}
 app-home-page .dashboard .balance-card .hero-money {
   display: flex;
   flex-wrap: wrap;
@@ -418,9 +227,6 @@ app-home-page .dashboard .balance-card .hero-currency {
   font-weight: 500;
   color: #c7d8f7;
   letter-spacing: 0.4px;
-}
-app-home-page .dashboard .transactions-card app-section-header {
-  margin-bottom: 4px;
 }
 app-home-page
   .dashboard
@@ -456,23 +262,8 @@ app-transactions-list .category-ion-header .custom-segment ion-segment-button {
 app-transactions-list .category-ion-header ion-buttons ion-button {
   --color: var(--ion-color-primary) !important;
 }
-app-home-page .transaction-item,
-app-transactions-list .transaction-item {
-  border-bottom-color: var(--ew-wallet-line) !important;
-}
-app-home-page .transaction-meta .transaction-category::before,
-app-transactions-list .transaction-meta .transaction-category::before {
-  display: none !important;
-}
-
-app-expense-form .expense-modal-content .top-hero ion-title {
-  color: var(--ion-text-color);
-}
 app-home-page .dashboard .balance-card app-balance-card .total-balance .amount {
   font-size: clamp(28px, 9.7vw, 40px);
-}
-app-home-page .dashboard .transactions-card .section-header {
-  margin-bottom: 8px;
 }
 
 app-home-page:has(.dashboard) {
@@ -488,33 +279,4 @@ app-home-page .dashboard .chart-container {
 // VD1.1 transaction-only density and picker affordances.
 ion-modal.main-modal:has(app-expense-form) {
   --height: min(620px, 100dvh);
-}
-app-expense-form .expense-modal-content {
-  .form-field[button]::part(detail-icon) {
-    color: var(--ew-wallet-muted);
-    opacity: 1;
-    font-size: 16px;
-  }
-  .amount-wrapper {
-    border-bottom: 2px solid var(--ew-wallet-line);
-  }
-  .amount-wrapper:focus-within {
-    border-color: var(--ion-color-primary);
-  }
-  .huge-amount-input:focus-within {
-    box-shadow: none;
-  }
-  .desc-icon-box {
-    display: none;
-  }
-  .form-field:has(.premium-input) {
-    --padding-start: 16px;
-    --min-height: 80px;
-  }
-  .premium-input {
-    --background: transparent;
-  }
-  .submit-btn {
-    min-height: 52px;
-  }
 }

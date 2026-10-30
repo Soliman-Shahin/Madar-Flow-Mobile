@@ -14,74 +14,7 @@
   --input-border-width: var(--ew-border-width-sm);
 }
 
-// Modern input item styling
-.modern-input-item,
-.form-item,
-.ui-form-item {
-  --border-radius: var(--input-border-radius);
-  --border-width: var(--input-border-width);
-  --border-color: transparent;
-  --background: var(--ion-color-step-100);
-  --color: var(--ion-text-color);
-  --padding-start: var(--input-padding-horizontal);
-  --padding-end: var(--input-padding-horizontal);
-  --padding-top: var(--ew-space-4);
-  --padding-bottom: var(--ew-space-4);
-  --min-height: 48px; // Was 56px
-  
-  margin: var(--ew-space-5) 0;
-  border-radius: var(--border-radius);
-  border: var(--border-width) solid var(--border-color);
-  background: var(--background);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04),
-              0 1px 4px rgba(0, 0, 0, 0.02);
-  transition: var(--input-transition);
-  overflow: hidden;
-  position: relative;
-
-  // Hover state
-  &:hover:not(.ion-focused):not(.ion-invalid) {
-    --border-color: transparent;
-    --background: var(--ion-color-step-150);
-    transform: translateY(calc(var(--ew-space-1) * -1));
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08),
-                0 2px 8px rgba(0, 0, 0, 0.04);
-  }
-
-  // Focus state
-  &.ion-focused,
-  &.item-has-focus {
-    --border-color: var(--ion-color-primary);
-    --background: var(--ion-background-color);
-    transform: translateY(calc(var(--ew-border-width-md) * -1));
-    box-shadow: 0 8px 32px rgba(var(--ion-color-primary-rgb), 0.2),
-                0 4px 16px rgba(0, 0, 0, 0.08);
-    border: var(--input-border-width) solid var(--ion-color-primary);
-  }
-
-  // Invalid state
-  &.ion-invalid {
-    --border-color: var(--ion-color-danger);
-    --background: rgba(var(--ion-color-danger-rgb), 0.05);
-    animation: inputShake 0.4s ease-in-out;
-  }
-
-  // Touched state
-  &.ion-touched.ion-valid {
-    --border-color: var(--ion-color-success);
-  }
-
-  // Remove default ionic styling
-  --inner-border-width: 0;
-  --border-style: none;
-  --highlight-color-focused: transparent;
-  --highlight-color-valid: transparent;
-  --highlight-color-invalid: transparent;
-}
-
 // Input field styling
-.modern-input,
-.form-input,
 .ui-form-input,
 ion-input {
   --color: var(--ion-text-color);
@@ -98,7 +31,7 @@ ion-input {
   z-index: 2;
 
   // Placeholder styling
-  &::placeholder {
+&::placeholder {
     color: var(--placeholder-color);
     opacity: 0.7;
     font-weight: var(--ew-font-weight-medium);
@@ -198,7 +131,7 @@ ion-select {
   z-index: 2;
   
   // Fix dropdown arrow position for LTR
-  &::part(icon) {
+&::part(icon) {
     position: absolute;
     inset-inline-end: var(--ew-space-5);
     top: 50%;
@@ -207,7 +140,7 @@ ion-select {
   }
   
   // Ensure proper spacing for the arrow
-  &::part(container) {
+&::part(container) {
     padding-inline-end: var(--ew-space-10);
     padding-inline-start: 0;
   }
@@ -224,11 +157,6 @@ ion-datetime-button {
   text-align: start;
   position: relative;
   z-index: 2;
-  
-  .placeholder-text {
-    color: var(--ion-color-step-400);
-    font-weight: var(--ew-font-weight-regular);
-  }
 }
 
 // Checkbox styling
@@ -250,8 +178,7 @@ ion-checkbox {
 }
 
 // Button enhancements for forms
-ion-button[type="submit"],
-.form-submit-button {
+ion-button[type="submit"] {
   --border-radius: var(--input-border-radius);
   --padding-top: var(--input-padding-vertical);
   --padding-bottom: var(--input-padding-vertical);
@@ -295,10 +222,6 @@ ion-button[type="submit"],
   100% {
     transform: scale(1);
   }
-}
-
-.form-submit-button.submitting {
-  animation: form-submit-animation 0.5s ease-in-out;
 }
 
 // Modern Searchbar
@@ -370,36 +293,6 @@ ion-button[type="submit"],
   --min-height: calc(var(--ew-header-height) + var(--ew-space-4)); // 68px
 }
 
-// Dark mode optimizations
-.dark {
-  .modern-input-item,
-  .form-item,
-  .ui-form-item {
-    --background: var(--ion-color-step-150);
-    --border-color: transparent;
-    box-shadow: none;
-    
-    &:hover:not(.ion-focused):not(.ion-invalid) {
-      --background: var(--ion-color-step-200);
-      --border-color: transparent;
-      box-shadow: none;
-    }
-  }
-}
-
-// High contrast mode
-@media (prefers-contrast: high) {
-  .modern-input-item,
-  .form-item,
-  .ui-form-item {
-    --border-width: var(--ew-border-width-md);
-    
-    &.ion-focused {
-      --border-width: var(--ew-border-width-lg);
-    }
-  }
-}
-
 // RTL fixes for shimmer
 [dir="rtl"] {
   --shine-direction: -90deg;
@@ -407,13 +300,10 @@ ion-button[type="submit"],
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-  .modern-input-item,
-  .form-item,
-  .ui-form-item,
   ion-input,
-  ion-label,
-  ion-icon,
-  ion-button {
+ion-label,
+ion-icon,
+ion-button {
     transition: none !important;
     animation: none !important;
     transform: none !important;

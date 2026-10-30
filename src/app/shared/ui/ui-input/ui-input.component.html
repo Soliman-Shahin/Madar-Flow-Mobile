@@ -96,8 +96,10 @@
       </ion-note>
     }
 
+    </ion-item>
+
     @if (isInvalid) {
-      <ion-note slot="error" color="danger">
+      <ion-note class="ui-input-error" color="danger" role="alert">
         @if (ngControl?.control; as c) {
           @if (c.errors?.['required']) {
             <span>{{
@@ -127,5 +129,4 @@
             }
           </ion-note>
         }
-      </ion-item>
     </div>

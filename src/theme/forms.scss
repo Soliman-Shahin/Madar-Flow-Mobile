@@ -10,74 +10,6 @@ ion-item {
   // Use transparent background to adopt the host's styled background
   --background: transparent;
 
-  // Auth form specific styles
-  .login-form &,
-  .signup-form & {
-    --border-radius: var(--ew-radius-lg, 16px);
-    --min-height: 48px;
-    margin-bottom: var(--ew-space-6, 24px);
-
-    ion-icon[slot="start"] {
-      color: var(--ew-color-neutral-500, var(--ion-color-medium));
-      margin-inline-end: var(--ew-space-3, 12px);
-      font-size: var(--ew-font-size-lg, 20px);
-      transition: color var(--ew-transition-duration-short, 0.2s)
-        var(--ew-transition-timing-function-ease, ease);
-    }
-
-    /* Ensure inputs fill the full width of ion-item across the app */
-
-    ion-item ion-input,
-    ion-item ion-textarea,
-    ion-item ion-select,
-    ion-item ion-datetime-button {
-      display: flex !important;
-      align-items: center !important;
-      flex: 1 1 auto !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important; /* allow shrinking inside flex */
-    }
-
-    /* Fallback: make any middle child (not slotted start/end) flex to fill */
-    ion-item > *:not([slot="start"]):not([slot="end"]) {
-      flex: 1 1 auto !important;
-      min-width: 0 !important;
-    }
-
-    /* Common slotted companions should not block input growth */
-    ion-item ion-icon[slot="start"],
-    ion-item ion-icon[slot="end"],
-    ion-item ion-button[slot="end"],
-    ion-item ion-buttons[slot="end"] {
-      flex: 0 0 auto;
-    }
-
-    /* Make ion-input internal parts expand as well */
-    ion-item ion-input::part(container),
-    ion-item ion-input::part(native) {
-      display: flex !important;
-      align-items: center !important;
-      width: 100% !important;
-    }
-
-    /* Labels/icons should not flex-grow; keep them intrinsic so input can grow */
-    ion-item ion-label,
-    ion-item ion-icon[slot="start"],
-    ion-item ion-icon[slot="end"],
-    ion-item ion-button[slot="end"],
-    ion-item ion-buttons[slot="end"] {
-      flex: 0 0 auto !important;
-      max-width: none !important;
-    }
-
-    ion-label[position="floating"] {
-      margin-inline-start: 8px;
-      font-weight: 500;
-      color: var(--ion-color-medium);
-    }
-  }
-
   &.item-has-focus {
     --border-color: var(--ew-color-primary-500, var(--ion-color-primary));
     --box-shadow: var(
@@ -95,7 +27,7 @@ ion-item {
   }
 
   // Invalid state
-  &.ion-invalid.ion-touched {
+&.ion-invalid.ion-touched {
     --background: rgba(
       var(--ew-color-danger-500-rgb, var(--ion-color-danger-rgb)),
       0.05
@@ -124,27 +56,6 @@ ion-datetime-button {
   --padding-top: var(--ew-space-2, 8px);
   --padding-bottom: var(--ew-space-2, 8px);
   font-weight: var(--ew-font-weight-medium, 500);
-
-  // Auth form specific overrides
-  .login-form &,
-  .signup-form & {
-    --padding-top: var(--ew-space-3, 12px);
-    --padding-bottom: var(--ew-space-3, 12px);
-    margin-inline-start: 0;
-
-    &::part(placeholder) {
-      font-weight: var(--ew-font-weight-regular, 400);
-    }
-  }
-}
-
-// Make invalid state subtle for auth forms to avoid harsh red outlines
-.login-form .form-item.ion-invalid.ion-touched,
-.signup-form .form-item.ion-invalid.ion-touched {
-  --background: transparent;
-  --border-color: transparent;
-  --box-shadow: 0 0 0 2px
-    color-mix(in srgb, var(--ion-color-danger) 14%, transparent);
 }
 
 // Form Labels
@@ -156,23 +67,6 @@ ion-label {
   transition: all var(--ew-transition-duration-medium, 0.3s)
     var(--ew-transition-timing-function-ease-in-out, ease);
   transform-origin: start center;
-
-  // Auth form specific styles
-  .login-form &,
-  .signup-form & {
-    margin-inline-start: 8px;
-    font-size: 15px;
-
-    &[position="floating"] {
-      transform: translateY(20px) scale(1);
-      margin-inline-start: 0;
-
-      &.label-floating {
-        transform: translateY(0) scale(0.85);
-        margin-inline-start: 0;
-      }
-    }
-  }
 }
 
 ion-input {
@@ -210,24 +104,6 @@ ion-note[slot="error"] {
   color: var(--ion-color-primary);
 }
 
-// Input with icons
-.input-with-icon {
-  display: flex;
-  align-items: center;
-
-  ion-icon {
-    margin-inline-end: 12px;
-    color: var(--ion-color-medium);
-    font-size: 20px;
-    min-width: 20px;
-  }
-
-  ion-input,
-  ion-select {
-    flex: 1;
-  }
-}
-
 // Select customization
 ion-select {
   --placeholder-color: var(--ion-color-medium);
@@ -235,10 +111,6 @@ ion-select {
   width: 100%;
   max-width: 100%;
   padding: 0;
-
-  .select-icon {
-    padding-inline-end: 8px;
-  }
 }
 
 // Date time button customization
@@ -264,21 +136,6 @@ ion-datetime-button {
   &.has-value .datetime-button {
     color: var(--ion-color-dark);
   }
-}
-
-// Form validation states
-.valid-feedback {
-  color: var(--ion-color-success);
-  font-size: 12px;
-  margin-top: 4px;
-  padding: 0 16px;
-}
-
-.invalid-feedback {
-  color: var(--ion-color-danger);
-  font-size: 12px;
-  margin-top: 4px;
-  padding: 0 16px;
 }
 
 // Form groups
@@ -307,8 +164,7 @@ ion-datetime-button {
 //  ADVANCED FORM FEATURES (v2.1)
 // ===================================================================
 
-/* Success State for Inputs */
-ion-item.ion-valid.ion-touched {
+/* Success State for Inputs */ion-item.ion-valid.ion-touched {
   ion-icon[slot="start"] {
     color: var(--ion-color-success);
     animation: bounceIn 0.4s var(--ew-animation-easing-bounce);
@@ -327,8 +183,7 @@ ion-item.ion-valid.ion-touched {
   }
 }
 
-/* Loading State for Inputs */
-ion-input.loading,
+/* Loading State for Inputs */ion-input.loading,
 ion-textarea.loading,
 ion-select.loading {
   position: relative;
@@ -346,108 +201,11 @@ ion-select.loading {
   }
 }
 
-/* Character Counter */
-.input-wrapper {
+/* Character Counter */.input-wrapper {
   position: relative;
-
-  .input-counter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-    padding: 4px var(--ew-space-4);
-    margin-top: -8px;
-    margin-bottom: var(--ew-space-3);
-
-    &.counter-warning {
-      color: var(--ion-color-warning);
-    }
-
-    &.counter-danger {
-      color: var(--ion-color-danger);
-      font-weight: var(--font-weight-semibold);
-    }
-  }
 }
 
-/* Input Groups */
-.input-group {
-  display: flex;
-  align-items: stretch;
-  margin-bottom: var(--ew-space-4);
-
-  ion-input,
-  ion-select,
-  ion-button {
-    margin-bottom: 0;
-  }
-
-  ion-input,
-  ion-select {
-    flex: 1;
-    border-radius: 0;
-
-    &:first-child {
-      border-radius: var(--ew-radius-md) 0 0 var(--ew-radius-md);
-    }
-
-    &:last-child {
-      border-radius: 0 var(--ew-radius-md) var(--ew-radius-md) 0;
-    }
-  }
-
-  .input-group-text {
-    display: flex;
-    align-items: center;
-    padding: 0 var(--ew-space-4);
-    background: var(--ew-color-gray-100);
-    border: 1px solid var(--ew-input-border-color);
-    color: var(--text-secondary);
-    font-size: var(--text-sm);
-    white-space: nowrap;
-
-    &:first-child {
-      border-radius: var(--ew-radius-md) 0 0 var(--ew-radius-md);
-      border-right: none;
-    }
-
-    &:last-child {
-      border-radius: 0 var(--ew-radius-md) var(--ew-radius-md) 0;
-      border-left: none;
-    }
-  }
-}
-
-/* Floating Label Enhanced */
-.floating-label-wrapper {
-  position: relative;
-  margin-bottom: var(--ew-space-5);
-
-  ion-input,
-  ion-textarea {
-    padding-top: 1.5rem;
-    padding-bottom: 0.5rem;
-  }
-
-  ion-label {
-    position: absolute;
-    top: 1rem;
-    left: var(--ew-space-4);
-    transition: all var(--ew-duration-base) var(--ew-ease-in-out);
-    pointer-events: none;
-    color: var(--text-muted);
-
-    &.label-floating {
-      top: 0.25rem;
-      font-size: var(--text-xs);
-      color: var(--ion-color-primary);
-    }
-  }
-}
-
-/* Form Validation Animations */
-@keyframes inputShake {
+/* Form Validation Animations */@keyframes inputShake {
   0%,
   100% {
     transform: translateX(0);
@@ -464,8 +222,7 @@ ion-item.ion-invalid.ion-touched {
   animation: inputShake 0.3s ease-in-out;
 }
 
-/* Checkbox & Radio Custom Styles */
-ion-checkbox,
+/* Checkbox & Radio Custom Styles */ion-checkbox,
 ion-radio {
   --size: 20px;
   --border-radius: var(--ew-radius-xs);
@@ -481,8 +238,7 @@ ion-radio {
   }
 }
 
-/* Toggle Custom Styles */
-ion-toggle {
+/* Toggle Custom Styles */ion-toggle {
   --handle-width: 20px;
   --handle-height: 20px;
   --handle-spacing: 2px;
@@ -494,66 +250,5 @@ ion-toggle {
   &::part(handle) {
     transition: transform var(--ew-duration-base)
       var(--ew-animation-easing-spring);
-  }
-}
-
-/* Form Layout Utilities */
-.form-row {
-  display: flex;
-  gap: var(--ew-space-4);
-  margin-bottom: var(--ew-space-5);
-
-  .form-col {
-    flex: 1;
-
-    &.col-auto {
-      flex: 0 0 auto;
-    }
-
-    &.col-2 {
-      flex: 0 0 16.666%;
-    }
-
-    &.col-3 {
-      flex: 0 0 25%;
-    }
-
-    &.col-4 {
-      flex: 0 0 33.333%;
-    }
-
-    &.col-6 {
-      flex: 0 0 50%;
-    }
-
-    &.col-8 {
-      flex: 0 0 66.666%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-
-    .form-col {
-      flex: 1 1 100%;
-    }
-  }
-}
-
-/* Input Prefix/Suffix */
-.input-affix {
-  display: flex;
-  align-items: center;
-  gap: var(--ew-space-2);
-
-  .input-prefix,
-  .input-suffix {
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    white-space: nowrap;
-  }
-
-  ion-input {
-    flex: 1;
   }
 }
