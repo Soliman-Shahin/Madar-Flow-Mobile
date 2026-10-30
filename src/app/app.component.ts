@@ -134,7 +134,7 @@ export class AppComponent extends BaseComponent implements OnInit {
       }
       if (
         this.backgroundedAt !== null &&
-        Date.now() - this.backgroundedAt < 30_000
+        Date.now() - this.backgroundedAt < this.biometricService.lockTimeoutMs
       ) {
         this.backgroundedAt = null;
         return;

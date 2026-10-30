@@ -172,6 +172,38 @@
           (ionChange)="toggleBiometric($event)"
         ></ion-toggle>
       </ion-item>
+      @if (biometricEnabled) {
+      <ion-item
+        lines="none"
+        button
+        detail="false"
+        (click)="openSelect(lockSelect, $event)"
+      >
+        <div slot="start" class="icon-wrapper color-green">
+          <ion-icon name="timer-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label>
+          <h3>{{ "SETTINGS.LOCK_TIMEOUT" | translate }}</h3>
+          <p>{{ "SETTINGS.LOCK_TIMEOUT_DESC" | translate }}</p>
+        </ion-label>
+        <ion-select
+          #lockSelect
+          slot="end"
+          [attr.aria-label]="'SETTINGS.LOCK_TIMEOUT' | translate"
+          [cancelText]="'COMMON.CANCEL' | translate"
+          [value]="lockTimeoutMs"
+          (ionChange)="onLockTimeoutChange($event)"
+          interface="action-sheet"
+          class="modern-select"
+        >
+          @for (opt of lockTimeouts; track opt.value) {
+          <ion-select-option [value]="opt.value">
+            {{ opt.label | translate }}
+          </ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      }
       @if (biometricSignInAvailable) {
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-green">
