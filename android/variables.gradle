@@ -6,8 +6,8 @@ ext {
     // Downgrade to avoid D8 NPE with 1.7.0 in AGP 8.0/Gradle 8.0.2
     androidxAppCompatVersion = '1.6.1'
     androidxCoordinatorLayoutVersion = '1.2.0'
-    // Note: core-ktx 1.15.0 requires compileSdk 35. Keep at 1.12.0 for compileSdk 34
-    androidxCoreVersion = '1.12.0'
+    // Capacitor 8 uses AndroidX APIs introduced after core 1.12.
+    androidxCoreVersion = '1.15.0'
     androidxFragmentVersion = '1.5.6'
     coreSplashScreenVersion = '1.0.0'
     androidxWebkitVersion = '1.6.1'

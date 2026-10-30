@@ -1,3 +1,4 @@
+/// <reference types="@capacitor/push-notifications" />
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
@@ -9,7 +10,7 @@ const config: CapacitorConfig = {
   },
   plugins: {
     PushNotifications: {
-      presentationOptions: [],
+      presentationOptions: ['banner', 'list', 'badge', 'sound'],
     },
     StatusBar: {
       overlaysWebView: true,
