@@ -1,0 +1,14 @@
+@use "src/theme/mobile-secondary" as secondary;
+@include secondary.settings;
+
+.mf-export__intro {
+  margin: 0 0 var(--mf-space-4, 16px);
+  font-size: var(--mf-text-callout, 0.9375rem);
+  line-height: 1.5;
+  color: var(--mf-ink-2, var(--ion-color-medium));
+}
+
+app-upgrade-prompt {
+  display: block;
+  margin-bottom: var(--mf-space-4, 16px);
+}

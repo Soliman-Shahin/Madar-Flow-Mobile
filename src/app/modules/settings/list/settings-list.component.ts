@@ -297,6 +297,10 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     this.router.navigate(['/settings/backup']);
   }
 
+  navigateToExport() {
+    this.router.navigate(['/settings/export']);
+  }
+
   navigateToSync() {
     this.router.navigate(['/settings/sync']);
   }
