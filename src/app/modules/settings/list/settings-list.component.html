@@ -154,8 +154,21 @@
     </p>
 
     <!-- Security -->
-    @if (biometricAvailable) {
+    @if (currentUser) {
     <h2 class="section-label">{{ "SETTINGS.SECURITY" | translate }}</h2>
+    <ion-list class="premium-list">
+      <ion-item button detail="true" lines="none" routerLink="/settings/sessions">
+        <div slot="start" class="icon-wrapper color-blue">
+          <ion-icon name="phone-portrait-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label>
+          <h3>{{ "SETTINGS.ACTIVE_SESSIONS" | translate }}</h3>
+          <p>{{ "SETTINGS.ACTIVE_SESSIONS_DESC" | translate }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    }
+    @if (biometricAvailable) {
     <ion-list class="premium-list">
       <ion-item lines="none">
         <div slot="start" class="icon-wrapper color-green">

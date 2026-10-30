@@ -3,7 +3,7 @@ export interface AuthResponse {
     user: User;
     tokens?: {
       accessToken: string;
-      refreshToken: string;
+      refreshToken?: string;
     };
     token?: string;
     refreshToken?: string;

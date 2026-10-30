@@ -3,6 +3,11 @@ import { APP_ROUTES } from 'src/app/core/constants';
 
 export const routes: Routes = [
   {
+    path: 'sessions',
+    loadComponent: () =>
+      import('./sessions/sessions.page').then((m) => m.SessionsPage),
+  },
+  {
     path: '',
     redirectTo: APP_ROUTES.SETTINGS.LIST,
     pathMatch: 'full',
