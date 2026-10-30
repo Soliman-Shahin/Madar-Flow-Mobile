@@ -414,7 +414,13 @@
     "DELETE_ACCOUNT_FAILED": "تعذّر حذف الحساب. حاول مرة أخرى.",
     "DELETE_ACCOUNT_WRONG_PASSWORD": "كلمة المرور غير صحيحة.",
     "DELETE_ACCOUNT_STAFF": "لا يمكن حذف حسابات فريق العمل من التطبيق. تواصل مع أحد المسؤولين.",
-    "DELETE_ACCOUNT_OFFLINE": "تحتاج إلى اتصال بالإنترنت لحذف حسابك."
+    "DELETE_ACCOUNT_OFFLINE": "تحتاج إلى اتصال بالإنترنت لحذف حسابك.",
+    "LOCK_TIMEOUT": "القفل التلقائي",
+    "LOCK_TIMEOUT_DESC": "اطلب البصمة مرة أخرى بعد ما يفضل التطبيق في الخلفية",
+    "LOCK_TIMEOUT_IMMEDIATELY": "فورًا",
+    "LOCK_TIMEOUT_30S": "بعد 30 ثانية",
+    "LOCK_TIMEOUT_1M": "بعد دقيقة",
+    "LOCK_TIMEOUT_5M": "بعد 5 دقائق"
   },
   "BUDGET": {
     "TITLE": "الميزانية"

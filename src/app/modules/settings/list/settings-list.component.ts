@@ -31,6 +31,13 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
 
   currentLanguage = 'en';
   selectedTheme = 'auto';
+  lockTimeoutMs = 30_000;
+  readonly lockTimeouts = [
+    { value: 0, label: 'SETTINGS.LOCK_TIMEOUT_IMMEDIATELY' },
+    { value: 30_000, label: 'SETTINGS.LOCK_TIMEOUT_30S' },
+    { value: 60_000, label: 'SETTINGS.LOCK_TIMEOUT_1M' },
+    { value: 300_000, label: 'SETTINGS.LOCK_TIMEOUT_5M' },
+  ];
   notificationsEnabled = true;
   notificationStatus = 'SETTINGS.NOTIFICATIONS_UNAVAILABLE';
 
@@ -119,6 +126,7 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     this.biometricSignInAvailable =
       await this.biometricSignInService.isAvailable();
     this.biometricEnabled = this.biometricService.isEnabled;
+    this.lockTimeoutMs = this.biometricService.lockTimeoutMs;
     this.biometricSignInEnabled = this.biometricSignInAvailable
       ? await this.biometricSignInService.hasEnrollment()
       : false;
@@ -164,6 +172,13 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
       await this.biometricService.setEnabled(false);
       this.biometricEnabled = false;
     }
+    this.cdr.markForCheck();
+  }
+
+  onLockTimeoutChange(event: any): void {
+    const ms = Number(event.detail.value);
+    this.biometricService.setLockTimeoutMs(ms);
+    this.lockTimeoutMs = this.biometricService.lockTimeoutMs;
     this.cdr.markForCheck();
   }
 
