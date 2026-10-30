@@ -8,15 +8,22 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { getApps, initializeApp } from 'firebase/app';
 import {
-  ActionPerformed as LocalNotificationActionPerformed,
-  LocalNotifications,
-} from '@capacitor/local-notifications';
+  deleteToken,
+  getMessaging,
+  getToken,
+  isSupported as isFirebaseMessagingSupported,
+  Messaging,
+  onMessage,
+} from 'firebase/messaging';
 import { firstValueFrom } from 'rxjs';
 import { TokenService } from 'src/app/modules/auth/services/token.service';
 import { ApiService } from './api.service';
 import { BRAND } from 'src/app/config/brand.config';
 import { debugLog } from 'src/app/shared/utils/debug-log.util';
+
 
 export type PushPermissionState =
   | 'unavailable'
@@ -34,6 +41,8 @@ const CHANNEL_ID = 'madar_flow_general';
 export class PushNotificationService {
   private listenersRegistered = false;
   private registrationRequested = false;
+  private firebaseConfigPromise?: Promise<any | null>;
+  private webMessaging?: Messaging;
 
   constructor(
     private apiService: ApiService,
@@ -43,7 +52,7 @@ export class PushNotificationService {
   ) {}
 
   async initializeIfEnabled(): Promise<PushPermissionState> {
-    if (!this.isSupported()) return 'unavailable';
+    if (!(await this.isSupported())) return 'unavailable';
 
     await this.registerListeners();
     await this.createAndroidChannel();
@@ -52,8 +61,8 @@ export class PushNotificationService {
     const enabled = localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== 'false';
     if (enabled && this.isAuthenticated()) {
       if (permission === 'granted') {
-        await this.requestNativeRegistration();
-      } else if (permission === 'prompt') {
+        await this.requestRegistration();
+      } else if (permission === 'prompt' && Capacitor.isNativePlatform()) {
         const enabledPermission = await this.enable();
         await this.processPendingNavigation();
         return enabledPermission;
@@ -67,36 +76,40 @@ export class PushNotificationService {
   }
 
   async enable(): Promise<PushPermissionState> {
-    if (!this.isSupported()) return 'unavailable';
+    if (!(await this.isSupported())) return 'unavailable';
 
     await this.registerListeners();
     await this.createAndroidChannel();
 
-    let permission = await PushNotifications.checkPermissions();
-    if (
-      permission.receive === 'prompt' ||
-      permission.receive === 'prompt-with-rationale'
-    ) {
-      permission = await PushNotifications.requestPermissions();
+    let granted: boolean;
+    if (Capacitor.isNativePlatform()) {
+      let permission = await PushNotifications.checkPermissions();
+      if (permission.receive === 'prompt' || permission.receive === 'prompt-with-rationale') {
+        permission = await PushNotifications.requestPermissions();
+      }
+      granted = permission.receive === 'granted';
+    } else {
+      granted = await Notification.requestPermission() === 'granted';
     }
 
-    if (permission.receive !== 'granted') {
+    if (!granted) {
       localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, 'false');
       return 'denied';
     }
 
     localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, 'true');
-    if (this.isAuthenticated()) await this.requestNativeRegistration();
+    if (this.isAuthenticated()) await this.requestRegistration();
     return 'granted';
   }
 
   async disable(): Promise<void> {
     localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, 'false');
-    if (!this.isSupported()) return;
+    if (!(await this.isSupported())) return;
 
     await this.deactivateCurrentDevice();
     try {
-      await PushNotifications.unregister();
+      if (Capacitor.isNativePlatform()) await PushNotifications.unregister();
+      else if (this.webMessaging) await deleteToken(this.webMessaging);
     } catch {
       // The backend association is already inactive; native cleanup can retry later.
     }
@@ -104,7 +117,7 @@ export class PushNotificationService {
   }
 
   async deactivateCurrentDevice(): Promise<void> {
-    if (!this.isSupported() || !this.isAuthenticated()) return;
+    if (!(await this.isSupported()) || !this.isAuthenticated()) return;
 
     const deviceId = this.getOrCreateDeviceId();
     try {
@@ -132,35 +145,41 @@ export class PushNotificationService {
     if (this.listenersRegistered) return;
     this.listenersRegistered = true;
 
-    await PushNotifications.addListener('registration', (token: Token) => {
-      void this.registerTokenWithBackend(token.value);
-    });
-
-    await PushNotifications.addListener('registrationError', () => {
-      this.registrationRequested = false;
-      console.warn('[Push] Native registration failed');
-    });
-
-    await PushNotifications.addListener(
-      'pushNotificationReceived',
-      (notification: PushNotificationSchema) => {
-        void this.presentForegroundNotification(notification);
+    if (Capacitor.isNativePlatform()) {
+      await PushNotifications.addListener('registration', (token: Token) => {
+        void this.registerTokenWithBackend(token.value);
+      });
+      await PushNotifications.addListener('registrationError', () => {
+        this.registrationRequested = false;
+        console.warn('[Push] Native registration failed');
+      });
+      await PushNotifications.addListener(
+        'pushNotificationReceived',
+        (notification: PushNotificationSchema) => this.presentForegroundNotification(notification)
+      );
+      await PushNotifications.addListener(
+        'pushNotificationActionPerformed',
+        (action: ActionPerformed) => this.handleNotificationTap(action.notification)
+      );
+    } else {
+      const messaging = await this.getWebMessaging();
+      if (messaging) {
+        onMessage(messaging, (payload) => {
+          void this.presentForegroundNotification({
+            title: payload.notification?.title,
+            body: payload.notification?.body,
+            data: payload.data,
+          });
+        });
       }
-    );
+    }
 
-    await PushNotifications.addListener(
-      'pushNotificationActionPerformed',
-      (action: ActionPerformed) => {
-        this.handleNotificationTap(action.notification);
-      }
-    );
-
-    await LocalNotifications.addListener(
-      'localNotificationActionPerformed',
-      (action: LocalNotificationActionPerformed) => {
-        this.handleNotificationData(action.notification.extra);
-      }
-    );
+    if (Capacitor.getPlatform() === 'android') {
+      await LocalNotifications.addListener(
+        'localNotificationActionPerformed',
+        (action) => this.handleNotificationData(action.notification.extra)
+      );
+    }
 
     App.addListener('resume', () => {
       if (localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== 'false') {
@@ -169,11 +188,27 @@ export class PushNotificationService {
     });
   }
 
-  private async requestNativeRegistration(): Promise<void> {
+  private async requestRegistration(): Promise<void> {
     if (this.registrationRequested) return;
     this.registrationRequested = true;
     try {
-      await PushNotifications.register();
+      if (Capacitor.isNativePlatform()) {
+        await PushNotifications.register();
+      } else {
+        const config = await this.loadFirebaseWebConfig();
+        if (!config) throw new Error('Web push is not configured');
+        const messaging = await this.getWebMessaging();
+        if (!messaging) throw new Error('Web push is unsupported by this browser');
+        const serviceWorkerRegistration = await navigator.serviceWorker.register(
+          '/fcm/firebase-messaging-sw.js',
+          { scope: '/fcm/' }
+        );
+        const token = await getToken(messaging, {
+          vapidKey: config.vapidKey,
+          serviceWorkerRegistration,
+        });
+        await this.registerTokenWithBackend(token);
+      }
     } catch {
       this.registrationRequested = false;
       console.warn('[Push] Unable to request native registration');
@@ -189,7 +224,7 @@ export class PushNotificationService {
         this.apiService.post('/push/devices', {
           deviceId: this.getOrCreateDeviceId(),
           token,
-          platform: 'android',
+          platform: this.currentPlatform(),
           appVersion: appInfo.version,
         })
       );
@@ -201,14 +236,16 @@ export class PushNotificationService {
     }
   }
 
-  private handleNotificationTap(notification: PushNotificationSchema): void {
+  private handleNotificationTap(notification: { data?: unknown }): void {
     this.handleNotificationData(notification.data);
   }
 
   private handleNotificationData(
-    data: Record<string, unknown> | undefined
+    data: unknown
   ): void {
-    const notificationId = this.getSafeNotificationId(data);
+    const notificationId = this.getSafeNotificationId(
+      data && typeof data === 'object' ? data as Record<string, unknown> : undefined
+    );
     if (!notificationId) return;
 
     this.rememberNotification(notificationId);
@@ -217,10 +254,27 @@ export class PushNotificationService {
   }
 
   private async presentForegroundNotification(
-    notification: PushNotificationSchema
+    notification: { id?: string; title?: string; body?: string; data?: unknown }
   ): Promise<void> {
-    const notificationId = this.getSafeNotificationId(notification.data);
+    const data = notification.data && typeof notification.data === 'object'
+      ? notification.data as Record<string, unknown>
+      : undefined;
+    const notificationId = this.getSafeNotificationId(data);
     if (!notificationId || !this.rememberNotification(notificationId)) return;
+
+    if (Capacitor.getPlatform() === 'ios') return;
+    if (!Capacitor.isNativePlatform()) {
+      if (Notification.permission !== 'granted') return;
+      const browserNotification = new Notification(
+        notification.title || BRAND.productName,
+        { body: notification.body || '', data: { notificationId, routeKey: 'notification-detail' } }
+      );
+      browserNotification.onclick = () => {
+        window.focus();
+        this.handleNotificationData(browserNotification.data);
+      };
+      return;
+    }
 
     try {
       await LocalNotifications.schedule({
@@ -236,8 +290,8 @@ export class PushNotificationService {
             extra: {
               notificationId,
               type:
-                typeof notification.data?.['type'] === 'string'
-                  ? notification.data['type']
+              typeof data?.['type'] === 'string'
+                  ? data['type']
                   : 'info',
               routeKey: 'notification-detail',
             },
@@ -305,25 +359,66 @@ export class PushNotificationService {
   }
 
   private async getPermissionState(): Promise<PushPermissionState> {
-    const permission = await PushNotifications.checkPermissions();
-    if (permission.receive === 'granted') return 'granted';
-    if (permission.receive === 'denied') return 'denied';
-    return 'prompt';
+    if (Capacitor.isNativePlatform()) {
+      const permission = await PushNotifications.checkPermissions();
+      if (permission.receive === 'granted') return 'granted';
+      if (permission.receive === 'denied') return 'denied';
+      return 'prompt';
+    }
+    return Notification.permission === 'granted'
+      ? 'granted'
+      : Notification.permission === 'denied'
+        ? 'denied'
+        : 'prompt';
   }
 
   async getCurrentPermissionState(): Promise<PushPermissionState> {
-    if (!this.isSupported()) return 'unavailable';
+    if (!(await this.isSupported())) return 'unavailable';
     return this.getPermissionState();
   }
 
-  private isSupported(): boolean {
-    return (
-      Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android'
-    );
+  private async isSupported(): Promise<boolean> {
+    if (Capacitor.isNativePlatform()) {
+      const platform = Capacitor.getPlatform();
+      return platform === 'android' || platform === 'ios';
+    }
+    return !!(await this.getWebMessaging());
+  }
+
+  private async getWebMessaging(): Promise<Messaging | null> {
+    if (this.webMessaging) return this.webMessaging;
+    if (!window.isSecureContext || !('serviceWorker' in navigator) || !('Notification' in window)) return null;
+    const config = await this.loadFirebaseWebConfig();
+    if (!config || !(await isFirebaseMessagingSupported())) return null;
+    const firebaseOptions = { ...config };
+    delete firebaseOptions.vapidKey;
+    const app = getApps()[0] || initializeApp(firebaseOptions);
+    this.webMessaging = getMessaging(app);
+    return this.webMessaging;
   }
 
   private isAuthenticated(): boolean {
     const token = this.tokenService.getAccessToken();
     return !!token && !this.tokenService.isTokenExpired(token);
+  }
+
+  private currentPlatform(): 'android' | 'ios' | 'web' {
+    const platform = Capacitor.getPlatform();
+    return platform === 'android' || platform === 'ios' ? platform : 'web';
+  }
+
+  private loadFirebaseWebConfig(): Promise<any | null> {
+    if (!this.firebaseConfigPromise) {
+      this.firebaseConfigPromise = fetch('/fcm/firebase-config.json', { cache: 'no-store' })
+        .then((response) => response.ok ? response.json() : null)
+        .then((config) => {
+          const required = ['apiKey', 'authDomain', 'projectId', 'messagingSenderId', 'appId', 'vapidKey'];
+          return config && required.every((key) => typeof config[key] === 'string' && config[key].trim())
+            ? config
+            : null;
+        })
+        .catch(() => null);
+    }
+    return this.firebaseConfigPromise;
   }
 }

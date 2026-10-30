@@ -63,7 +63,10 @@ export class TokenService {
       this.storage.get<boolean>('biometric_enabled') === true;
     if (!this.locked) this.user.set(saved.user);
     this.storage.set('user', saved.user);
-    await this.persist();
+    // The browser refresh credential is being migrated to an HttpOnly cookie
+    // by AuthService on startup; keep the legacy value in memory for that one
+    // exchange, but do not rewrite it to browser storage.
+    if (Capacitor.isNativePlatform()) await this.persist();
   }
 
   async saveSession(
@@ -94,6 +97,10 @@ export class TokenService {
   }
 
   private persist(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) {
+      localStorage.setItem(this.policyKey, 'false');
+      return this.secure.clear();
+    }
     const persistent = this.persistent;
     const snapshot = JSON.stringify(this.session);
     localStorage.setItem(this.policyKey, String(persistent));
@@ -130,7 +137,7 @@ export class TokenService {
   hasRestoredSession(): boolean {
     return (
       !!this.session.accessToken &&
-      !!this.session.refreshToken &&
+      (Capacitor.isNativePlatform() ? !!this.session.refreshToken : true) &&
       !!this.session.user
     );
   }

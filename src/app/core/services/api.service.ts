@@ -32,6 +32,9 @@ export class ApiService {
 
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
+      'X-Client-Platform': Capacitor.isNativePlatform()
+        ? Capacitor.getPlatform()
+        : 'web',
     };
 
     if (token) {

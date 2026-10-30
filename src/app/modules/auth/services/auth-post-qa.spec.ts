@@ -62,7 +62,28 @@ class LoaderView {
   clicked = false;
 }
 
+/** Native persistence goes through SecureStorageService, whose real storage loads a lazy
+ *  plugin chunk that never resolves under Karma. Keep it in memory for every instance. */
+let savedSecure: string | null = null;
+function mockSecureStorage() {
+  savedSecure = null;
+  spyOn(SecureStorageService.prototype, 'write').and.callFake(async (value) => {
+    savedSecure = value;
+  });
+  spyOn(SecureStorageService.prototype, 'read').and.callFake(async () => savedSecure);
+  spyOn(SecureStorageService.prototype, 'clear').and.callFake(async () => {
+    savedSecure = null;
+  });
+}
+
 describe('AUTH.1 post-QA regressions', () => {
+  // These cases pin the native transport contract (refresh token in the body, persisted
+  // session). The browser uses an HttpOnly cookie instead and is covered separately.
+  let native: jasmine.Spy;
+  beforeEach(() => {
+    native = spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
+    mockSecureStorage();
+  });
   let auth: AuthService;
   let tokens: TokenService;
   let requests: HttpTestingController;
@@ -80,7 +101,7 @@ describe('AUTH.1 post-QA regressions', () => {
       '.signature',
     refreshToken: 'synthetic-refresh',
   });
-  const url = (path: string) => environment.apiUrl + path;
+  const url = (path: string) => environment.nativeApiUrl + path;
 
   beforeEach(() => {
     localStorage.clear();
@@ -340,20 +361,12 @@ describe('AUTH.1 post-QA regressions', () => {
       'Google callback persists despite password Remember Me = ' + remember,
       fakeAsync(() => {
         sessionStorage.setItem('madarflow_oauth_persistent', String(remember));
-        // Persistent sessions are written through SecureStorageService, whose real
-        // storage is asynchronous beyond fakeAsync; keep it in memory like the native test.
-        const secure = TestBed.inject(SecureStorageService);
-        let saved: string | null = null;
-        spyOn(secure, 'write').and.callFake(async (value) => {
-          saved = value;
-        });
-        spyOn(secure, 'read').and.callFake(async () => saved);
-        spyOn(secure, 'clear').and.callFake(async () => {
-          saved = null;
-        });
         auth.exchangeGoogleCode('a'.repeat(64)).subscribe();
         flushMicrotasks();
-        const exchange = requests.expectOne(url('/user/auth/google/exchange'));
+        // The Google browser callback always talks to the same-origin API.
+        const exchange = requests.expectOne(
+          environment.browserApiUrl + '/user/auth/google/exchange'
+        );
         expect(exchange.request.body).toEqual({ code: 'a'.repeat(64) });
         // The exchange response nests the tokens under `tokens`.
         const { user: exchangedUser, ...tokens } = payload();
@@ -367,16 +380,6 @@ describe('AUTH.1 post-QA regressions', () => {
       'native Google persists with password Remember Me = ' + remember,
       fakeAsync(() => {
         spyOn(Capacitor, 'getPlatform').and.returnValue('android');
-        spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
-        const secure = TestBed.inject(SecureStorageService);
-        let saved: string | null = null;
-        spyOn(secure, 'write').and.callFake(async (value) => {
-          saved = value;
-        });
-        spyOn(secure, 'read').and.callFake(async () => saved);
-        spyOn(secure, 'clear').and.callFake(async () => {
-          saved = null;
-        });
         const previous = (window as any).GoogleAuth;
         (window as any).GoogleAuth = {
           signIn: async () => ({ idToken: 'synthetic-google-token' }),
@@ -393,7 +396,7 @@ describe('AUTH.1 post-QA regressions', () => {
             .expectOne(environment.nativeApiUrl + '/user/auth/google/native')
             .flush({ data: payload() });
           flushMicrotasks();
-          expect(saved).not.toBeNull();
+          expect(savedSecure).not.toBeNull();
           expect(coldSession().getRefreshToken()).toBe('synthetic-refresh');
         } finally {
           (window as any).GoogleAuth = previous;

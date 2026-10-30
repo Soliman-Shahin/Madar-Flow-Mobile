@@ -79,6 +79,10 @@ export class AuthService {
 
   async renewIfNeeded(): Promise<void> {
     await this.tokenService.initialize();
+    if (!Capacitor.isNativePlatform() && !this.loggingOut) {
+      await firstValueFrom(this.refreshAccessToken());
+      return;
+    }
     if (
       !this.loggingOut &&
       this.tokenService.isAccessTokenExpired() &&
@@ -232,7 +236,10 @@ export class AuthService {
       ? from(
           nativeHttp.post({
             url: fullUrl,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Client-Platform': Capacitor.getPlatform(),
+            },
             data: payload,
           })
         ).pipe(
@@ -245,7 +252,14 @@ export class AuthService {
             return res.data;
           })
         )
-      : new HttpClient(this.httpBackend).post(fullUrl, payload);
+      : new HttpClient(this.httpBackend).post(fullUrl, payload, {
+          withCredentials: true,
+          headers: {
+            'X-Auth-Transport': 'cookie',
+            'X-Auth-Cookie-Path': this.browserAuthCookiePath(),
+            'X-Auth-Persistence': persistent ? 'persistent' : 'session',
+          },
+        });
     return request.pipe(
       timeout(15000),
       switchMap((raw) =>
@@ -256,7 +270,8 @@ export class AuthService {
             const accessToken = data?.tokens?.accessToken ?? data?.accessToken;
             const refreshToken =
               data?.tokens?.refreshToken ?? data?.refreshToken;
-            if (!data?.user || !accessToken || !refreshToken)
+            const cookieAuth = !Capacitor.isNativePlatform();
+            if (!data?.user || !accessToken || (!cookieAuth && !refreshToken))
               throw new Error('Invalid authentication response');
             if (expectedUserId && data.user._id !== expectedUserId)
               throw new Error(
@@ -267,7 +282,7 @@ export class AuthService {
               await this.tokenService.saveSession(
                 data.user,
                 accessToken,
-                refreshToken,
+                refreshToken || '',
                 persistent
               );
             } catch {
@@ -289,34 +304,61 @@ export class AuthService {
     refreshToken: string;
   }> {
     if (this.refreshInFlight) return this.refreshInFlight;
+    const cookieAuth = !Capacitor.isNativePlatform();
     const credential = this.getRefreshToken();
     const revision = this.tokenService.revision;
-    if (!credential || this.loggingOut)
+    if ((!cookieAuth && !credential) || this.loggingOut)
       return throwError(() => new HttpErrorResponse({ status: 401 }));
-    this.refreshInFlight = new HttpClient(this.httpBackend)
-      .post<any>(
-        (Capacitor.isNativePlatform()
-          ? environment.nativeApiUrl
-          : environment.browserApiUrl) + '/user/refresh-token',
-        this.payload({ refreshToken: credential })
-      )
+    const http = new HttpClient(this.httpBackend);
+    const baseUrl = Capacitor.isNativePlatform()
+      ? environment.nativeApiUrl
+      : environment.browserApiUrl;
+    const cookiePath = this.browserAuthCookiePath();
+    const request = cookieAuth
+      ? http
+          .get<{ csrfToken: string }>(baseUrl + '/user/csrf-token', {
+            withCredentials: true,
+            headers: { 'X-Auth-Cookie-Path': cookiePath },
+          })
+          .pipe(
+            switchMap(({ csrfToken }) =>
+              http.post<any>(
+                baseUrl + '/user/refresh-token',
+                this.payload(credential ? { refreshToken: credential } : {}),
+                {
+                  withCredentials: true,
+                  headers: {
+                    'X-Auth-Transport': 'cookie',
+                    'X-Auth-Cookie-Path': cookiePath,
+                    'X-CSRF-Token': csrfToken,
+                  },
+                }
+              )
+            )
+          )
+      : http.post<any>(
+          baseUrl + '/user/refresh-token',
+          this.payload({ refreshToken: credential })
+        );
+    this.refreshInFlight = request
       .pipe(
         timeout(15000),
         switchMap((raw) =>
           from(
             (async () => {
               const data = this.unwrap(raw)?.data;
-              if (!data?.accessToken || !data?.refreshToken)
+              if (!data?.accessToken || (!cookieAuth && !data?.refreshToken))
                 throw new Error('Invalid renewal response');
               if (revision !== this.tokenService.revision)
                 throw new Error('Session changed');
               await this.tokenService.updateTokens(
                 data.accessToken,
-                data.refreshToken
+                data.refreshToken || ''
               );
+              if (data.user) this.tokenService.setUser(data.user);
               return {
                 accessToken: data.accessToken as string,
-                refreshToken: data.refreshToken as string,
+                refreshToken: (data.refreshToken || '') as string,
               };
             })()
           )
@@ -352,18 +394,47 @@ export class AuthService {
       try {
         if (this.refreshInFlight)
           await firstValueFrom(this.refreshInFlight.pipe(timeout(3000)));
+        const http = new HttpClient(this.httpBackend);
+        const baseUrl = Capacitor.isNativePlatform()
+          ? environment.nativeApiUrl
+          : environment.browserApiUrl;
+        const cookiePath = this.browserAuthCookiePath();
         const refreshToken = this.getRefreshToken();
-        if (refreshToken)
+        if (Capacitor.isNativePlatform() && refreshToken) {
           await firstValueFrom(
-            new HttpClient(this.httpBackend)
+            http
               .post(
-                (Capacitor.isNativePlatform()
-                  ? environment.nativeApiUrl
-                  : environment.browserApiUrl) + '/user/logout',
+                baseUrl + '/user/logout',
                 this.payload({ refreshToken })
               )
               .pipe(timeout(3000))
           );
+        } else if (!Capacitor.isNativePlatform()) {
+          const { csrfToken } = await firstValueFrom(
+            http
+              .get<{ csrfToken: string }>(baseUrl + '/user/csrf-token', {
+                withCredentials: true,
+                headers: { 'X-Auth-Cookie-Path': cookiePath },
+              })
+              .pipe(timeout(3000))
+          );
+          await firstValueFrom(
+            http
+              .post(
+                baseUrl + '/user/logout',
+                this.payload(refreshToken ? { refreshToken } : {}),
+                {
+                  withCredentials: true,
+                  headers: {
+                    'X-Auth-Transport': 'cookie',
+                    'X-Auth-Cookie-Path': cookiePath,
+                    'X-CSRF-Token': csrfToken,
+                  },
+                }
+              )
+              .pipe(timeout(3000))
+          );
+        }
       } catch {
         /* Local logout must work offline. */
       } finally {
@@ -387,7 +458,18 @@ export class AuthService {
       return throwError(() => new Error('Invalid OAuth exchange code'));
     }
     return new HttpClient(this.httpBackend)
-      .post<any>(environment.browserApiUrl + '/user/auth/google/exchange', { code })
+      .post<any>(
+        environment.browserApiUrl + '/user/auth/google/exchange',
+        { code },
+        {
+          withCredentials: true,
+          headers: {
+            'X-Auth-Transport': 'cookie',
+            'X-Auth-Cookie-Path': this.browserAuthCookiePath(),
+            'X-Auth-Persistence': 'persistent',
+          },
+        }
+      )
       .pipe(
         timeout(15000),
         switchMap((raw) =>
@@ -396,18 +478,26 @@ export class AuthService {
               const data = this.unwrap(raw)?.data;
               const accessToken = data?.tokens?.accessToken;
               const refreshToken = data?.tokens?.refreshToken;
-              if (!data?.user || !accessToken || !refreshToken)
+              if (!data?.user || !accessToken)
                 throw new Error('Invalid OAuth exchange response');
               this.loggingOut = false;
               await this.tokenService.saveSession(
                 data.user,
                 accessToken,
-                refreshToken,
+                refreshToken || '',
                 true
               );
             })()
           )
         )
       );
+  }
+
+  private browserAuthCookiePath(): string {
+    const basePath = new URL(
+      environment.browserApiUrl,
+      typeof window === 'undefined' ? 'https://madar-flow.invalid' : window.location.origin
+    ).pathname.replace(/\/$/, '');
+    return `${basePath}/user`;
   }
 }
