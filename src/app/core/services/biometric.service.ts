@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { NativeBiometric } from '@capgo/capacitor-native-biometric';
 import { Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from '../../modules/auth/services/storage.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ export class BiometricService {
 
   private platform = inject(Platform);
   private storage = inject(StorageService);
+  private translate = inject(TranslateService);
 
   get isEnabled(): boolean {
     return !!this.storage.get(this.BIOMETRIC_ENABLED_KEY);
@@ -51,8 +53,8 @@ export class BiometricService {
     try {
       const result = await NativeBiometric.verifyIdentity({
         reason: reason,
-        title: 'Authentication Required',
-        subtitle: 'Log in with your biometric',
+        title: this.translate.instant('BIOMETRIC_PROMPT.TITLE'),
+        subtitle: this.translate.instant('BIOMETRIC_PROMPT.SUBTITLE'),
         description: reason,
       });
       this.lastBiometricTime = Date.now();

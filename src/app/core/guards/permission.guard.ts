@@ -62,7 +62,7 @@ export const permissionGuard: CanActivateFn = async (
 
     // Permission denied - show appropriate message
     await toastService.show({
-      message: 'You do not have permission to access this feature.',
+      message: 'GUARDS.NO_PERMISSION',
       color: 'warning',
       duration: 3000,
       position: 'bottom',
@@ -76,7 +76,7 @@ export const permissionGuard: CanActivateFn = async (
   } catch (error) {
     console.error('Error in permissionGuard:', error);
     await toastService.show({
-      message: 'Unable to verify your permissions. Please try again.',
+      message: 'GUARDS.PERMISSION_CHECK_FAILED',
       color: 'danger',
       duration: 3000,
       position: 'bottom',

@@ -6,6 +6,7 @@
  */
 
 import { inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { UserRole, hasRoleLevel, getRoleDisplayName } from '../models/role.model';
 import { ToastService } from '../../shared/services/toast.service';
@@ -29,6 +30,7 @@ export const roleGuard: CanActivateFn = async (
 ) => {
   const router = inject(Router);
   const toastService = inject(ToastService);
+  const translate = inject(TranslateService);
   
   // TODO: Inject AuthService when available
   // const authService = inject(AuthService);
@@ -48,7 +50,9 @@ export const roleGuard: CanActivateFn = async (
     // This will be updated when AuthService is integrated
     
     await toastService.show({
-      message: `This area requires ${getRoleDisplayName(requiredRole)} role.`,
+      message: translate.instant('GUARDS.ROLE_REQUIRED', {
+        required: getRoleDisplayName(requiredRole),
+      }),
       color: 'warning',
       duration: 3000,
       position: 'bottom',
@@ -76,7 +80,10 @@ export const roleGuard: CanActivateFn = async (
     const requiredRoleName = getRoleDisplayName(requiredRole);
     
     await toastService.show({
-      message: `This area requires ${requiredRoleName} role. You are currently ${currentRoleName}.`,
+      message: translate.instant('GUARDS.ROLE_REQUIRED_CURRENT', {
+        required: requiredRoleName,
+        current: currentRoleName,
+      }),
       color: 'warning',
       duration: 3000,
       position: 'bottom',
@@ -88,7 +95,7 @@ export const roleGuard: CanActivateFn = async (
   } catch (error) {
     console.error('Error in roleGuard:', error);
     await toastService.show({
-      message: 'Unable to verify your role. Please try again.',
+      message: 'GUARDS.ROLE_CHECK_FAILED',
       color: 'danger',
       duration: 3000,
       position: 'bottom',
