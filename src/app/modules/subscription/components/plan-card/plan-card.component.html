@@ -24,6 +24,19 @@
   </header>
 
   <!-- Price -->
+  @if (storeMode && isPaidPlan && storePackages.length) {
+  <ul class="mf-plan__store-prices">
+    @for (pkg of storePackages; track pkg.id) {
+    <li>
+      <bdi dir="ltr" class="mf-plan__amount">{{ pkg.priceString }}</bdi>
+      <span class="mf-plan__period">{{
+        (pkg.cycle === "yearly" ? "SUBSCRIPTION.PER_YEAR" : "SUBSCRIPTION.PER_MONTH")
+          | translate
+      }}</span>
+    </li>
+    }
+  </ul>
+  } @else if (!storeMode) {
   <p class="mf-plan__price">
     <bdi dir="ltr" class="mf-plan__amount"
       >{{ plan.price }}<span class="mf-plan__currency">{{
@@ -38,6 +51,7 @@
       ) | translate
     }}</span>
   </p>
+  }
 
   <!-- Limits -->
   <h4 class="mf-plan__label">{{ "SUBSCRIPTION.LIMITS" | translate }}</h4>
@@ -76,6 +90,18 @@
   }
 
   <!-- Action -->
+  @if (storeMode) { @if (isCurrentPlan) {
+  <ion-button expand="block" class="mf-plan__action mf-plan__action--current" disabled="true">
+    {{ "SUBSCRIPTION.CURRENT_PLAN" | translate }}
+  </ion-button>
+  } @else if (isPaidPlan && storePackages.length) { @for (pkg of storePackages; track pkg.id) {
+  <ion-button expand="block" class="mf-plan__action" (click)="onPurchase(pkg)">
+    {{ (pkg.cycle === "yearly" ? "SUBSCRIPTION.SUBSCRIBE_YEARLY" : "SUBSCRIPTION.SUBSCRIBE_MONTHLY") | translate }}
+    · <bdi dir="ltr">{{ pkg.priceString }}</bdi>
+  </ion-button>
+  } } @else if (isPaidPlan) {
+  <p class="mf-plan__soon">{{ "SUBSCRIPTION.COMING_SOON" | translate }}</p>
+  } } @else {
   <ion-button
     expand="block"
     class="mf-plan__action"
@@ -88,4 +114,5 @@
         | translate
     }}
   </ion-button>
+  }
 </article>

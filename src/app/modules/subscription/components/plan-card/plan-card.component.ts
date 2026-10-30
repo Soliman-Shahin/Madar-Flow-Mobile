@@ -7,6 +7,7 @@ import {
   PlanSlug,
   Permission,
 } from '../../../../shared/models/plan.model';
+import { StorePackage } from '../../../../core/services/store-purchases.gateway';
 
 @Component({
   selector: 'app-plan-card',
@@ -19,7 +20,20 @@ export class PlanCardComponent {
   @Input() plan!: Plan;
   @Input() isCurrentPlan = false;
   @Input() isPopular = false;
+  /** True when this device buys through the store (Google Play). */
+  @Input() storeMode = false;
+  /** Store offers that grant this plan, with the store's own prices. */
+  @Input() storePackages: StorePackage[] = [];
   @Output() upgrade = new EventEmitter<Plan>();
+  @Output() purchase = new EventEmitter<StorePackage>();
+
+  onPurchase(pkg: StorePackage) {
+    this.purchase.emit(pkg);
+  }
+
+  get isPaidPlan(): boolean {
+    return this.plan.slug !== PlanSlug.FREE;
+  }
 
   onUpgrade() {
     this.upgrade.emit(this.plan);

@@ -4,6 +4,8 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlanService } from '../../core/services/plan.service';
+import { StorePurchasesService } from '../../core/services/store-purchases.service';
+import { StorePackage } from '../../core/services/store-purchases.gateway';
 import { ToastService } from '../../shared/services/toast.service';
 import {
   Plan,
@@ -36,6 +38,7 @@ export class SubscriptionPage implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  private storePurchases = inject(StorePurchasesService);
 
   // State
   availablePlans: Plan[] = [];
@@ -43,7 +46,10 @@ export class SubscriptionPage implements OnInit {
   selectedSegment: 'plans' | 'usage' = 'plans';
   isLoading = false;
   loadError = false;
-  private isChangingPlan = false;
+  /** True when plans are bought through Google Play on this device. */
+  storeMode = false;
+  storePackages: StorePackage[] = [];
+  isChangingPlan = false;
   from?: string;
 
   // Query params (for redirects from guards/interceptors)
@@ -77,6 +83,10 @@ export class SubscriptionPage implements OnInit {
 
       this.availablePlans = plans;
       this.currentPlan = myPlan;
+      this.storeMode = this.storePurchases.isAvailable(myPlan);
+      this.storePackages = this.storeMode
+        ? await this.storePurchases.loadPackages(myPlan)
+        : [];
       this.changeDetectorRef.markForCheck();
 
       // Show contextual message based on reason
@@ -186,6 +196,77 @@ export class SubscriptionPage implements OnInit {
     } finally {
       this.isChangingPlan = false;
     }
+  }
+
+  packagesFor(plan: Plan): StorePackage[] {
+    return this.storePurchases.packagesFor(plan, this.storePackages);
+  }
+
+  async onPurchase(plan: Plan, pkg: StorePackage) {
+    if (this.isChangingPlan || this.isLoading || !this.currentPlan) return;
+    this.isChangingPlan = true;
+    try {
+      const outcome = await this.storePurchases.purchase(
+        this.currentPlan,
+        pkg,
+        plan.slug
+      );
+      if (outcome === 'cancelled') return;
+      if (outcome === 'active') {
+        this.currentPlan = await this.planService.getMyPlan();
+        this.changeDetectorRef.markForCheck();
+        await this.toastService.show({
+          message: this.translateService.instant('SUBSCRIPTION.UPGRADE_SUCCESS', {
+            plan: plan.name,
+          }),
+          color: 'success',
+          duration: 3000,
+          position: 'bottom',
+        });
+        return;
+      }
+      await this.toastService.show({
+        message:
+          outcome === 'pending'
+            ? 'SUBSCRIPTION.PURCHASE_PENDING'
+            : 'SUBSCRIPTION.PURCHASE_FAILED',
+        color: outcome === 'pending' ? 'warning' : 'danger',
+        duration: 4500,
+        position: 'bottom',
+      });
+    } finally {
+      this.isChangingPlan = false;
+    }
+  }
+
+  async onRestore() {
+    if (this.isChangingPlan || this.isLoading || !this.currentPlan) return;
+    this.isChangingPlan = true;
+    try {
+      const outcome = await this.storePurchases.restore(this.currentPlan);
+      if (outcome === 'restored') {
+        this.currentPlan = await this.planService.getMyPlan();
+        this.changeDetectorRef.markForCheck();
+      }
+      await this.toastService.show({
+        message:
+          outcome === 'restored'
+            ? 'SUBSCRIPTION.RESTORE_DONE'
+            : outcome === 'nothing'
+              ? 'SUBSCRIPTION.RESTORE_NONE'
+              : 'SUBSCRIPTION.RESTORE_FAILED',
+        color: outcome === 'restored' ? 'success' : outcome === 'nothing' ? 'medium' : 'danger',
+        duration: 3500,
+        position: 'bottom',
+      });
+    } finally {
+      this.isChangingPlan = false;
+    }
+  }
+
+  /** Cancelling or changing a subscription happens in Google Play, not here. */
+  manageSubscription() {
+    window.open('https://play.google.com/store/account/subscriptions', '_system');
   }
 
   segmentChanged(event: any) {
