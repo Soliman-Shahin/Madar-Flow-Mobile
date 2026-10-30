@@ -16,6 +16,7 @@ import { firstValueFrom } from 'rxjs';
 import { TokenService } from 'src/app/modules/auth/services/token.service';
 import { ApiService } from './api.service';
 import { BRAND } from 'src/app/config/brand.config';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 export type PushPermissionState =
   | 'unavailable'
@@ -193,7 +194,7 @@ export class PushNotificationService {
         })
       );
       this.registrationRequested = false;
-      console.info('[Push] Device registration synchronized');
+      debugLog('[Push] Device registration synchronized');
     } catch {
       this.registrationRequested = false;
       console.warn('[Push] Backend device registration failed');

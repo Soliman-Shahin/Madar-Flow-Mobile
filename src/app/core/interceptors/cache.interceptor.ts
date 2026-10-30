@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 interface CacheEntry {
   response: HttpResponse<any>;
@@ -53,7 +54,7 @@ function cleanupExpired(): void {
   });
 
   if (cleaned > 0) {
-    console.log(`🧹 [Cache] Cleaned ${cleaned} expired entries`);
+    debugLog(`🧹 [Cache] Cleaned ${cleaned} expired entries`);
   }
 }
 
@@ -71,7 +72,7 @@ export const cacheInterceptor: HttpInterceptorFn = (
   }
   const cached = cache.get(req.urlWithParams);
   if (cached && !isExpired(cached)) {
-    console.log('✅ [Cache] HIT:', req.urlWithParams);
+    debugLog('✅ [Cache] HIT:', req.urlWithParams);
     return of(cached.response.clone());
   }
 
@@ -92,7 +93,7 @@ export const cacheInterceptor: HttpInterceptorFn = (
           response: event.clone(),
           timestamp: Date.now(),
         });
-        console.log('💾 [Cache] STORED:', req.urlWithParams);
+        debugLog('💾 [Cache] STORED:', req.urlWithParams);
       }
     })
   );

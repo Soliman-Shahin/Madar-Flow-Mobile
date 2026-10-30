@@ -50,6 +50,7 @@ import { AppComponent } from './app/app.component';
 import { provideServiceWorker } from '@angular/service-worker';
 import { ThemeService } from './app/shared/services/themeToggle.service';
 import { Capacitor } from '@capacitor/core';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -143,7 +144,7 @@ if (!(window as any).__appBootstrapped) {
             // Only load permissions if user is authenticated
             const hasToken = tokenService.getAccessToken();
             if (!hasToken) {
-              console.log(
+              debugLog(
                 '⚠️ [APP_INITIALIZER] No token found, skipping permission load'
               );
               return Promise.resolve([]);
