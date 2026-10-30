@@ -1093,5 +1093,15 @@
     "BASIC": "Basic",
     "PRO": "Pro",
     "ENTERPRISE": "Enterprise"
+  },
+  "TELEMETRY": {
+    "SECTION": "Privacy",
+    "TOGGLE": "Share anonymous usage data",
+    "TOGGLE_DESC": "Helps us see which features are used so we can improve the app",
+    "NOTE": "Off by default. Only simple events such as \"app opened\" or \"transaction added\" are sent, with a random ID. Never your amounts, notes, categories, email or name. Turning this off deletes what was sent.",
+    "PROMPT_TITLE": "Help improve Madar Flow?",
+    "PROMPT_MESSAGE": "Share anonymous usage data? We only count simple events like \"app opened\" or \"transaction added\", with a random ID that is not linked to your account. We never send your amounts, notes or personal details. You can change this any time in Settings > Privacy.",
+    "PROMPT_ALLOW": "Share",
+    "PROMPT_DECLINE": "Not now"
   }
 }

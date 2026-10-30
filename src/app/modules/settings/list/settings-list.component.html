@@ -224,6 +224,27 @@
     </ion-list>
     }
 
+    <!-- Privacy -->
+    <h2 class="section-label">{{ "TELEMETRY.SECTION" | translate }}</h2>
+    <ion-list class="premium-list">
+      <ion-item lines="none">
+        <div slot="start" class="icon-wrapper color-cyan">
+          <ion-icon name="analytics-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label class="ion-text-wrap">
+          <h3>{{ "TELEMETRY.TOGGLE" | translate }}</h3>
+          <p>{{ "TELEMETRY.TOGGLE_DESC" | translate }}</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          [attr.aria-label]="'TELEMETRY.TOGGLE' | translate"
+          [checked]="telemetryEnabled"
+          (ionChange)="toggleTelemetry($event)"
+        ></ion-toggle>
+      </ion-item>
+    </ion-list>
+    <p class="section-note">{{ "TELEMETRY.NOTE" | translate }}</p>
+
     <!-- Data -->
     <h2 class="section-label">{{ "SETTINGS.DATA_BACKUP" | translate }}</h2>
     <ion-list class="premium-list">

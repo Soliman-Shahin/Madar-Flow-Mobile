@@ -1,3 +1,4 @@
+import { TelemetryService } from 'src/app/core/services/telemetry.service';
 import { Injectable, inject } from '@angular/core';
 import {
   Observable,
@@ -51,6 +52,7 @@ export class SyncService {
   private connectionService = inject(ConnectionService);
   private expenseService = inject(ExpenseService);
   private tokenService = inject(TokenService);
+  private readonly telemetry = inject(TelemetryService);
 
   // ==================== CONFIGURATION ====================
 
@@ -645,6 +647,7 @@ export class SyncService {
     this.persistLastSyncTime(now);
 
     debugLog('✅ Sync completed at:', now);
+    this.telemetry.track('sync_completed');
   }
 
   /**
