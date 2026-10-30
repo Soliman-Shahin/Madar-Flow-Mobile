@@ -149,7 +149,7 @@ export class SideMenuComponent
   }
 
   initials(user: any | null): string {
-    const value = user?.username || user?.name || '';
+    const value = user?.username || user?.fullName || user?.name || '';
     return (
       value
         .trim()

@@ -940,6 +940,7 @@
   },
   "SUBSCRIPTION": {
     "TITLE": "Subscription Plans",
+    "PAGE_TITLE": "Subscription",
     "SUBTITLE": "Choose the plan that fits your needs",
     "CURRENT_PLAN": "Current Plan",
     "UPGRADE": "Upgrade",

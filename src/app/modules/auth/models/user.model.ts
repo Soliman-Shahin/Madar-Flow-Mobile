@@ -16,6 +16,7 @@ export interface User {
   signupType?: 'normal' | 'facebook' | 'google';
   email?: string;
   username?: string;
+  fullName?: string;
   image?: string;
   emailVerified?: boolean;
   sessions?: [token: string, expiresAt: number];
