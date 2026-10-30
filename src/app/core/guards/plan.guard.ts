@@ -2,7 +2,10 @@ import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { PlanService } from '../services/plan.service';
-import { PlanSlug, PLAN_WEIGHTS, isPlanSufficient, getPlanDisplayName } from '../../shared/models/plan.model';
+import { PlanSlug, PLAN_WEIGHTS, isPlanSufficient } from '../../shared/models/plan.model';
+
+/** i18n key for a plan's display name (PLAN_NAMES.FREE, PLAN_NAMES.PRO, ...). */
+const planNameKey = (slug: PlanSlug): string => `PLAN_NAMES.${String(slug).toUpperCase()}`;
 import { ToastService } from '../../shared/services/toast.service';
 
 /**
@@ -59,8 +62,8 @@ export const planGuard: CanActivateFn = async (
     }
 
     // Plan requirement not met
-    const currentPlanName = getPlanDisplayName(userPlanSlug);
-    const requiredPlanName = getPlanDisplayName(requiredPlan);
+    const currentPlanName = translate.instant(planNameKey(userPlanSlug));
+    const requiredPlanName = translate.instant(planNameKey(requiredPlan));
     
     await toastService.show({
       message: translate.instant('GUARDS.PLAN_REQUIRED', {

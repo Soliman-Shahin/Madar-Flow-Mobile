@@ -43,22 +43,6 @@ ion-content.mf-note-detail {
   ion-icon {
     font-size: 16px;
   }
-
-  &.tone-success {
-    --mf-kind: var(--mf-success);
-  }
-
-  &.tone-warning {
-    --mf-kind: var(--mf-warning);
-  }
-
-  &.tone-error {
-    --mf-kind: var(--mf-danger);
-  }
-
-  &.tone-neutral {
-    --mf-kind: var(--mf-cat-8);
-  }
 }
 
 .mf-note-detail__title {

@@ -394,7 +394,10 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
 
     const amount = Number(e.amount) || 0;
     const title =
-      e.description || (isPopulated ? (cat as Category).title : 'Transaction');
+      e.description ||
+      (isPopulated
+        ? (cat as Category).title
+        : this.translateService.instant('TRANSACTIONS.UNTITLED'));
 
     return {
       _id: e._id,

@@ -150,10 +150,6 @@ ion-toast.custom-toast::part(backdrop) {
   --border-radius: var(--ew-radius-xl);
   --box-shadow: var(--ew-shadow-xl);
 
-  .loading-wrapper {
-    padding: var(--ew-space-6);
-  }
-
   ion-spinner {
     width: var(--ew-size-12);
     height: var(--ew-size-12);
@@ -270,15 +266,6 @@ ion-card {
       animation: shimmer 2s infinite;
     }
   }
-
-  &.card-elevated {
-    box-shadow: var(--ew-shadow-xl);
-  }
-
-  &.card-flat {
-    box-shadow: none;
-    border: 1px solid var(--ion-border-color);
-  }
 }
 
 /* Button Variants */
@@ -314,70 +301,6 @@ ion-button.btn-gradient {
   }
 }
 
-.btn-glass,
-ion-button.btn-glass {
-  --background: var(--glass-background);
-  --color: var(--ion-color-primary);
-  backdrop-filter: blur(18px) saturate(150%);
-  border: var(--glass-border);
-
-  &:hover {
-    --background: rgba(var(--ion-color-primary-rgb), 0.15);
-  }
-}
-
-.btn-outline,
-ion-button.btn-outline {
-  --background: transparent;
-  --color: var(--ion-color-primary);
-  --border-width: 2px;
-  --border-style: solid;
-  --border-color: var(--ion-color-primary);
-
-  &:hover {
-    --background: var(--primary-alpha-10);
-  }
-}
-
-.btn-icon-only {
-  --padding-start: 12px;
-  --padding-end: 12px;
-  min-width: 44px;
-  min-height: 44px;
-
-  ion-icon {
-    font-size: 24px;
-  }
-}
-
-/* Card Types */
-.card-glass {
-  background: var(--glass-background) !important;
-  backdrop-filter: blur(18px) saturate(150%);
-  border: var(--glass-border);
-  box-shadow: var(--ew-shadow-lg);
-}
-
-.card-gradient {
-  background: var(--brand-gradient) !important;
-  color: white;
-
-  ion-card-header,
-  ion-card-title,
-  ion-card-content {
-    color: white;
-  }
-}
-
-.card-bordered {
-  border: 2px solid var(--ion-border-color);
-  box-shadow: none;
-
-  &:hover {
-    border-color: var(--ion-color-primary);
-  }
-}
-
 /* Badge Component */
 .badge {
   display: inline-flex;
@@ -389,104 +312,6 @@ ion-button.btn-outline {
   border-radius: var(--ew-radius-pill);
   line-height: 1;
   white-space: nowrap;
-
-  &.badge-primary {
-    background: var(--primary-alpha-10);
-    color: var(--ion-color-primary);
-  }
-
-  &.badge-success {
-    background: var(--success-alpha-10);
-    color: var(--ion-color-success);
-  }
-
-  &.badge-danger {
-    background: var(--danger-alpha-10);
-    color: var(--ion-color-danger);
-  }
-
-  &.badge-warning {
-    background: var(--warning-alpha-10);
-    color: var(--ion-color-warning);
-  }
-
-  &.badge-gradient {
-    background: var(--brand-gradient);
-    color: white;
-  }
-
-  &.badge-lg {
-    padding: 0.5rem 1rem;
-    font-size: var(--text-sm);
-  }
-
-  &.badge-sm {
-    padding: 0.125rem 0.5rem;
-    font-size: 0.625rem;
-  }
-}
-
-/* Ribbon Component */
-.ribbon {
-  position: absolute;
-  top: 10px;
-  right: -5px;
-  padding: 4px 12px;
-  background: var(--ion-color-primary);
-  color: white;
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-bold);
-  border-radius: var(--ew-radius-sm);
-  box-shadow: var(--ew-shadow-md);
-  z-index: 10;
-
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-top: 5px solid var(--ion-color-primary-shade);
-  }
-
-  &.ribbon-success {
-    background: var(--ion-color-success);
-
-    &::before {
-      border-top-color: var(--ion-color-success-shade);
-    }
-  }
-
-  &.ribbon-danger {
-    background: var(--ion-color-danger);
-
-    &::before {
-      border-top-color: var(--ion-color-danger-shade);
-    }
-  }
-}
-
-/* Divider Styles */
-.divider {
-  height: 1px;
-  background: var(--ion-border-color);
-  margin: var(--ew-space-4) 0;
-
-  &.divider-gradient {
-    background: var(--brand-gradient);
-    height: 2px;
-  }
-
-  &.divider-dashed {
-    border-top: 1px dashed var(--ion-border-color);
-    background: transparent;
-  }
-
-  &.divider-thick {
-    height: 3px;
-  }
 }
 
 /* Avatar Component */
@@ -520,12 +345,6 @@ ion-button.btn-outline {
     font-size: var(--text-lg);
   }
 
-  &.avatar-xl {
-    width: 80px;
-    height: 80px;
-    font-size: var(--text-2xl);
-  }
-
   &.avatar-bordered {
     border: 3px solid var(--ion-color-primary);
     box-shadow: var(--ew-shadow-md);
@@ -546,10 +365,6 @@ ion-button.btn-outline {
 
   &.skeleton-circle {
     border-radius: 50%;
-  }
-
-  &.skeleton-rect {
-    border-radius: var(--ew-radius-md);
   }
 }
 

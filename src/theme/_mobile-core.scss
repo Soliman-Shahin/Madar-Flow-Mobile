@@ -60,21 +60,8 @@ app-home-page .dashboard {
     box-shadow: none;
     transform: none;
   }
-  .balance-card {
-    border-inline-start: 3px solid var(--ion-color-primary);
-  }
 }
 app-balance-card {
-  .total-balance {
-    padding: 12px 0 0;
-    padding-inline-end: 44px;
-    margin-bottom: 20px;
-    text-align: start;
-  }
-  .total-balance .amount {
-    font-size: clamp(1.7rem, 7vw, 2.35rem);
-    line-height: 1.3;
-  }
   .amount {
     font-variant-numeric: tabular-nums;
     direction: ltr;
@@ -84,48 +71,6 @@ app-balance-card {
     -webkit-text-fill-color: currentColor !important;
     text-shadow: none !important;
     color: var(--ion-text-color) !important;
-  }
-  .toggle-visibility {
-    min-width: 44px;
-    min-height: 44px;
-    background: var(--ew-wallet-inset);
-    backdrop-filter: none;
-    border: 0;
-    border-radius: 12px;
-    color: var(--ion-text-color);
-  }
-  .income-expense-row {
-    gap: 12px;
-  }
-  .balance-item,
-  .balance-item.income,
-  .balance-item.expenses,
-  .balance-item.savings {
-    min-width: 0;
-    padding: 12px;
-    border: 0;
-    border-radius: 10px;
-    background: var(--ew-wallet-inset);
-    gap: 6px;
-    box-shadow: none;
-    transform: none;
-    &::before {
-      display: none;
-    }
-    .amount {
-      font-size: 1rem;
-    }
-    .label {
-      color: var(--ew-wallet-muted);
-    }
-    ion-icon {
-      font-size: 20px;
-      margin: 0;
-      animation: none;
-    }
-  }
-  .balance-item.savings {
-    padding-block: 10px;
   }
 }
 
@@ -168,18 +113,6 @@ app-transactions-list {
     --color: var(--ew-wallet-muted);
     --color-checked: var(--ion-color-primary);
     --indicator-box-shadow: none;
-  }
-  app-add-fab-button .fab-add {
-    --background: var(--ion-color-primary);
-    --color: var(--ion-color-primary-contrast);
-    --box-shadow: 0 2px 6px #0002;
-    --border-radius: 16px;
-    width: 52px;
-    height: 52px;
-    animation: none;
-  }
-  app-add-fab-button .fab-add:hover {
-    transform: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {

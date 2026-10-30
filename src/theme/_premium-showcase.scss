@@ -61,97 +61,12 @@ app-home-page .dashboard {
   .tabs-row {
     margin-top: 4px;
   }
-  .card-section.balance-card {
-    background: var(--ew-bold-hero);
-    border: 1px solid #ffffff20;
-    border-radius: 24px 24px 24px 8px;
-    box-shadow: 0 12px 28px #17377725;
-    padding: 22px 20px 18px;
-    position: relative;
-    overflow: hidden;
-    color: #fff;
-  }
-  .balance-card::before {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    inset-inline-end: -88px;
-    top: -78px;
-    border: 26px solid #ffffff07;
-    border-radius: 50%;
-    pointer-events: none;
-  }
   .charts-card {
     background: var(--ion-item-background);
     box-shadow: var(--ew-bold-shadow);
   }
   .salary-item {
     background: var(--ew-wallet-inset);
-  }
-}
-app-home-page .dashboard .balance-card app-balance-card {
-  .balance-summary {
-    animation: none;
-  }
-  .total-balance {
-    padding: 18px 0 0;
-    margin-bottom: 22px;
-    gap: 8px;
-  }
-  .total-balance .amount {
-    font-size: clamp(27px, 8vw, 40px);
-    font-weight: 500;
-    letter-spacing: -1.1px;
-    line-height: 1.2;
-    color: #fff !important;
-  }
-  .toggle-visibility {
-    top: -40px;
-    background: #ffffff12;
-    color: #e2ebff;
-    border: 1px solid #ffffff20;
-    border-radius: 50%;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-  }
-  .income-expense-row {
-    border-top: 1px solid #ffffff26;
-    padding-top: 16px;
-    gap: 12px;
-  }
-  .balance-item.income,
-  .balance-item.expenses {
-    background: transparent;
-    padding: 0;
-    gap: 6px;
-    border-radius: 0;
-    .label {
-      color: #c7d8f7;
-      font-size: 12px;
-      font-weight: 400;
-    }
-    .amount {
-      color: #fff !important;
-      font-size: 15px;
-      font-weight: 500;
-      overflow: visible;
-      white-space: normal;
-    }
-    ion-icon {
-      font-size: 20px;
-    }
-  }
-  .balance-item.income ion-icon {
-    color: #7ae2bf;
-  }
-  .balance-item.expenses ion-icon {
-    color: #ffb3ab;
-  }
-  .balance-item.expenses {
-    border-inline-start: 1px solid #ffffff26;
-    padding-inline-start: 16px;
   }
 }
 app-home-page,
@@ -167,12 +82,6 @@ app-transactions-list {
   .custom-segment ion-segment-button::part(indicator-background) {
     border-radius: 10px;
     box-shadow: 0 2px 8px #1424400a;
-  }
-  app-add-fab-button .fab-add {
-    --background: linear-gradient(135deg, #3467ff, #2547ca);
-    --color: white;
-    --box-shadow: 0 6px 18px #214ecd44;
-    --border-radius: 18px 18px 18px 6px;
   }
   .transactions-list {
     border-radius: 16px;
@@ -214,42 +123,6 @@ app-transactions-list {
     outline-offset: -3px;
   }
 }
-app-home-page .dashboard .balance-card .hero-money {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  direction: ltr;
-  unicode-bidi: isolate;
-}
-app-home-page .dashboard .balance-card .hero-currency {
-  font-size: 14px;
-  font-weight: 500;
-  color: #c7d8f7;
-  letter-spacing: 0.4px;
-}
-app-home-page
-  .dashboard
-  .balance-card
-  app-balance-card
-  .balance-item.income
-  ion-icon {
-  color: #7ae2bf !important;
-}
-app-home-page
-  .dashboard
-  .balance-card
-  app-balance-card
-  .balance-item.expenses
-  ion-icon {
-  color: #ffb3ab !important;
-}
-app-home-page app-add-fab-button .fab-add,
-app-transactions-list app-add-fab-button .fab-add {
-  --background: linear-gradient(135deg, #3467ff, #2547ca) !important;
-  --color: #fff !important;
-  --border-radius: 18px 18px 18px 6px !important;
-}
 app-transactions-list .category-ion-header ion-searchbar {
   --background: var(--ion-item-background) !important;
   --placeholder-color: var(--ew-wallet-muted) !important;
@@ -261,9 +134,6 @@ app-transactions-list .category-ion-header .custom-segment ion-segment-button {
 }
 app-transactions-list .category-ion-header ion-buttons ion-button {
   --color: var(--ion-color-primary) !important;
-}
-app-home-page .dashboard .balance-card app-balance-card .total-balance .amount {
-  font-size: clamp(28px, 9.7vw, 40px);
 }
 
 app-home-page:has(.dashboard) {

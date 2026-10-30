@@ -8,7 +8,7 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { AmountComponent } from 'src/app/shared/ui/amount/amount.component';
-import { ExpenseComparison } from 'src/app/shared/components/balance-card/balance-card.component';
+import { ExpenseComparison } from 'src/app/shared/models/expense-comparison.model';
 
 /**
  * Home hero — Calm Personal Ledger.

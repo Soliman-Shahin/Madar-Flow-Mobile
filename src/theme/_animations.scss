@@ -9,44 +9,14 @@
 // All animations respect prefers-reduced-motion for accessibility.
 
 @media (prefers-reduced-motion: reduce) {
-  .fade-in,
-  .fade-in-up,
-  .fade-in-down,
-  .fade-in-left,
-  .fade-in-right,
-  .scale-in {
+  .fade-in-left {
     animation: none !important;
     transition: none !important;
   }
 }
 
-.fade-in {
-  animation: fadeIn var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-standard);
-}
-
-.fade-in-up {
-  animation: fadeInUp var(--ew-animation-duration-long)
-    var(--ew-animation-easing-standard);
-}
-
-.fade-in-down {
-  animation: fadeInDown var(--ew-animation-duration-long)
-    var(--ew-animation-easing-standard);
-}
-
 .fade-in-left {
   animation: fadeInLeft var(--ew-animation-duration-long)
-    var(--ew-animation-easing-standard);
-}
-
-.fade-in-right {
-  animation: fadeInRight var(--ew-animation-duration-long)
-    var(--ew-animation-easing-standard);
-}
-
-.scale-in {
-  animation: scaleIn var(--ew-animation-duration-long)
     var(--ew-animation-easing-standard);
 }
 
@@ -115,21 +85,6 @@
   }
 }
 
-// ===================================================================
-//  ADVANCED ANIMATIONS (v2.1)
-// ===================================================================
-
-/* Slide Animations */
-.slide-in-right {
-  animation: slideInRight var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-emphasized);
-}
-
-.slide-in-left {
-  animation: slideInLeft var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-emphasized);
-}
-
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -173,12 +128,6 @@
   100% {
     transform: scale(1);
   }
-}
-
-/* Shake Animation (for errors) */
-.shake {
-  animation: shake var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-standard);
 }
 
 @keyframes shake {
@@ -228,11 +177,6 @@
   }
 }
 
-/* Pulse Animation */
-.pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 @keyframes pulse {
   0%,
   100% {
@@ -274,17 +218,6 @@
   }
 }
 
-/* Zoom Animations */
-.zoom-in {
-  animation: zoomIn var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-emphasized);
-}
-
-.zoom-out {
-  animation: zoomOut var(--ew-animation-duration-normal)
-    var(--ew-animation-easing-emphasized);
-}
-
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -324,11 +257,6 @@
   }
 }
 
-/* Float Animation */
-.float {
-  animation: float 3s ease-in-out infinite;
-}
-
 @keyframes float {
   0%,
   100% {
@@ -341,18 +269,11 @@
 
 /* Accessibility: Disable all new animations on reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .slide-in-right,
-  .slide-in-left,
   .bounce-in,
-  .shake,
-  .shimmer,
-  .pulse,
-  .rotate,
-  .flip-in,
-  .zoom-in,
-  .zoom-out,
-  .glow-pulse,
-  .float {
+.shimmer,
+.rotate,
+.flip-in,
+.glow-pulse {
     animation: none !important;
     transition: none !important;
   }

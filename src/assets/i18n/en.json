@@ -183,7 +183,8 @@
     "UNTIL": "Until",
     "TO": "to",
     "DATE_GROUP_TODAY": "Today",
-    "DATE_GROUP_YESTERDAY": "Yesterday"
+    "DATE_GROUP_YESTERDAY": "Yesterday",
+    "UNTITLED": "Transaction"
   },
   "ABOUT": "About",
   "LOGIN": "Login",
@@ -241,7 +242,9 @@
     "PASSWORD_MISSING_LOWER": "Password must contain at least one lowercase letter",
     "PASSWORD_MISSING_SPECIAL": "Password must contain at least one special character",
     "PASSWORDS_DO_NOT_MATCH": "Passwords do not match",
-    "WHITESPACE": "This field cannot contain only whitespace"
+    "WHITESPACE": "This field cannot contain only whitespace",
+    "MAX_LENGTH": "Maximum length is {{max}} characters",
+    "INVALID": "This value is not valid"
   },
   "COMMON": {
     "RETRY": "Retry",
@@ -279,7 +282,8 @@
     "ERRORS": {
       "LOAD_DATA": "Failed to load data. Please try again.",
       "DEFAULT": "An unexpected error occurred."
-    }
+    },
+    "VERIFIED": "Verified"
   },
   "CATEGORY": {
     "ADD": "Add new category",
@@ -301,7 +305,8 @@
     "COLOR": "Category color",
     "SELECT_COLOR": "Select a color for the category",
     "ICON": "Category icon",
-    "SELECT_ICON": "Select an icon for the category"
+    "SELECT_ICON": "Select an icon for the category",
+    "CUSTOM_COLOR": "Custom color"
   },
   "CREATE": "Create",
   "EXPENSE": {
@@ -450,7 +455,8 @@
     "TITLE": "Charts",
     "INCOME_VS_EXPENSE": "Income vs. expense",
     "EXPENSE_BY_CATEGORY": "Expense by category",
-    "MONTHLY_EXPENSE_TREND": "Monthly expense trend"
+    "MONTHLY_EXPENSE_TREND": "Monthly expense trend",
+    "NO_DATA": "No data to display"
   },
   "CATEGORIES": {
     "COUNT_ONE": "category",
@@ -817,7 +823,8 @@
     "OFFLINE": "Offline",
     "BACKEND_CONNECTED": "Connected to server",
     "BACKEND_UNREACHABLE": "Server unreachable",
-    "NO_INTERNET": "No internet connection"
+    "NO_INTERNET": "No internet connection",
+    "CREATING_BACKUP": "Creating backup..."
   },
   "ERROR_CODES": {
     "AUTH_MISSING_OR_INVALID_HEADER": "Authentication header is missing or invalid.",
@@ -1074,5 +1081,11 @@
   "A11Y": {
     "APP_LOGO": "Madar Flow logo",
     "SELECT_DATE_RANGE": "Select a date range"
+  },
+  "PLAN_NAMES": {
+    "FREE": "Free",
+    "BASIC": "Basic",
+    "PRO": "Pro",
+    "ENTERPRISE": "Enterprise"
   }
 }

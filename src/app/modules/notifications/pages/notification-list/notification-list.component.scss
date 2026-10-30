@@ -71,22 +71,6 @@ ion-item.mf-note {
   }
 }
 
-.tone-success .mf-note__mark {
-  --mf-note-tone: var(--mf-success);
-}
-
-.tone-warning .mf-note__mark {
-  --mf-note-tone: var(--mf-warning);
-}
-
-.tone-error .mf-note__mark {
-  --mf-note-tone: var(--mf-danger);
-}
-
-.tone-neutral .mf-note__mark {
-  --mf-note-tone: var(--mf-cat-8);
-}
-
 .mf-note__text {
   display: flex;
   flex-direction: column;

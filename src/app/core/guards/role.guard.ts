@@ -8,7 +8,10 @@
 import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { UserRole, hasRoleLevel, getRoleDisplayName } from '../models/role.model';
+import { UserRole, hasRoleLevel } from '../models/role.model';
+
+/** i18n key for a role's display name (ROLES.USER, ROLES.SUPERADMIN, ...). */
+const roleNameKey = (role: UserRole): string => `ROLES.${String(role).toUpperCase()}`;
 import { ToastService } from '../../shared/services/toast.service';
 
 // This would typically come from an AuthService
@@ -51,7 +54,7 @@ export const roleGuard: CanActivateFn = async (
     
     await toastService.show({
       message: translate.instant('GUARDS.ROLE_REQUIRED', {
-        required: getRoleDisplayName(requiredRole),
+        required: translate.instant(roleNameKey(requiredRole)),
       }),
       color: 'warning',
       duration: 3000,
@@ -76,8 +79,8 @@ export const roleGuard: CanActivateFn = async (
     }
 
     // Role requirement not met
-    const currentRoleName = getRoleDisplayName(currentUser.role);
-    const requiredRoleName = getRoleDisplayName(requiredRole);
+    const currentRoleName = translate.instant(roleNameKey(currentUser.role));
+    const requiredRoleName = translate.instant(roleNameKey(requiredRole));
     
     await toastService.show({
       message: translate.instant('GUARDS.ROLE_REQUIRED_CURRENT', {

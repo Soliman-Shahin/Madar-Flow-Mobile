@@ -1,4 +1,3 @@
-export * from './balance-card/balance-card.component';
 export * from './date-time/date-time.component';
 export * from './months-scroll-header/months-scroll-header.component';
 export * from './sync-status/sync-status.component';
