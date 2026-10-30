@@ -188,3 +188,17 @@ ion-button.mf-plan__action {
     --color: var(--mf-primary);
   }
 }
+
+.mf-plan__store-prices {
+  list-style: none;
+  margin: 0 0 var(--mf-space-3, 12px);
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.mf-plan__soon {
+  margin: 0;
+  text-align: center;
+  color: var(--mf-text-muted, var(--ion-color-medium));
+  font-size: 0.85rem;
+}

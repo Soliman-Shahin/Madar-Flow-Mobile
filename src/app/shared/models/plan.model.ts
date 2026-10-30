@@ -74,6 +74,8 @@ export interface Plan {
   price: number;
   currency: string;
   billingCycle: 'monthly' | 'yearly' | 'lifetime';
+  /** Store subscription product ids that grant this plan (set in the Admin dashboard). */
+  productIds?: string[];
   limits: PlanLimits;
   features: Permission[];
   isActive: boolean;
@@ -129,6 +131,8 @@ export interface MyPlanResponse {
    * Missing on older servers, which behave as available.
    */
   upgradeAvailable?: boolean;
+  /** Present when in-app purchases are configured on the server. */
+  billing?: { provider: 'revenuecat'; androidPublicKey: string | null } | null;
 }
 
 export interface UpgradePlanRequest {

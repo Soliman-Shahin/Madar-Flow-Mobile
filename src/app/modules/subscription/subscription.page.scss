@@ -242,3 +242,16 @@ ion-content.mf-sub {
   display: grid;
   gap: var(--mf-space-4);
 }
+
+.mf-sub__store-actions {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-top: var(--mf-space-4, 16px);
+}
+.mf-sub__store-note {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--mf-text-muted, var(--ion-color-medium));
+}
