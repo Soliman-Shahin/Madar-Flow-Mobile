@@ -104,6 +104,6 @@ describe('ConflictResolutionPage presentation model', () => {
     );
 
     expect(page.getConflictIdentity(item)).toBe('Grocery run');
-    expect(page.getConflictFields(item)[0].local).toBe('â€”');
+    expect(page.getConflictFields(item)[0].local).toBe('—');
   });
 });

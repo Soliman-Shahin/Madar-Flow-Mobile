@@ -3,11 +3,15 @@ import { SyncSettingsPage } from './sync-settings.page';
 
 describe('SyncSettingsPage conflict navigation', () => {
   it('uses the existing absolute conflict-resolution route without invoking sync', () => {
-    expect(`/${APP_ROUTES.SETTINGS.CONFLICTS}`).toBe('/settings/conflicts');
+    expect(`/${APP_ROUTES.SETTINGS.INDEX}/${APP_ROUTES.SETTINGS.CONFLICTS}`).toBe(
+      '/settings/conflicts'
+    );
   });
 
   it('keeps the route available when there are zero conflicts', () => {
-    expect(`/${APP_ROUTES.SETTINGS.CONFLICTS}`).toBe('/settings/conflicts');
+    expect(`/${APP_ROUTES.SETTINGS.INDEX}/${APP_ROUTES.SETTINGS.CONFLICTS}`).toBe(
+      '/settings/conflicts'
+    );
   });
 
   it('navigates through the Router and prevents native row navigation', () => {

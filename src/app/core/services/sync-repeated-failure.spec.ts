@@ -20,7 +20,8 @@ class OperationsTable {
   }
 }
 
-function harness(ownerUserId = 'owner-a') {
+// `ownerUserId` owns the stored operation; `activeOwner` is who is signed in.
+function harness(ownerUserId = 'owner-a', activeOwner = ownerUserId) {
   const operations = new OperationsTable([
     {
       id: 'operation-1',
@@ -31,7 +32,7 @@ function harness(ownerUserId = 'owner-a') {
     },
   ]);
   const service = Object.create(OfflineStorageService.prototype) as any;
-  service.tokenService = { getUserId: () => ownerUserId };
+  service.tokenService = { getUserId: () => activeOwner };
   service.db = { syncOperations: operations };
   service.loadSyncQueue = async () => undefined;
   return { service, operations };
@@ -70,7 +71,8 @@ describe('durable repeated sync failure lifecycle', () => {
       jasmine.objectContaining({ ownerUserId: 'owner-a', retryCount: 1 })
     );
 
-    const other = harness('owner-b');
+    // owner-b is signed in; the operation belongs to owner-a.
+    const other = harness('owner-a', 'owner-b');
     expect(await other.service.recordSyncFailure('operation-1')).toBeNull();
     expect(other.operations.rows[0].retryCount).toBe(0);
   });

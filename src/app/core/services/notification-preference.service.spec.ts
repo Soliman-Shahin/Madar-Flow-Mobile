@@ -1,3 +1,4 @@
+import { fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { NotificationPreferenceService } from './notification-preference.service';
 import { DEFAULT_NOTIFICATION_PREFERENCES } from '../models/notification-preference.model';
@@ -12,7 +13,7 @@ describe('NotificationPreferenceService', () => {
     expect(service.current).toEqual(DEFAULT_NOTIFICATION_PREFERENCES);
   });
 
-  it('loads and updates the current owner preferences', () => {
+  it('loads and updates the current owner preferences', fakeAsync(() => {
     const categories = {
       sync: { inbox: true, realtime: true, push: false },
       subscription: { inbox: true, realtime: true, push: true },
@@ -28,12 +29,13 @@ describe('NotificationPreferenceService', () => {
     service.load().subscribe();
     expect(service.current).toEqual(categories);
     service.update({ sync: { push: false } }).subscribe();
+    flushMicrotasks();
     expect(api.patch).toHaveBeenCalledWith('/notifications/preferences', {
       sync: { push: false },
     });
     service.clearForOwner();
     expect(service.current.sync.push).toBe(true);
-  });
+  }));
 
   it('keeps server state unchanged when the preference API fails', () => {
     const api = {
@@ -72,7 +74,7 @@ describe('NotificationPreferenceService', () => {
     expect(service.current).toEqual(DEFAULT_NOTIFICATION_PREFERENCES);
   });
 
-  it('serializes rapid updates to the same field and keeps narrow patches', () => {
+  it('serializes rapid updates to the same field and keeps narrow patches', fakeAsync(() => {
     const firstResponse$ = new Subject<any>();
     const secondResponse$ = new Subject<any>();
     let call = 0;
@@ -94,19 +96,22 @@ describe('NotificationPreferenceService', () => {
 
     service.update({ sync: { push: false } }).subscribe();
     service.update({ sync: { push: true } }).subscribe();
+    flushMicrotasks();
 
     expect(api.patch).toHaveBeenCalledTimes(1);
     expect(api.patch.calls.argsFor(0)[1]).toEqual({ sync: { push: false } });
 
     firstResponse$.next({ categories });
     firstResponse$.complete();
+    flushMicrotasks();
     expect(api.patch).toHaveBeenCalledTimes(2);
     expect(api.patch.calls.argsFor(1)[1]).toEqual({ sync: { push: true } });
 
     secondResponse$.next({ categories: finalCategories });
     secondResponse$.complete();
+    flushMicrotasks();
     expect(service.current).toEqual(finalCategories);
-  });
+  }));
 
   it('keeps the current state when a preference update fails', () => {
     const initial = {

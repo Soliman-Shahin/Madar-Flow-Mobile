@@ -1,4 +1,4 @@
-import { firstValueFrom, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { SyncService } from './sync.service';
 import { OfflineStorageService } from './offline-storage.service';
 import { DatabaseService } from './database.service';
@@ -32,6 +32,7 @@ function harness(operations: any[]) {
     },
   };
   service.updateSyncMetadata = () => undefined;
+  service.syncProgressSubject = new BehaviorSubject<any>({});
   return { service, operations, requests, persisted };
 }
 
@@ -114,7 +115,11 @@ describe('actual sync receipt transport contract', () => {
       h.service.tokenService.getUserId = () => 'account-b';
       return of({ success: true, processed: 0, conflicts: [], errors: [], receipts: { a: 'receipt-a' } });
     };
-    await firstValueFrom((h.service as any).pushLocalChanges());
+    // The sync stops when the signed-in account changes mid-push, and nothing
+    // from account A is written onto account B's operation.
+    await expectAsync(
+      firstValueFrom((h.service as any).pushLocalChanges())
+    ).toBeRejectedWithError('SYNC_OWNER_CHANGED');
     expect(h.operations[0].receiptId).toBeUndefined();
   });
 
