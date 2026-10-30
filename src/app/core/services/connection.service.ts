@@ -4,6 +4,7 @@ import { map, debounceTime, timeout } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Capacitor } from '@capacitor/core';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 export interface ConnectionStatus {
   online: boolean;
@@ -211,7 +212,7 @@ export class ConnectionService {
   private startRecoveryPolling(): void {
     if (this.recoveryInterval) return;
     this.recoveryInterval = setInterval(async () => {
-      console.log('🔄 [ConnectionService] Recovery polling...');
+      debugLog('🔄 [ConnectionService] Recovery polling...');
       const isHealthy = await this.checkBackendHealth();
       if (isHealthy) {
         this.stopRecoveryPolling();

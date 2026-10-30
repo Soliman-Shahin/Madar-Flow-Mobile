@@ -6,6 +6,7 @@
  */
 
 import { Injectable, signal, computed } from '@angular/core';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 interface CacheEntry<T> {
   value: T;
@@ -243,7 +244,7 @@ export class CacheService {
     }
 
     if (removed > 0) {
-      console.log(`[CacheService] Cleaned up ${removed} expired entries`);
+      debugLog(`[CacheService] Cleaned up ${removed} expired entries`);
       this.updateStats();
     }
   }

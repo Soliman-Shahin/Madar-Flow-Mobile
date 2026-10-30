@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError, timer } from 'rxjs';
 import { retryWhen, mergeMap } from 'rxjs/operators';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 const MAX_RETRIES = 1;
 const INITIAL_DELAY = 1000;
@@ -20,23 +21,23 @@ function isRetryable(request: HttpRequest<unknown>): boolean {
 
 function shouldRetry(error: any, attempt: number): boolean {
   if (attempt >= MAX_RETRIES) {
-    console.log('❌ Max retries exceeded');
+    debugLog('❌ Max retries exceeded');
     return false;
   }
   if (!(error instanceof HttpErrorResponse)) {
     return false;
   }
   if (error.status !== 0 && NON_RETRYABLE_STATUS.includes(error.status)) {
-    console.log(`❌ Not retrying status ${error.status}`);
+    debugLog(`❌ Not retrying status ${error.status}`);
     return false;
   }
   const retry = error.status >= 500 && error.status < 600;
   if (!retry && error.status === 0) {
-    console.log('❌ Backend not available - not retrying network error');
+    debugLog('❌ Backend not available - not retrying network error');
     return false;
   }
   if (retry) {
-    console.log(`✅ Will retry server error: ${error.status} ${error.statusText}`);
+    debugLog(`✅ Will retry server error: ${error.status} ${error.statusText}`);
   }
   return retry;
 }

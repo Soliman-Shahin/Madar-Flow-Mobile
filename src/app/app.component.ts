@@ -26,6 +26,7 @@ import { ConnectionService } from './core/services/connection.service';
 import { DeviceLockService } from './core/services/device-lock.service';
 import { NotificationService } from './core/services/notification.service';
 import { NotificationPreferenceService } from './core/services/notification-preference.service';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 @Component({
   selector: 'app-root',
@@ -186,7 +187,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         scopes: ['profile', 'email'],
         grantOfflineAccess: true,
       });
-      console.log('✅ GoogleAuth initialized successfully');
+      debugLog('✅ GoogleAuth initialized successfully');
     } catch (error) {
       console.warn(
         '⚠️ GoogleAuth initialization failed (normal on native):',
@@ -205,7 +206,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         await this.backupService.initializeGoogleDrive(
           environment.googleDriveClientId
         );
-        console.log('✅ Google Drive initialized successfully');
+        debugLog('✅ Google Drive initialized successfully');
       } else {
         console.warn(
           '⚠️ Google Drive Client ID not configured. Please add it to environment files.'

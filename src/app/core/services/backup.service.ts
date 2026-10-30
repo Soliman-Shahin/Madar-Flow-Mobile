@@ -8,6 +8,7 @@ import { GoogleDriveService } from './google-drive.service';
 import { TokenService } from 'src/app/modules/auth/services/token.service';
 import { ExpenseService } from './expense.service';
 import { CategoryService } from 'src/app/modules/categories/services/categories.service';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 export interface BackupData {
   version: string;
@@ -537,7 +538,7 @@ export class BackupService {
           const fileName = `auto-backup-${new Date().toISOString()}.json`;
           this.googleDriveService.uploadBackup(fileName, backupJson).subscribe({
             next: (file) => {
-              console.log(
+              debugLog(
                 '✅ Auto backup uploaded to Google Drive:',
                 file.name
               );
@@ -551,7 +552,7 @@ export class BackupService {
           });
         }
 
-        console.log('✅ Auto backup completed successfully');
+        debugLog('✅ Auto backup completed successfully');
       },
       error: (error) => {
         console.error('❌ Auto backup failed:', error);

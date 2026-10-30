@@ -31,6 +31,7 @@ import {
   SyncProgress,
   SyncIndicatorState,
 } from 'src/app/shared/models/sync.model';
+import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 /**
  * 🔄 Sync Service - Professional Implementation
@@ -164,7 +165,7 @@ export class SyncService {
           100,
           Math.max(1, this.syncConfig.batchSize || 50)
         );
-        console.log('⚙️ Loaded sync config:', this.syncConfig);
+        debugLog('⚙️ Loaded sync config:', this.syncConfig);
       }
     } catch (e) {
       console.warn('Could not load sync config', e);
@@ -187,7 +188,7 @@ export class SyncService {
         this.isOnline = isOnline;
         this.updateSyncMetadata({ isOnline });
 
-        console.log(
+        debugLog(
           '📡 Connection changed:',
           wasOnline ? 'Online' : 'Offline',
           '→',
@@ -196,12 +197,12 @@ export class SyncService {
 
         // Auto-sync when coming back online (backend is reachable)
         if (!wasOnline && isOnline && this.syncConfig.autoSync) {
-          console.log('🔄 Connection restored, starting auto-sync...');
+          debugLog('🔄 Connection restored, starting auto-sync...');
           // Small delay to let connection stabilize
           setTimeout(() => {
             this.syncAll().subscribe({
               next: (success) =>
-                console.log('✅ Auto-sync completed:', success),
+                debugLog('✅ Auto-sync completed:', success),
               error: (err) => console.error('❌ Auto-sync failed:', err),
             });
           }, 1500);
@@ -220,13 +221,13 @@ export class SyncService {
         .pipe(
           filter(() => this.isOnline && !this.syncInProgress),
           switchMap(() => {
-            console.log('⏰ Auto-sync triggered');
+            debugLog('⏰ Auto-sync triggered');
             return this.syncAll();
           })
         )
         .subscribe({
           next: (success) =>
-            console.log('✅ Auto-sync:', success ? 'Success' : 'Failed'),
+            debugLog('✅ Auto-sync:', success ? 'Success' : 'Failed'),
           error: (err) => console.error('❌ Auto-sync error:', err),
         });
     }
@@ -245,13 +246,13 @@ export class SyncService {
   syncAll(): Observable<boolean> {
     // Check if sync is already running
     if (this.syncInProgress) {
-      console.log('⚠️ Sync already in progress, skipping...');
+      debugLog('⚠️ Sync already in progress, skipping...');
       return of(false);
     }
 
     // Check if online
     if (!this.isOnline) {
-      console.log('⚠️ Device is offline, cannot sync');
+      debugLog('⚠️ Device is offline, cannot sync');
       return of(false);
     }
 
@@ -272,7 +273,7 @@ export class SyncService {
       errors: [],
     });
 
-    console.log('🔄 Starting full sync...');
+    debugLog('🔄 Starting full sync...');
 
     // Step 1: Push local pending changes to server
     return this.pushLocalChanges().pipe(
@@ -298,7 +299,7 @@ export class SyncService {
             });
           }),
           switchMap((pullResult) => {
-            console.log(
+            debugLog(
               `✅ Pulled ${
                 pullResult.entities?.length || 0
               } entities from server`
@@ -342,7 +343,7 @@ export class SyncService {
         this.syncInProgress = false;
         this.syncOwnerId = null;
         if (ownerStillActive) this.updateSyncMetadata({ isSyncing: false });
-        console.log('🏁 Sync process finished');
+        debugLog('🏁 Sync process finished');
       })
     );
   }
@@ -355,8 +356,8 @@ export class SyncService {
   private pullDataFromServer(): Observable<any> {
     const lastSyncTime = this.syncMetadataSubject.value.lastSyncTime;
 
-    console.log('📥 Pulling data from server...');
-    console.log('📅 Last sync time:', lastSyncTime);
+    debugLog('📥 Pulling data from server...');
+    debugLog('📅 Last sync time:', lastSyncTime);
 
     return this.apiService
       .get<any>('/sync/pull', {
@@ -365,7 +366,7 @@ export class SyncService {
       })
       .pipe(
         tap((response) => {
-          console.log('✅ Pull response:', {
+          debugLog('✅ Pull response:', {
             entitiesCount: response.entities?.length || 0,
             conflicts: response.conflicts?.length || 0,
             totalCount: response.totalCount,
@@ -385,11 +386,11 @@ export class SyncService {
    */
   private mergeWithLocalData(serverEntities: any[]): Observable<boolean> {
     if (!serverEntities || serverEntities.length === 0) {
-      console.log('ℹ️ No server entities to merge');
+      debugLog('ℹ️ No server entities to merge');
       return of(true);
     }
 
-    console.log(
+    debugLog(
       `🔀 Merging ${serverEntities.length} entities with local data...`
     );
 
@@ -405,7 +406,7 @@ export class SyncService {
 
     // Merge expenses
     if (expenseEntities.length > 0) {
-      console.log(`💰 Merging ${expenseEntities.length} expenses...`);
+      debugLog(`💰 Merging ${expenseEntities.length} expenses...`);
       mergeObservables.push(
         this.offlineStorage.mergeEntities('expense', expenseEntities)
       );
@@ -413,7 +414,7 @@ export class SyncService {
 
     // Merge categories
     if (categoryEntities.length > 0) {
-      console.log(`📁 Merging ${categoryEntities.length} categories...`);
+      debugLog(`📁 Merging ${categoryEntities.length} categories...`);
       mergeObservables.push(
         this.offlineStorage.mergeEntities('category', categoryEntities)
       );
@@ -427,7 +428,7 @@ export class SyncService {
       Promise.all(mergeObservables.map((obs) => obs.toPromise()))
     ).pipe(
       map(() => {
-        console.log('✅ Merge completed');
+        debugLog('✅ Merge completed');
         return true;
       }),
       catchError((error) => {
@@ -443,12 +444,12 @@ export class SyncService {
    * 📤 Push التغييرات المحلية إلى السيرفر
    */
   private pushLocalChanges(): Observable<boolean> {
-    console.log('📤 Checking for pending local changes...');
+    debugLog('📤 Checking for pending local changes...');
 
     return this.offlineStorage.getPendingOperations().pipe(
       switchMap((operations) => {
         if (!operations || operations.length === 0) {
-          console.log('ℹ️ No pending operations to push');
+          debugLog('ℹ️ No pending operations to push');
           return of(true);
         }
 
@@ -458,7 +459,7 @@ export class SyncService {
               new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           )
           .slice(0, this.syncConfig.batchSize);
-        console.log(`📤 Pushing ${batch.length} pending operations...`);
+        debugLog(`📤 Pushing ${batch.length} pending operations...`);
 
         // Convert operations to entities format
         const entities = batch.map((op) => ({
@@ -523,7 +524,7 @@ export class SyncService {
             ).pipe(map(() => result))
           ),
           tap((result) => {
-            console.log('✅ Push result:', result);
+            debugLog('✅ Push result:', result);
 
             // Remove successful operations from queue
             if (result?.success) {
@@ -643,7 +644,7 @@ export class SyncService {
     // 💾 Persist lastSyncTime so it survives app restarts
     this.persistLastSyncTime(now);
 
-    console.log('✅ Sync completed at:', now);
+    debugLog('✅ Sync completed at:', now);
   }
 
   /**
@@ -667,7 +668,7 @@ export class SyncService {
         const lastSyncTime = new Date(stored);
         if (!isNaN(lastSyncTime.getTime())) {
           this.updateSyncMetadata({ lastSyncTime });
-          console.log('📂 Loaded lastSyncTime:', lastSyncTime);
+          debugLog('📂 Loaded lastSyncTime:', lastSyncTime);
         }
       }
     } catch (e) {
@@ -681,7 +682,7 @@ export class SyncService {
    * 🔄 Force Sync (Manual)
    */
   forceSync(): Observable<boolean> {
-    console.log('🔄 Force sync requested');
+    debugLog('🔄 Force sync requested');
     return this.syncAll();
   }
 
@@ -691,7 +692,7 @@ export class SyncService {
    * حل التعارض
    */
   resolveConflict(resolution: any): Observable<boolean> {
-    console.log('🔧 Resolving conflict:', resolution);
+    debugLog('🔧 Resolving conflict:', resolution);
 
     if (!this.isOnline) {
       console.warn('⚠️ Cannot resolve conflict while offline');
@@ -708,7 +709,7 @@ export class SyncService {
       })
       .pipe(
         switchMap((result) => {
-          console.log('✅ Conflict resolved:', result);
+          debugLog('✅ Conflict resolved:', result);
           const resolved = result?.data || result?.result || result;
           if (!resolved?.entity || !resolved?.conflictId)
             throw new Error('SYNC_RESOLUTION_MISSING_RESULT');
@@ -750,7 +751,7 @@ export class SyncService {
 
     return this.apiService.get<any[]>('/sync/conflicts').pipe(
       tap((conflicts) => {
-        console.log(`📋 Fetched ${conflicts.length} conflicts`);
+        debugLog(`📋 Fetched ${conflicts.length} conflicts`);
         this.updateSyncMetadata({ conflictCount: conflicts.length });
       }),
       catchError((error) => {
@@ -779,7 +780,7 @@ export class SyncService {
     );
     localStorage.setItem('sync_config', JSON.stringify(this.syncConfig));
     this.initializeAutoSync();
-    console.log('⚙️ Sync config updated:', this.syncConfig);
+    debugLog('⚙️ Sync config updated:', this.syncConfig);
   }
 
   getConfig(): SyncConfig {
