@@ -1015,7 +1015,17 @@
     "UNKNOWN_PLAN": "Unknown Plan",
     "ONGOING": "Ongoing",
     "UPGRADE_UNAVAILABLE": "Paid plans are not available yet. Everything else in the app stays free.",
-    "COMING_SOON": "Coming soon"
+    "COMING_SOON": "Coming soon",
+    "SUBSCRIBE_MONTHLY": "Monthly",
+    "SUBSCRIBE_YEARLY": "Yearly",
+    "RESTORE_PURCHASES": "Restore purchases",
+    "RESTORE_DONE": "Your subscription was restored.",
+    "RESTORE_NONE": "No active subscription was found for this account.",
+    "RESTORE_FAILED": "Could not restore purchases. Check your connection and try again.",
+    "MANAGE_SUBSCRIPTION": "Manage in Google Play",
+    "PURCHASE_PENDING": "Thanks! Your purchase is being confirmed. Your plan will update in a moment.",
+    "PURCHASE_FAILED": "The purchase did not go through. You were not charged.",
+    "STORE_PRICE_NOTE": "Prices are shown by Google Play in your local currency."
   },
   "PLAN_FEATURES": {
     "CATEGORY_CREATE": "Create categories",

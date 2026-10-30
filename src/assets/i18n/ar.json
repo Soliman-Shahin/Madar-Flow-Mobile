@@ -1016,7 +1016,17 @@
     "UNKNOWN_PLAN": "خطة غير معروفة",
     "ONGOING": "مستمر",
     "UPGRADE_UNAVAILABLE": "الباقات المدفوعة مش متاحة لسه. باقي التطبيق يفضل مجاني.",
-    "COMING_SOON": "قريبًا"
+    "COMING_SOON": "قريبًا",
+    "SUBSCRIBE_MONTHLY": "شهري",
+    "SUBSCRIBE_YEARLY": "سنوي",
+    "RESTORE_PURCHASES": "استعادة المشتريات",
+    "RESTORE_DONE": "اشتراكك اتسترجع.",
+    "RESTORE_NONE": "مفيش اشتراك فعّال للحساب ده.",
+    "RESTORE_FAILED": "ماقدرناش نسترجع المشتريات. اتأكد من الاتصال وجرب تاني.",
+    "MANAGE_SUBSCRIPTION": "إدارة الاشتراك في Google Play",
+    "PURCHASE_PENDING": "شكرًا! بنأكد عملية الشراء، والباقة هتتحدث كمان لحظات.",
+    "PURCHASE_FAILED": "عملية الشراء ماتمتش، ومتخصمش منك أي مبلغ.",
+    "STORE_PRICE_NOTE": "الأسعار معروضة من Google Play بعملتك المحلية."
   },
   "PLAN_FEATURES": {
     "CATEGORY_CREATE": "إنشاء الأقسام",

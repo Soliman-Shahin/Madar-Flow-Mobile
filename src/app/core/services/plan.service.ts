@@ -109,6 +109,15 @@ export class PlanService {
     }
   }
 
+  /**
+   * Asks the server to re-check the user's store purchases with RevenueCat
+   * ("restore purchases"). It can only grant a plan, never remove one.
+   */
+  async syncPurchases(): Promise<void> {
+    await firstValueFrom(this.http.post(`${this.apiUrl}/billing/sync`, {}));
+    invalidateHttpCache('/plans/me');
+  }
+
   // ==================== Permission Checks ====================
 
   /**

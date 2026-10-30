@@ -83,8 +83,22 @@
         *ngFor="let plan of availablePlans"
         [plan]="plan"
         [isCurrentPlan]="isCurrentPlan(plan)"
+        [storeMode]="storeMode"
+        [storePackages]="packagesFor(plan)"
         (upgrade)="onUpgrade(plan)"
+        (purchase)="onPurchase(plan, $event)"
       ></app-plan-card>
+    </div>
+
+    <!-- Store actions: restore and manage -->
+    <div class="mf-sub__store-actions" *ngIf="storeMode">
+      <ion-button fill="clear" size="small" [disabled]="isChangingPlan" (click)="onRestore()">
+        {{ 'SUBSCRIPTION.RESTORE_PURCHASES' | translate }}
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="manageSubscription()">
+        {{ 'SUBSCRIPTION.MANAGE_SUBSCRIPTION' | translate }}
+      </ion-button>
+      <p class="mf-sub__store-note">{{ 'SUBSCRIPTION.STORE_PRICE_NOTE' | translate }}</p>
     </div>
 
     <!-- Empty State -->
