@@ -457,12 +457,6 @@ ion-button {
 [dir="rtl"] body {
   --ion-font-family: var(--mf-font-sans) !important;
 }
-
-// --- Toast Styles ---
-.toast-success {
-  --background: var(--ion-color-success);
-  --color: var(--ion-color-success-contrast);
-}
 .toast-error {
   --background: var(--ion-color-danger);
   --color: var(--ion-color-danger-contrast);

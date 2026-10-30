@@ -90,22 +90,6 @@
   margin-top: var(--ew-space-2);
 }
 
-.slice-label {
-  font-size: 14px;
-  font-weight: bold;
-  fill: white;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--ew-transition-duration-fast) ease-in-out;
-}
-
-.pie-slice:hover + .slice-label,
-.pie-slice:focus-visible + .slice-label {
-  opacity: 1;
-}
-
 .chart-legend {
   display: flex;
   flex-wrap: wrap;

@@ -109,7 +109,6 @@ ion-skeleton-text {
 :host-context(ion-content) {
   --ew-content-radius: 16px;
 }
-:host-context(.app-dark),
 :host-context(body.dark) {
   --ew-content-skeleton: rgba(255, 255, 255, 0.1);
 }

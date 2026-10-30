@@ -165,29 +165,7 @@
   height: 100%;
   background: var(--ion-color-primary);
 }
-.stats-grid {
-  display: grid;
-  gap: 0;
-}
-.stat-box {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding-block: 8px;
-}
 .stat-icon {
-  color: var(--ew-wallet-muted);
-}
-.stat-data {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  min-width: 0;
-}
-.stat-lbl {
-  font-size: 12px;
   color: var(--ew-wallet-muted);
 }
 .stat-val {
@@ -484,10 +462,6 @@
   letter-spacing: 0.02em;
 }
 
-.stat-unavailable {
-  color: var(--ew-wallet-muted);
-}
-
 .form-actions ion-button ion-spinner {
   margin-inline-end: 8px;
 }
@@ -525,14 +499,6 @@
 .completion-strip {
   border: 0;
   padding: 0 4px;
-}
-.stats-grid {
-  background: var(--ew-wallet-inset);
-  border-radius: 14px;
-  padding: 6px 14px;
-}
-.stat-box + .stat-box {
-  border-top: 1px solid var(--ew-wallet-line);
 }
 .stat-val {
   unicode-bidi: isolate;
@@ -589,10 +555,6 @@
   }
   .premium-card {
     padding: 14px;
-  }
-  .stat-data {
-    flex-wrap: wrap;
-    gap: 4px 10px;
   }
   .stat-val {
     margin-inline-start: auto;

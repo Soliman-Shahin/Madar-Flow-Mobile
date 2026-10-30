@@ -16,25 +16,6 @@ ion-content {
   --background: var(--ion-background-color);
 }
 
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 16px;
-
-  ion-spinner {
-    width: 48px;
-    height: 48px;
-  }
-
-  p {
-    font-size: 14px;
-    opacity: 0.6;
-  }
-}
-
 .content-loading-state {
   padding: 24px 16px;
 }
@@ -42,30 +23,6 @@ ion-content {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.header-section {
-  padding: 32px 24px;
-  text-align: center;
-  background: linear-gradient(
-    135deg,
-    var(--ion-color-primary-tint) 0%,
-    var(--ion-background-color) 100%
-  );
-
-  h1 {
-    font-size: 32px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    color: var(--ion-color-primary);
-  }
-
-  p {
-    font-size: 16px;
-    opacity: 0.7;
-    max-width: 600px;
-    margin: 0 auto;
-  }
 }
 
 .alert-card {
@@ -153,13 +110,6 @@ ion-content {
 
 // Dark mode
 @media (prefers-color-scheme: dark) {
-  .header-section {
-    background: linear-gradient(
-      135deg,
-      rgba(var(--ion-color-primary-rgb), 0.2) 0%,
-      var(--ion-background-color) 100%
-    );
-  }
 
   .empty-state {
     h3 {
@@ -186,21 +136,6 @@ ion-content {
 }
 
 :host {
-  .header-section {
-    background: none;
-    text-align: start;
-    padding: 20px 16px;
-  }
-  .header-section h1 {
-    font-size: 24px;
-    color: var(--ion-text-color);
-    margin: 0 0 8px;
-  }
-  .header-section p {
-    font-size: 14px;
-    opacity: 1;
-    color: var(--ew-wallet-muted);
-  }
   .plans-grid {
     padding-top: 0;
   }
@@ -222,10 +157,6 @@ ion-content {
   .empty-state p {
     color: var(--ew-wallet-muted);
     opacity: 1;
-  }
-  .loading-container {
-    height: auto;
-    min-height: 180px;
   }
 }
 

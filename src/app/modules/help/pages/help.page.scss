@@ -91,10 +91,6 @@ ion-accordion:last-of-type ion-item.mf-help__q {
   --inner-border-width: 0;
 }
 
-ion-accordion.accordion-expanded ion-item.mf-help__q {
-  --inner-border-width: 0;
-}
-
 .mf-help__a {
   padding: 0 var(--mf-space-4) var(--mf-space-4);
   border-bottom: 1px solid var(--mf-separator);

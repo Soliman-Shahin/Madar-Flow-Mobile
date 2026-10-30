@@ -150,7 +150,8 @@
     "REPORTS": "التقارير",
     "SETTINGS": "إعدادات",
     "MAIN_MENU": "القائمة الرئيسية",
-    "TRANSACTIONS": "المعاملات"
+    "TRANSACTIONS": "المعاملات",
+    "CHARTS": "الرسوم البيانية"
   },
   "DASHBOARD": "الرئيسية",
   "TRANSACTIONS": {
@@ -183,7 +184,8 @@
     "UNTIL": "حتى",
     "TO": "إلى",
     "DATE_GROUP_TODAY": "اليوم",
-    "DATE_GROUP_YESTERDAY": "أمس"
+    "DATE_GROUP_YESTERDAY": "أمس",
+    "UNTITLED": "معاملة"
   },
   "ABOUT": "حول التطبيق",
   "LOGIN": "تسجيل الدخول",
@@ -251,7 +253,8 @@
     "ERRORS": {
       "LOAD_DATA": "فشل تحميل البيانات. يرجى المحاولة مرة أخرى.",
       "DEFAULT": "حدث خطأ غير متوقع."
-    }
+    },
+    "VERIFIED": "موثّق"
   },
   "CATEGORY": {
     "ADD": "إضافة قسم جديد",
@@ -273,7 +276,8 @@
     "TITLE": "عنوان الفئة",
     "TITLE_PLACEHOLDER": "أدخل عنوان الفئة",
     "SELECT_COLOR": "اختر لونًا للقسم",
-    "SELECT_ICON": "اختر أيقونة للقسم"
+    "SELECT_ICON": "اختر أيقونة للقسم",
+    "CUSTOM_COLOR": "لون مخصص"
   },
   "CREATE": "إنشاء",
   "EXPENSE": {
@@ -422,7 +426,8 @@
     "TITLE": "الرسوم البيانية",
     "INCOME_VS_EXPENSE": "الدخل مقابل المصروفات",
     "EXPENSE_BY_CATEGORY": "المصروفات حسب الفئة",
-    "MONTHLY_EXPENSE_TREND": "اتجاه المصروفات الشهري"
+    "MONTHLY_EXPENSE_TREND": "اتجاه المصروفات الشهري",
+    "NO_DATA": "لا توجد بيانات للعرض"
   },
   "CATEGORIES": {
     "COUNT_ONE": "فئة واحدة",
@@ -437,7 +442,21 @@
     "EXPENSES": "المصروفات",
     "MISCELLANEOUS": "متفردة",
     "FOOD_AND_DRINK": "طعام و المشروبات",
-    "TRANSPORTATION": "نقل"
+    "TRANSPORTATION": "نقل",
+    "HEALTH_AND_BEAUTY": "الصحة والجمال",
+    "ENTERTAINMENT": "الترفيه",
+    "HOME_AND_DECOR": "المنزل والديكور",
+    "CLOTHES_AND_ACCESSORIES": "الملابس والإكسسوارات",
+    "EDUCATION": "التعليم",
+    "SERVICES": "الخدمات",
+    "TRAVEL": "السفر",
+    "WORK": "العمل",
+    "BILLS_PAYMENTS": "الفواتير والمدفوعات",
+    "CONTROLLED": "مصروفات مضبوطة",
+    "CREATE_CATEGORY": "إضافة فئة جديدة",
+    "ADD_SUBCATEGORY": "إضافة فئة فرعية",
+    "UPDATE_CATEGORY": "تحديث الفئة",
+    "UNCATEGORIZED": "غير مصنّف"
   },
   "FILTERS": {
     "TITLE": "الفلاتر",
@@ -465,7 +484,9 @@
     "PASSWORD_MISSING_LOWER": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل (a-z)",
     "PASSWORD_MISSING_SPECIAL": "يجب أن تحتوي كلمة المرور على حرف خاص واحد على الأقل",
     "PASSWORDS_DO_NOT_MATCH": "كلمات المرور غير متطابقة",
-    "WHITESPACE": "لا يمكن أن يحتوي هذا الحقل على مسافات بيضاء فقط"
+    "WHITESPACE": "لا يمكن أن يحتوي هذا الحقل على مسافات بيضاء فقط",
+    "MAX_LENGTH": "الحد الأقصى للطول {{max}} حرفًا",
+    "INVALID": "هذه القيمة غير صالحة"
   },
   "NO_CATEGORIES_FOUND": "لا توجد فئات",
   "NO_CATEGORIES_MESSAGE": "لم تقم بإنشاء أي فئات بعد. قم بإنشاء فئتك الأولى للبدء.",
@@ -559,7 +580,8 @@
     "SIGNUP_ERROR": "حدث خطأ أثناء إنشاء الحساب. يرجى المحاولة مرة أخرى.",
     "EMAIL_ALREADY_EXISTS": "هذا البريد الإلكتروني مسجل بالفعل. يمكنك تسجيل الدخول.",
     "INVALID_EMAIL": "عنوان البريد الإلكتروني غير صالح.",
-    "WEAK_PASSWORD": "كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى."
+    "WEAK_PASSWORD": "كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى.",
+    "AND": "و"
   },
   "PROFILE": {
     "UNSAVED": {
@@ -802,7 +824,8 @@
     "OFFLINE": "غير متصل",
     "BACKEND_CONNECTED": "متصل بالخادم",
     "BACKEND_UNREACHABLE": "الخادم غير متاح",
-    "NO_INTERNET": "لا يوجد اتصال بالإنترنت"
+    "NO_INTERNET": "لا يوجد اتصال بالإنترنت",
+    "CREATING_BACKUP": "جارٍ إنشاء النسخة الاحتياطية..."
   },
   "ERROR_CODES": {
     "AUTH_MISSING_OR_INVALID_HEADER": "رأس التوثيق مفقود أو غير صالح.",
@@ -1059,5 +1082,11 @@
   "A11Y": {
     "APP_LOGO": "شعار مدار فلو",
     "SELECT_DATE_RANGE": "اختر نطاقًا زمنيًا"
+  },
+  "PLAN_NAMES": {
+    "FREE": "المجانية",
+    "BASIC": "الأساسية",
+    "PRO": "الاحترافية",
+    "ENTERPRISE": "المؤسسات"
   }
 }
