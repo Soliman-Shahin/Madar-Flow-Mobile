@@ -564,6 +564,7 @@ export class HomePageComponent
   get displayUsername(): string {
     return (
       this.user?.['username'] ||
+      this.user?.['fullName'] ||
       this.translateService.instant('USER.DEFAULT_NAME')
     );
   }

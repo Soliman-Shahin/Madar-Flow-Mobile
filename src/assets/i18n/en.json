@@ -501,7 +501,7 @@
     "BACK_TO_LOGIN": "Back to Login",
     "RESET_INVALID": "This reset link is missing, invalid, or expired.",
     "RESET_SUCCESS": "Your password was reset successfully. You can now sign in.",
-    "PASSWORD_MISMATCH": "Passwords do not match.",
+    "PASSWORD_MISMATCH": "Passwords do not match",
     "DONT_HAVE_ACCOUNT": "Don't have an account?",
     "WELCOME_BACK": "Welcome back!",
     "SIGN_IN_TO_CONTINUE": "Sign in to continue to your account",
@@ -567,8 +567,7 @@
     "SIGNUP_ERROR": "An error occurred while creating your account. Please try again.",
     "EMAIL_ALREADY_EXISTS": "This email is already registered. Try signing in instead.",
     "INVALID_EMAIL": "The email address is invalid.",
-    "WEAK_PASSWORD": "Password is too weak. Please choose a stronger password.",
-    "PASSWORD_MISMATCH": "Passwords do not match"
+    "WEAK_PASSWORD": "Password is too weak. Please choose a stronger password."
   },
   "PROFILE": {
     "UNSAVED": {
@@ -941,6 +940,7 @@
   },
   "SUBSCRIPTION": {
     "TITLE": "Subscription Plans",
+    "PAGE_TITLE": "Subscription",
     "SUBTITLE": "Choose the plan that fits your needs",
     "CURRENT_PLAN": "Current Plan",
     "UPGRADE": "Upgrade",

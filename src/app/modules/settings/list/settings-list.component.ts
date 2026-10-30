@@ -41,6 +41,7 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     return (
       this.profile?.username ||
       this.currentUser?.username ||
+      this.currentUser?.fullName ||
       this.translateService.instant('MOBILE_UI.ACCOUNT')
     );
   }
@@ -54,11 +55,12 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
     const source = (
       this.profile?.username ||
       this.currentUser?.username ||
+      this.currentUser?.fullName ||
       this.displayEmail ||
       ''
     ).trim();
     if (!source) return '';
-    const words = source.split(/[s@._-]+/).filter(Boolean);
+    const words = source.split(/[\s@._-]+/).filter(Boolean);
     const letters =
       words.length > 1 ? words[0][0] + words[1][0] : source.slice(0, 1);
     return letters.toUpperCase();

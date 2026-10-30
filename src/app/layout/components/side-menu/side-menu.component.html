@@ -34,7 +34,9 @@
       </div>
       <div class="user-details">
         <h3>
-          {{ vm.profile.user?.username || ("USER.DEFAULT_NAME" | translate) }}
+          {{ vm.profile.user?.username ||
+          vm.profile.user?.fullName ||
+          ("USER.DEFAULT_NAME" | translate) }}
         </h3>
         <p>
           {{ vm.profile.user?.email || "" }}
