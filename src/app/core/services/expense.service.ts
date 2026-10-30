@@ -1,3 +1,4 @@
+import { TelemetryService } from 'src/app/core/services/telemetry.service';
 import { Injectable, inject } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable, Subject, throwError, from, of } from 'rxjs';
@@ -27,6 +28,7 @@ export class ExpenseService {
     Observable<{ income: number; expenses: number }>
   >();
 
+  private readonly telemetry = inject(TelemetryService);
   private apiService = inject(ApiService);
   private auth = inject(AuthService);
   private offlineStorage = inject(OfflineStorageService);
@@ -334,6 +336,12 @@ export class ExpenseService {
   }
 
   createExpense(expense: Partial<Expense>): Observable<Expense> {
+    return this.createExpenseInternal(expense).pipe(
+      tap(() => this.telemetry.track('transaction_added'))
+    );
+  }
+
+  private createExpenseInternal(expense: Partial<Expense>): Observable<Expense> {
     const isOnline = this.connectionService.isOnline();
 
     // If it's an offline category, we cannot send it directly to the server!

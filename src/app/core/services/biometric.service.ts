@@ -9,6 +9,10 @@ import { StorageService } from '../../modules/auth/services/storage.service';
 })
 export class BiometricService {
   private readonly BIOMETRIC_ENABLED_KEY = 'biometric_enabled';
+  private readonly LOCK_TIMEOUT_KEY = 'biometric_lock_timeout_ms';
+  /** Allowed idle periods before the app locks again, in milliseconds. */
+  static readonly LOCK_TIMEOUT_OPTIONS = [0, 30_000, 60_000, 300_000] as const;
+  static readonly DEFAULT_LOCK_TIMEOUT = 30_000;
   public lastBiometricTime = 0;
 
   private platform = inject(Platform);
@@ -21,6 +25,27 @@ export class BiometricService {
 
   async setEnabled(enabled: boolean): Promise<void> {
     this.storage.set(this.BIOMETRIC_ENABLED_KEY, enabled);
+  }
+
+  /**
+   * How long the app may stay in the background before it asks for the
+   * biometric again. 0 locks immediately. Unknown stored values fall back to
+   * the default so a corrupted setting can never disable the lock.
+   */
+  get lockTimeoutMs(): number {
+    const stored = Number(this.storage.get(this.LOCK_TIMEOUT_KEY));
+    return (BiometricService.LOCK_TIMEOUT_OPTIONS as readonly number[]).includes(
+      stored
+    ) && this.storage.get(this.LOCK_TIMEOUT_KEY) !== null
+      ? stored
+      : BiometricService.DEFAULT_LOCK_TIMEOUT;
+  }
+
+  setLockTimeoutMs(ms: number): void {
+    if (!(BiometricService.LOCK_TIMEOUT_OPTIONS as readonly number[]).includes(ms)) {
+      return;
+    }
+    this.storage.set(this.LOCK_TIMEOUT_KEY, ms);
   }
 
   async isAvailable(): Promise<boolean> {

@@ -443,7 +443,13 @@
     "DELETE_ACCOUNT_FAILED": "Account deletion failed. Please try again.",
     "DELETE_ACCOUNT_WRONG_PASSWORD": "The password is incorrect.",
     "DELETE_ACCOUNT_STAFF": "Staff accounts cannot be deleted from the app. Contact an administrator.",
-    "DELETE_ACCOUNT_OFFLINE": "You need an internet connection to delete your account."
+    "DELETE_ACCOUNT_OFFLINE": "You need an internet connection to delete your account.",
+    "LOCK_TIMEOUT": "Auto-lock",
+    "LOCK_TIMEOUT_DESC": "Ask for biometrics again after the app has been in the background",
+    "LOCK_TIMEOUT_IMMEDIATELY": "Immediately",
+    "LOCK_TIMEOUT_30S": "After 30 seconds",
+    "LOCK_TIMEOUT_1M": "After 1 minute",
+    "LOCK_TIMEOUT_5M": "After 5 minutes"
   },
   "BUDGET": {
     "TITLE": "Budget"
@@ -1127,5 +1133,14 @@
     "COL_AMOUNT": "Amount",
     "TYPE_INCOME": "Income",
     "TYPE_EXPENSE": "Expenses"
+  "TELEMETRY": {
+    "SECTION": "Privacy",
+    "TOGGLE": "Share anonymous usage data",
+    "TOGGLE_DESC": "Helps us see which features are used so we can improve the app",
+    "NOTE": "Off by default. Only simple events such as \"app opened\" or \"transaction added\" are sent, with a random ID. Never your amounts, notes, categories, email or name. Turning this off deletes what was sent.",
+    "PROMPT_TITLE": "Help improve Madar Flow?",
+    "PROMPT_MESSAGE": "Share anonymous usage data? We only count simple events like \"app opened\" or \"transaction added\", with a random ID that is not linked to your account. We never send your amounts, notes or personal details. You can change this any time in Settings > Privacy.",
+    "PROMPT_ALLOW": "Share",
+    "PROMPT_DECLINE": "Not now"
   }
 }
