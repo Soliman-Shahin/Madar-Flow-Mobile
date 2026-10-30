@@ -39,8 +39,8 @@ const jwt = (seconds: number) =>
   'header.' +
   btoa(JSON.stringify({ exp: Date.now() / 1000 + seconds })) +
   '.signature';
-const endpoint = environment.apiUrl + '/expenses';
-const refreshUrl = environment.apiUrl + '/user/refresh-token';
+const endpoint = environment.nativeApiUrl + '/expenses';
+const refreshUrl = environment.nativeApiUrl + '/user/refresh-token';
 
 @Component({
   standalone: true,
@@ -57,7 +57,27 @@ class LoginHarness {
   form!: FormGroup;
 }
 
+/** Native persistence goes through SecureStorageService, whose real storage loads a lazy
+ *  plugin chunk that never resolves under Karma. Keep it in memory for every instance. */
+let savedSecure: string | null = null;
+function mockSecureStorage() {
+  savedSecure = null;
+  spyOn(SecureStorageService.prototype, 'write').and.callFake(async (value) => {
+    savedSecure = value;
+  });
+  spyOn(SecureStorageService.prototype, 'read').and.callFake(async () => savedSecure);
+  spyOn(SecureStorageService.prototype, 'clear').and.callFake(async () => {
+    savedSecure = null;
+  });
+}
+
 describe('AUTH.1 consumer sessions', () => {
+  // These cases pin the native transport contract (refresh token in the body, persisted
+  // session). The browser uses an HttpOnly cookie instead and is covered separately.
+  beforeEach(() => {
+    spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
+    mockSecureStorage();
+  });
   let auth: AuthService;
   let tokens: TokenService;
   let http: HttpClient;
@@ -246,7 +266,7 @@ describe('AUTH.1 consumer sessions', () => {
     seed();
     for (const url of [
       'https://example.test/data',
-      environment.apiUrl + '-other/data',
+      environment.nativeApiUrl + '-other/data',
     ]) {
       http.get(url).subscribe();
       const req = requests.expectOne(url);
@@ -269,7 +289,7 @@ describe('AUTH.1 consumer sessions', () => {
   }));
   it('login persists credentials, never the raw password', fakeAsync(() => {
     auth.login(user.email, 'synthetic-password-never-save', true).subscribe();
-    requests.expectOne(environment.apiUrl + '/user/login').flush({
+    requests.expectOne(environment.nativeApiUrl + '/user/login').flush({
       success: true,
       data: {
         user: { ...user, password: 'synthetic-password-never-save' },
@@ -287,7 +307,7 @@ describe('AUTH.1 consumer sessions', () => {
     seed(3600, true);
     auth.logout().subscribe();
     requests
-      .expectOne(environment.apiUrl + '/user/logout')
+      .expectOne(environment.nativeApiUrl + '/user/logout')
       .flush({}, { status: 503, statusText: 'Unavailable' });
     flushMicrotasks();
     expect(tokens.getRefreshToken()).toBeNull();
