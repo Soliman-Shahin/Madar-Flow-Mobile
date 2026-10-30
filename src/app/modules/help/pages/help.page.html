@@ -14,9 +14,11 @@
       <p>{{ "HELP_PAGE.SUPPORT_SUBTITLE" | translate }}</p>
     </header>
 
-    <!-- Contact -->
+    <!-- Contact (dashboard-managed; hidden until configured) -->
+    @if (support().hasContact) {
     <h2 class="mf-help__label">{{ "LEDGER.CONTACT" | translate }}</h2>
     <ion-list class="mf-help__group" lines="none">
+      @if (support().email) {
       <ion-item button detail="true" (click)="openEmail()" class="mf-help__row">
         <span
           class="mf-help__mark"
@@ -31,6 +33,8 @@
           <p dir="ltr">{{ support().email }}</p>
         </ion-label>
       </ion-item>
+      }
+      @if (support().whatsapp) {
       <ion-item
         button
         detail="true"
@@ -50,6 +54,8 @@
           <p>{{ support().hours ?? ("HELP_PAGE.REPLY_FAST" | translate) }}</p>
         </ion-label>
       </ion-item>
+      }
+      @if (support().website) {
       <ion-item
         button
         detail="true"
@@ -69,6 +75,7 @@
           <p dir="ltr">{{ support().websiteLabel }}</p>
         </ion-label>
       </ion-item>
+      }
       @for (link of support().links; track link.url) {
       <ion-item
         button
@@ -90,6 +97,7 @@
       </ion-item>
       }
     </ion-list>
+    }
 
     <!-- FAQ -->
     <h2 class="mf-help__label">{{ "HELP_PAGE.FAQ_TITLE" | translate }}</h2>

@@ -10,13 +10,6 @@ import {
   pickLocalized,
 } from 'src/app/core/services/app-settings.service';
 
-/** Built-in contact values, used until the dashboard configures support. */
-const DEFAULT_SUPPORT = {
-  email: 'support@expenses-wallet.com',
-  whatsapp: '201234567890',
-  website: 'https://expenses-wallet.com',
-};
-
 @Component({
   selector: 'app-help-page',
   templateUrl: './help.page.html',
@@ -32,21 +25,30 @@ export class HelpPageComponent extends BaseComponent {
     initialValue: this.currentLang,
   });
 
-  /** Dashboard values when configured, otherwise the built-in defaults. */
+  /**
+   * Dashboard-managed support details. Nothing is invented: a contact row is
+   * shown only after it is configured in Admin > Settings > App content.
+   */
   readonly support = computed(() => {
     const remote = this.appSettings.support();
     const lang = this.lang();
-    const website = remote?.website ?? DEFAULT_SUPPORT.website;
+    const website = remote?.website ?? null;
+    const email = remote?.email ?? null;
+    const whatsapp = remote?.whatsapp ?? null;
+    const links = (remote?.links ?? []).map((link) => ({
+      url: link.url,
+      label: pickLocalized(link.label, lang) ?? new URL(link.url).hostname,
+    }));
     return {
-      email: remote?.email ?? DEFAULT_SUPPORT.email,
-      whatsapp: remote?.whatsapp ?? DEFAULT_SUPPORT.whatsapp,
+      email,
+      whatsapp,
       website,
-      websiteLabel: website.replace(/^https:\/\//, '').replace(/\/$/, ''),
+      websiteLabel: website
+        ? website.replace(/^https:\/\//, '').replace(/\/$/, '')
+        : '',
+      hasContact: !!(email || whatsapp || website || links.length),
       hours: pickLocalized(remote?.hours, lang),
-      links: (remote?.links ?? []).map((link) => ({
-        url: link.url,
-        label: pickLocalized(link.label, lang) ?? new URL(link.url).hostname,
-      })),
+      links,
     };
   });
 
@@ -75,15 +77,18 @@ export class HelpPageComponent extends BaseComponent {
   }
 
   openEmail() {
-    window.location.href = `mailto:${this.support().email}`;
+    const email = this.support().email;
+    if (email) window.location.href = `mailto:${email}`;
   }
 
   openWhatsApp() {
-    window.open(`https://wa.me/${this.support().whatsapp}`, '_blank', 'noopener');
+    const whatsapp = this.support().whatsapp;
+    if (whatsapp) window.open(`https://wa.me/${whatsapp}`, '_blank', 'noopener');
   }
 
   openWebsite() {
-    window.open(this.support().website, '_blank', 'noopener');
+    const website = this.support().website;
+    if (website) window.open(website, '_blank', 'noopener');
   }
 
   openLink(url: string) {
