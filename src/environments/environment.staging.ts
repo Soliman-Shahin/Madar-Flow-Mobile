@@ -9,7 +9,6 @@ export const environment = {
 
   // Google OAuth
   google: {
-    // TODO: replace with your real Web Client ID from Google Cloud Console (OAuth 2.0 Client IDs - type Web)
     webClientId:
       '353235771010-hrhbu0k5v93qbjqpuirdh4pcatb1sdvg.apps.googleusercontent.com',
   },
