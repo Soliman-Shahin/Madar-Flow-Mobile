@@ -63,13 +63,6 @@ app-home-page .dashboard {
   .balance-card {
     border-inline-start: 3px solid var(--ion-color-primary);
   }
-  .transactions-card {
-    padding: 16px 4px 4px;
-  }
-  .transactions-card app-section-header {
-    display: block;
-    padding-inline: 12px;
-  }
 }
 app-balance-card {
   .total-balance {
@@ -209,11 +202,6 @@ app-transactions-list
 app-home-page .custom-segment ion-segment-button,
 app-transactions-list .custom-segment ion-segment-button {
   --color-checked: var(--ion-color-primary);
-}
-
-ion-modal.expense-record-modal {
-  --height: min(480px, 90dvh);
-  --width: min(100%, 480px);
 }
 @media (max-width: 360px) {
   app-transactions-list .custom-segment ion-segment-button ion-icon {
