@@ -501,7 +501,7 @@
     "BACK_TO_LOGIN": "Back to Login",
     "RESET_INVALID": "This reset link is missing, invalid, or expired.",
     "RESET_SUCCESS": "Your password was reset successfully. You can now sign in.",
-    "PASSWORD_MISMATCH": "Passwords do not match.",
+    "PASSWORD_MISMATCH": "Passwords do not match",
     "DONT_HAVE_ACCOUNT": "Don't have an account?",
     "WELCOME_BACK": "Welcome back!",
     "SIGN_IN_TO_CONTINUE": "Sign in to continue to your account",
@@ -567,8 +567,7 @@
     "SIGNUP_ERROR": "An error occurred while creating your account. Please try again.",
     "EMAIL_ALREADY_EXISTS": "This email is already registered. Try signing in instead.",
     "INVALID_EMAIL": "The email address is invalid.",
-    "WEAK_PASSWORD": "Password is too weak. Please choose a stronger password.",
-    "PASSWORD_MISMATCH": "Passwords do not match"
+    "WEAK_PASSWORD": "Password is too weak. Please choose a stronger password."
   },
   "PROFILE": {
     "UNSAVED": {
@@ -1056,5 +1055,23 @@
     "MODERATOR": "Moderator",
     "ADMIN": "Admin",
     "SUPERADMIN": "Super Admin"
+  },
+  "GUARDS": {
+    "NO_PERMISSION": "You do not have permission to access this feature.",
+    "PERMISSION_CHECK_FAILED": "Unable to verify your permissions. Please try again.",
+    "PLAN_EXPIRED": "Your subscription has expired. Please renew to access this feature.",
+    "PLAN_REQUIRED": "This feature requires the {{required}} plan or higher. You are currently on {{current}}.",
+    "PLAN_CHECK_FAILED": "Unable to verify your plan. Please try again.",
+    "ROLE_REQUIRED": "This area requires the {{required}} role.",
+    "ROLE_REQUIRED_CURRENT": "This area requires the {{required}} role. You are currently {{current}}.",
+    "ROLE_CHECK_FAILED": "Unable to verify your role. Please try again."
+  },
+  "BIOMETRIC_PROMPT": {
+    "TITLE": "Authentication Required",
+    "SUBTITLE": "Log in with your biometric"
+  },
+  "A11Y": {
+    "APP_LOGO": "Madar Flow logo",
+    "SELECT_DATE_RANGE": "Select a date range"
   }
 }

@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { PlanService } from '../services/plan.service';
 import { PlanSlug, PLAN_WEIGHTS, isPlanSufficient, getPlanDisplayName } from '../../shared/models/plan.model';
@@ -21,6 +22,7 @@ export const planGuard: CanActivateFn = async (
   const planService = inject(PlanService);
   const router = inject(Router);
   const toastService = inject(ToastService);
+  const translate = inject(TranslateService);
 
   const requiredPlan = route.data['requiredPlan'] as PlanSlug | undefined;
 
@@ -39,7 +41,7 @@ export const planGuard: CanActivateFn = async (
       // Check if plan is expired
       if (myPlan.context.isExpired) {
         await toastService.show({
-          message: 'Your subscription has expired. Please renew to access this feature.',
+          message: 'GUARDS.PLAN_EXPIRED',
           color: 'warning',
           duration: 3000,
           position: 'bottom',
@@ -61,7 +63,10 @@ export const planGuard: CanActivateFn = async (
     const requiredPlanName = getPlanDisplayName(requiredPlan);
     
     await toastService.show({
-      message: `This feature requires the ${requiredPlanName} plan or higher. You are currently on ${currentPlanName}.`,
+      message: translate.instant('GUARDS.PLAN_REQUIRED', {
+        required: requiredPlanName,
+        current: currentPlanName,
+      }),
       color: 'warning',
       duration: 3000,
       position: 'bottom',
@@ -78,7 +83,7 @@ export const planGuard: CanActivateFn = async (
   } catch (error) {
     console.error('Error in planGuard:', error);
     await toastService.show({
-      message: 'Unable to verify your plan. Please try again.',
+      message: 'GUARDS.PLAN_CHECK_FAILED',
       color: 'danger',
       duration: 3000,
       position: 'bottom',
