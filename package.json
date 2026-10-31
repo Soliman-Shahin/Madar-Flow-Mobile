@@ -20,7 +20,9 @@
     "serve:prod": "ng serve --configuration production",
     "analyze": "source-map-explorer \"dist/**/*.js\"",
     "update-onpush": "node update-onpush.js",
-    "postinstall": "node scripts/patch-google-auth.cjs"
+    "postinstall": "node scripts/patch-google-auth.cjs",
+    "e2e": "playwright test",
+    "e2e:report": "playwright show-report e2e-report"
   },
   "private": true,
   "dependencies": {
@@ -78,6 +80,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.1",
     "@ionic/angular-toolkit": "^11.0.1",
+    "@playwright/test": "^1.64.1",
     "@types/crypto-js": "^4.2.2",
     "@types/jasmine": "~5.1.15",
     "@typescript-eslint/eslint-plugin": "8.62.0",

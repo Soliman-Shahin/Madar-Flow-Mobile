@@ -161,3 +161,8 @@ src/environments/environment.*.ts
 /android/XmlHighlighting.xml
 /android/XmlUnusedNamespaceDeclaration.xml
 /android/unused.xml
+
+# Playwright e2e output
+/e2e-report
+/e2e-results
+/test-results
