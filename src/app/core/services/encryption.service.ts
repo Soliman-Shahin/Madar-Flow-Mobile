@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+// Only AES + UTF-8 are used: importing these modules (not the whole library) keeps ~100 kB out of the bundle.
+import AES from 'crypto-js/aes';
+import Utf8 from 'crypto-js/enc-utf8';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -16,7 +18,7 @@ export class EncryptionService {
   encrypt(data: any, key?: string): string {
     if (!data) return '';
     try {
-      return CryptoJS.AES.encrypt(
+      return AES.encrypt(
         JSON.stringify(data),
         key || this.TRANSPORT_KEY
       ).toString();
@@ -29,8 +31,8 @@ export class EncryptionService {
   decrypt(ciphertext: string, key?: string, isObject: boolean = true): any {
     if (!ciphertext) return null;
     try {
-      const bytes = CryptoJS.AES.decrypt(ciphertext, key || this.TRANSPORT_KEY);
-      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      const bytes = AES.decrypt(ciphertext, key || this.TRANSPORT_KEY);
+      const decryptedData = bytes.toString(Utf8);
       return isObject ? JSON.parse(decryptedData) : decryptedData;
     } catch (e) {
       console.warn('Cryptographic operation failed');
