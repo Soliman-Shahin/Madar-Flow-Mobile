@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title desc">
+<title id="title">Madar Flow — MOBILE</title>
+<desc id="desc">Consumer app with a phone and ledger illustration.</desc>
+<defs><clipPath id="frame"><rect width="1280" height="360" rx="20"/></clipPath></defs>
+<g clip-path="url(#frame)" font-family="Segoe UI, Arial, sans-serif">
+<rect width="1280" height="360" fill="#081627"/>
+<path d="M784 0 V360 M808 0 V360 M0 319 H1280" stroke="#172d43"/>
+<circle cx="1010" cy="183" r="159" fill="none" stroke="#173450"/>
+<circle cx="1010" cy="183" r="188" fill="none" stroke="#122c44" stroke-dasharray="3 10"/>
+<rect x="56" y="48" width="28" height="3" fill="#3399ff"/>
+<text x="96" y="54" fill="#a5bcd3" font-size="12" font-weight="600" letter-spacing="2.4">ORBIT MADAR / MOBILE</text>
+<text x="56" y="148" fill="#f5f8ff" font-size="65" font-weight="700" letter-spacing="-2.5">Madar Flow<tspan fill="#3399ff">.</tspan></text>
+<text x="59" y="199" fill="#c1d3e5" font-size="26" letter-spacing="-.4">Your everyday money, in focus.</text>
+<text x="59" y="274" fill="#7998b6" font-size="11" font-weight="600" letter-spacing="1.5">ANGULAR  /  IONIC  /  CAPACITOR</text>
+<text x="59" y="343" fill="#6f8ba6" font-size="10" letter-spacing="2">ONE PLATFORM. THREE CONNECTED EXPERIENCES.</text>
+<text x="1224" y="54" fill="#7998b6" text-anchor="end" font-size="12" letter-spacing="2">01 / 03</text>
+<rect x="928" y="57" width="150" height="246" rx="25" fill="#10243b" stroke="#4a79a7" stroke-width="2"/>
+<rect x="940" y="69" width="126" height="222" rx="16" fill="#0b192b"/>
+<rect x="977" y="77" width="52" height="5" rx="2.5" fill="#446580"/>
+<text x="956" y="114" fill="#9cb4cc" font-size="10" letter-spacing="1">MY LEDGER</text>
+<rect x="956" y="129" width="83" height="10" rx="3" fill="#e2ecf8"/>
+<rect x="956" y="147" width="53" height="5" rx="2" fill="#536f8c"/>
+<path d="M956 193 L973 184 L990 190 L1008 170 L1025 175 L1048 159" fill="none" stroke="#58b0ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M956 216 H1048 M956 236 H1048 M956 256 H1012" stroke="#2b4561" stroke-width="7" stroke-linecap="round"/>
+<rect x="850" y="197" width="116" height="65" rx="10" fill="#18344e" stroke="#3b6083"/>
+<circle cx="870" cy="218" r="5" fill="#58b0ff"/>
+<path d="M884 217 H945 M867 240 H927" stroke="#9cb4cc" stroke-width="5" stroke-linecap="round"/>
+<circle cx="1117" cy="116" r="21" fill="#123456" stroke="#3399ff"/>
+<path d="M1109 116 L1115 122 L1126 110" fill="none" stroke="#a7d6ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
