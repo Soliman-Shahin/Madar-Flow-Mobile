@@ -51,7 +51,7 @@
 
       <div class="mf-auth__row">
         <label class="mf-auth__check">
-          <ion-checkbox [formControlName]="formFields.rememberMe"></ion-checkbox>
+          <ion-checkbox [formControlName]="formFields.rememberMe" [attr.aria-label]="'AUTH.REMEMBER_ME' | translate"></ion-checkbox>
           <span>{{ "AUTH.REMEMBER_ME" | translate }}</span>
         </label>
         <a routerLink="/auth/forgot-password" class="mf-auth__link">
