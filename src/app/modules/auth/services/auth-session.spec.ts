@@ -349,6 +349,14 @@ describe('AUTH.1 Login validity', () => {
     login.initForm();
     login.loading = { next: () => {} };
     login.errorMessage = { next: () => {} };
+    // Collaborators used by refreshBiometricSignInAvailability (the instance is
+    // created without DI, so they must be stubbed or the promise rejects unhandled).
+    login.platform = { ready: () => Promise.resolve('dom') };
+    login.biometricSignInService = {
+      isAvailable: () => Promise.resolve(false),
+      hasEnrollment: () => Promise.resolve(false),
+    };
+    login.cdr = { markForCheck: () => {} };
     login.ionViewWillEnter();
     expect(login.loginForm.value.email).toBe('saved@example.test');
     TestBed.configureTestingModule({

@@ -80,7 +80,7 @@ export class DataExportService {
       summary: summarize(rows),
       rows,
       rtl: lang.startsWith('ar'),
-      currency: this.profile.getProfile()?.currency || 'USD',
+      currency: this.profile.getProfile()?.currency || '',
       periodLabel: t(`EXPORT.PERIOD_${period.toUpperCase().replace(/-/g, '_')}`),
       generatedOn: new Date().toISOString().slice(0, 10),
       labels: {

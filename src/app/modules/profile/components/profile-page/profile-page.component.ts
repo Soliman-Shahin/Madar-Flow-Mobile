@@ -19,6 +19,7 @@ import {
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { ProfileService } from '../../services/profile.service';
+import { SUPPORTED_CURRENCIES } from 'src/app/shared/utils';
 import { UserProfile } from '../../models/profile.model';
 import { BehaviorSubject, combineLatest, takeUntil } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -127,21 +128,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
     authMetadata: this.authMetadata$,
   });
 
-  currencies: string[] = [
-    'USD',
-    'EUR',
-    'GBP',
-    'SAR',
-    'AED',
-    'KWD',
-    'QAR',
-    'BHD',
-    'OMR',
-    'EGP',
-    'MAD',
-    'DZD',
-    'TND',
-  ];
+  currencies: string[] = [...SUPPORTED_CURRENCIES];
   private nextDetailId = 0;
   private leaveConfirmationOpen = false;
 
@@ -162,7 +149,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
 
     this.salaryForm = this.fb.group({
       details: this.fb.array([], this.duplicateLabelsValidator.bind(this)),
-      currency: ['USD', [Validators.required]],
+      currency: ['', [Validators.required]],
     });
 
     const existing = this.profileService.getProfile();
@@ -181,7 +168,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
           this.personalForm.reset({}, { emitEvent: false });
           while (this.details.length) this.details.removeAt(0);
           this.details.push(this.createDetailGroup('Salary', 0));
-          this.salaryForm.patchValue({ currency: 'USD' }, { emitEvent: false });
+          this.salaryForm.patchValue({ currency: '' }, { emitEvent: false });
           this.personalForm.markAsPristine();
           this.salaryForm.markAsPristine();
           this.isPersonalFormDirty = false;

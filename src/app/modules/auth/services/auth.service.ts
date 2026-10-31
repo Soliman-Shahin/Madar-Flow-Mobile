@@ -254,11 +254,16 @@ export class AuthService {
         )
       : new HttpClient(this.httpBackend).post(fullUrl, payload, {
           withCredentials: true,
-          headers: {
-            'X-Auth-Transport': 'cookie',
-            'X-Auth-Cookie-Path': this.browserAuthCookiePath(),
-            'X-Auth-Persistence': persistent ? 'persistent' : 'session',
-          },
+          // Native builds keep the refresh token in the response body (stored on device);
+          // cookie transport is browser-only. Sending it from native makes the backend omit
+          // refreshToken and sign-in fails with "Invalid authentication response".
+          headers: Capacitor.isNativePlatform()
+            ? {}
+            : {
+                'X-Auth-Transport': 'cookie',
+                'X-Auth-Cookie-Path': this.browserAuthCookiePath(),
+                'X-Auth-Persistence': persistent ? 'persistent' : 'session',
+              },
         });
     return request.pipe(
       timeout(15000),

@@ -55,6 +55,9 @@
     "OFFLINE": "غير متصل",
     "SYNCING": "جارٍ المزامنة",
     "CURRENCY_UNAVAILABLE": "العملة غير متاحة",
+    "CURRENCY_PROMPT_TITLE": "اختر عملتك",
+    "CURRENCY_PROMPT_MESSAGE": "ستظهر المبالغ بهذه العملة. يمكنك تغييرها لاحقًا من ملفك الشخصي.",
+    "CURRENCY_PROMPT_LATER": "لاحقًا",
     "AMOUNT_ERROR": "أدخل مبلغًا لا يقل عن 0.01.",
     "RECORD": "سجل المعاملة",
     "EDIT": "تعديل المعاملة"

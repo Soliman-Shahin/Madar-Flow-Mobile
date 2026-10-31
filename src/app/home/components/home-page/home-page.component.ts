@@ -14,7 +14,9 @@ import { Observable, defer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
+import { ProfileService } from 'src/app/modules/profile/services/profile.service';
+import { SUPPORTED_CURRENCIES } from 'src/app/shared/utils';
 import { SyncStatusComponent } from 'src/app/shared/components/sync-status/sync-status.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -124,7 +126,7 @@ export class HomePageComponent
   // Keep simple fallbacks where needed
   percentageChange: number | null = null;
   selectedRange: DateRange = '1m';
-  currency: string = 'USD';
+  currency = '';
 
   // UI state
   activeTab: 'charts' | 'summary' = 'summary';
@@ -154,6 +156,10 @@ export class HomePageComponent
   // Privacy: hide amounts on the hero (remembered per device).
   amountsMasked = false;
   private readonly quickAdd = inject(QuickAddService);
+  private readonly alertController = inject(AlertController);
+  private readonly profileData = inject(ProfileService);
+  /** Asked at most once per app session; "Later" must not nag on every home visit. */
+  private static currencyPromptShown = false;
   private unregisterQuickAdd?: () => void;
 
   constructor() {
@@ -421,10 +427,10 @@ export class HomePageComponent
         salaryDetails,
         totalSalary,
         salaryBreakdown,
-        currency: data.profile?.currency || 'USD',
+        currency: data.profile?.currency || '',
         chartSummaries: this.buildChartSummaries(
           { ...data, salaryBreakdown },
-          data.profile?.currency || 'USD'
+          data.profile?.currency || ''
         ),
       };
     }),
@@ -572,12 +578,40 @@ export class HomePageComponent
   /**
    * Initializes the component with additional setup
    */
+  /** An account with no currency (new, or created before currencies were required) is asked once. */
+  private async promptForCurrency(profile: { currency?: string } | null): Promise<void> {
+    if (!profile || profile.currency || HomePageComponent.currencyPromptShown) return;
+    HomePageComponent.currencyPromptShown = true;
+    const alert = await this.alertController.create({
+      header: this.translateService.instant('MOBILE.CURRENCY_PROMPT_TITLE'),
+      message: this.translateService.instant('MOBILE.CURRENCY_PROMPT_MESSAGE'),
+      backdropDismiss: false,
+      inputs: SUPPORTED_CURRENCIES.map((code, index) => ({
+        type: 'radio' as const,
+        label: code,
+        value: code,
+        checked: index === 0,
+      })),
+      buttons: [
+        { text: this.translateService.instant('MOBILE.CURRENCY_PROMPT_LATER'), role: 'cancel' },
+        {
+          text: this.translateService.instant('COMMON.SAVE'),
+          handler: (code: string) => {
+            if (code) this.profileData.updateProfile({ currency: code }).subscribe();
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
   override ngOnInit(): void {
     super.ngOnInit();
     this.vm$.pipe(takeUntil(this.destroy$)).subscribe((vm) => {
       this.latestVm = vm;
       if (vm.profile) {
         this.hasRenderedHomeContent = true;
+        void this.promptForCurrency(vm.profile);
       }
       // vm.loading observes shared state; writing it back can replay stale
       // loading after logout/navigation clears the operation that owns it.

@@ -106,7 +106,7 @@ export class ProfileService {
       email: data.email ?? '',
       phone: data.phone ?? '',
       salary: salaryArr,
-      currency: data.currency ?? 'USD',
+      currency: data.currency ?? '', // no silent default: the user picks one (D-024)
       avatarUrl: data.avatarUrl ?? data.image ?? undefined,
       createdAt: data.createdAt ?? data.created_at ?? undefined,
     } as UserProfile;
@@ -147,7 +147,7 @@ export class ProfileService {
       email: '',
       phone: '',
       salary: [],
-      currency: 'USD',
+      currency: '',
     };
     const merged: UserProfile = { ...current, ...partial } as UserProfile;
     return this.saveProfile(merged);

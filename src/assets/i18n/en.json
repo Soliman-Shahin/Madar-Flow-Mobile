@@ -55,6 +55,9 @@
     "OFFLINE": "Offline",
     "SYNCING": "Syncing",
     "CURRENCY_UNAVAILABLE": "Currency unavailable",
+    "CURRENCY_PROMPT_TITLE": "Choose your currency",
+    "CURRENCY_PROMPT_MESSAGE": "Amounts are shown in this currency. You can change it later in your profile.",
+    "CURRENCY_PROMPT_LATER": "Later",
     "AMOUNT_ERROR": "Enter an amount of at least 0.01.",
     "RECORD": "Transaction record",
     "EDIT": "Edit record"
