@@ -11,7 +11,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   OnInit,
-  OnDestroy,
   inject,
   effect,
 } from '@angular/core';
@@ -22,7 +21,7 @@ import { Permission } from '../models/plan.model';
   selector: '[appHasPermission]',
   standalone: true,
 })
-export class HasPermissionDirective implements OnInit, OnDestroy {
+export class HasPermissionDirective implements OnInit {
   @Input() appHasPermission!: Permission | Permission[];
   @Input() appHasPermissionMode: 'all' | 'any' = 'all';
 
@@ -63,9 +62,5 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
         : this.permissionService.hasAnyPermission(this.appHasPermission);
     }
     return this.permissionService.hasPermission(this.appHasPermission);
-  }
-
-  ngOnDestroy(): void {
-    // Effect cleanup is automatic
   }
 }

@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { ICONS } from '../../models';
 
@@ -11,7 +11,7 @@ import { ICONS } from '../../models';
   styleUrls: ['./icon-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IconSelectorComponent implements OnInit {
+export class IconSelectorComponent {
   @Output() icon = new EventEmitter<string>();
   @Input() selectedIcon?: string;
   @Input() themeColor?: string;
@@ -19,8 +19,6 @@ export class IconSelectorComponent implements OnInit {
   icons: string[] = ICONS;
 
   constructor() {}
-
-  ngOnInit() {}
 
   selectIcon(icon: string) {
     this.selectedIcon = icon;

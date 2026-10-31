@@ -1,4 +1,4 @@
-<ion-app [class.no-tabs]="!(isLoggedIn$ | async)">
+<ion-app [class.no-tabs]="(isLoggedIn$ | async) !== true">
   <!-- Global Loader Overlay -->
   @if (isGlobalLoading$ | async) {
   <div class="custom-loader-overlay" aria-live="polite" aria-busy="true">

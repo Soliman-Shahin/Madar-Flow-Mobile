@@ -53,7 +53,7 @@ const refreshUrl = environment.nativeApiUrl + '/user/refresh-token';
   template:
     '<form [formGroup]="form"><app-ui-input [errorsAfterTouch]="true" formControlName="email" type="email"/><app-ui-input formControlName="password" type="password"/><button [disabled]="form.invalid">Login</button></form>',
 })
-class LoginHarness {
+class LoginHarnessComponent {
   form!: FormGroup;
 }
 
@@ -360,9 +360,9 @@ describe('AUTH.1 Login validity', () => {
     login.ionViewWillEnter();
     expect(login.loginForm.value.email).toBe('saved@example.test');
     TestBed.configureTestingModule({
-      imports: [LoginHarness, TranslateModule.forRoot()],
+      imports: [LoginHarnessComponent, TranslateModule.forRoot()],
     });
-    const fixture = TestBed.createComponent(LoginHarness);
+    const fixture = TestBed.createComponent(LoginHarnessComponent);
     fixture.componentInstance.form = login.loginForm;
     fixture.detectChanges();
     await fixture.whenStable();

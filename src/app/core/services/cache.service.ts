@@ -5,7 +5,7 @@
  * Used for caching permissions, plans, and other frequently accessed data.
  */
 
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, OnDestroy, signal, computed } from '@angular/core';
 import { debugLog } from 'src/app/shared/utils/debug-log.util';
 
 interface CacheEntry<T> {
@@ -24,7 +24,7 @@ interface CacheStats {
 @Injectable({
   providedIn: 'root',
 })
-export class CacheService {
+export class CacheService implements OnDestroy {
   private cache = new Map<string, CacheEntry<any>>();
   private cleanupInterval: any;
   private hits = 0;

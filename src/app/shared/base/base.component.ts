@@ -49,6 +49,8 @@ import { SessionLifecycleService } from 'src/app/core/services/session-lifecycle
   selector: '[appBaseComponent]',
   standalone: true,
 })
+// Shared base for many components; renaming it to "*Directive" would touch every subclass.
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseComponent<T = any> implements OnInit, OnDestroy {
   // Common properties
   protected language: string = 'en';

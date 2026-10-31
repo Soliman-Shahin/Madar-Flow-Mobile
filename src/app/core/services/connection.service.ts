@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, BehaviorSubject, fromEvent, merge, of } from 'rxjs';
 import { map, debounceTime, timeout } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +24,7 @@ export interface ConnectionStatus {
 @Injectable({
   providedIn: 'root',
 })
-export class ConnectionService {
+export class ConnectionService implements OnDestroy {
   private connectionStatusSubject = new BehaviorSubject<ConnectionStatus>({
     online: navigator.onLine,
     backendReachable: false,

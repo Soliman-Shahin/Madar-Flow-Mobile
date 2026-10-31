@@ -45,7 +45,7 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { environment } from 'src/environments/environment';
 
 @Component({ standalone: true, template: 'Login' })
-class LoginDestination {}
+class LoginDestinationComponent {}
 
 @Component({
   standalone: true,
@@ -57,7 +57,7 @@ class LoginDestination {}
     <button (click)="clicked = true">Login</button>
   `,
 })
-class LoaderView {
+class LoaderViewComponent {
   readonly loader = inject(LoadingService);
   clicked = false;
 }
@@ -116,8 +116,8 @@ describe('AUTH.1 post-QA regressions', () => {
       imports: [TranslateModule.forRoot()],
       providers: [
         provideRouter([
-          { path: 'home', component: LoginDestination },
-          { path: 'auth/login', component: LoginDestination },
+          { path: 'home', component: LoginDestinationComponent },
+          { path: 'auth/login', component: LoginDestinationComponent },
         ]),
         provideHttpClient(
           withInterceptors([errorInterceptor, authInterceptor])
@@ -185,7 +185,7 @@ describe('AUTH.1 post-QA regressions', () => {
         seed();
         void router.navigateByUrl('/home');
         flushMicrotasks();
-        const fixture = TestBed.createComponent(LoaderView);
+        const fixture = TestBed.createComponent(LoaderViewComponent);
         fixture.detectChanges();
         // Use Home's real subscription and the same delayed signal boundary as vm$.
         // Ionic may retain Home during navigation.
