@@ -793,7 +793,7 @@ export class HomePageComponent
       if (result.role === 'confirm' || result.role === 'delete') {
         this.refreshData();
       }
-    } catch (err: any) {
+    } catch (err) {
       this.handleError('COMMON.ERRORS.DEFAULT', err, true);
     } finally {
       this.isOpeningModal = false;

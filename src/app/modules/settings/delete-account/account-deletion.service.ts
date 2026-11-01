@@ -50,8 +50,8 @@ export class AccountDeletionService {
           { headers: new HttpHeaders({ 'X-Silent-Error': 'true' }) }
         )
       );
-    } catch (error: any) {
-      const status = error?.status;
+    } catch (error: unknown) {
+      const status = (error as { status?: number })?.status;
       if (status === 0) throw new AccountDeletionFailed('offline');
       if (status === 422) throw new AccountDeletionFailed('wrong-password');
       if (status === 403) throw new AccountDeletionFailed('staff');

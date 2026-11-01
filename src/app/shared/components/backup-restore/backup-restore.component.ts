@@ -452,14 +452,15 @@ export class BackupRestoreComponent extends BaseComponent implements OnInit {
           console.error(error);
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.setLoading(false);
+      const code = (error as { code?: string })?.code;
       const messageKey =
-        error?.code === 'BACKUP_OWNER_MISMATCH'
+        code === 'BACKUP_OWNER_MISMATCH'
           ? 'BACKUP.OWNER_MISMATCH'
-          : error?.code === 'BACKUP_OWNER_UNKNOWN'
+          : code === 'BACKUP_OWNER_UNKNOWN'
           ? 'BACKUP.OWNER_UNKNOWN'
-          : error?.code === 'BACKUP_INVALID'
+          : code === 'BACKUP_INVALID'
           ? 'BACKUP.INVALID_FILE'
           : 'BACKUP.WRONG_PASSWORD';
       this.toastService.presentErrorToast(

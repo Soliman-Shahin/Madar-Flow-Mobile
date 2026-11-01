@@ -92,8 +92,10 @@ export class PermissionService {
       const permissions = response.data.permissions;
       this.permissionsSignal.set(permissions);
       return permissions;
-    } catch (error: any) {
-      const errorMessage = error?.error?.message || 'Failed to load permissions';
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { error?: { message?: string } })?.error?.message ||
+        'Failed to load permissions';
       this.errorSignal.set(errorMessage);
       console.error('Error loading permissions:', error);
       throw error;

@@ -140,7 +140,7 @@ export class OfflineStorageService {
           );
         }
       );
-    } catch (error: any) {
+    } catch (error) {
       throw error;
     }
     await this.loadSyncQueue();

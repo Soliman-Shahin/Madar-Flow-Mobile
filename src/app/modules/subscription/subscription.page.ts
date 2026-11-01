@@ -185,7 +185,7 @@ export class SubscriptionPage implements OnInit {
 
       // Reload data
       this.loadError = false;
-    } catch (error: any) {
+    } catch (error) {
       console.warn('Subscription upgrade unavailable');
       await this.toastService.show({
         message: 'SUBSCRIPTION.UPGRADE_FAILED',
