@@ -79,8 +79,21 @@ ion-tab-button {
   letter-spacing: 0;
 }
 
+.mf-tabs__gap {
+  flex: 0 0 60px;
+}
+
+// The add action is not a tab, so it lives outside the tablist and is placed over the gap
+// reserved for it between the tabs.
 .mf-tabs__add {
-  flex: 0 0 auto;
+  position: absolute;
+  z-index: 11;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 5px);
+  inset-inline-start: calc(
+    var(--mf-space-1) + var(--mf-add-index) *
+      ((100% - 60px - 2 * var(--mf-space-1)) / var(--mf-tabs-count))
+  );
+  width: 60px;
   display: grid;
   place-items: center;
   min-width: 60px;

@@ -22,9 +22,12 @@ test.describe('data pulled from the server', () => {
     await page.goto('/transactions');
     const search = page.getByRole('searchbox', { name: 'search text' });
     await expect(page.getByRole('button', { name: /QA sample 1 /i })).toBeVisible({ timeout: 20_000 });
-    await search.fill('QA sample 2');
+    // Seeded rows are one day apart and the list shows the current month, so on the 1st of a
+    // month only 'QA sample 1' (today) is in range: assert filtering with it, not with sample 2.
+    await search.fill('QA sample 1');
+    await expect(page.getByRole('button', { name: /QA sample 1 /i })).toBeVisible();
+    await search.fill('no such transaction');
     await expect(page.getByRole('button', { name: /QA sample 1 /i })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /QA sample 2 /i })).toBeVisible();
   });
 
   test('settings shows the signed-in account', async ({ page }) => {

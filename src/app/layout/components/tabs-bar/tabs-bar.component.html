@@ -4,23 +4,12 @@
 <ion-tab-bar slot="bottom" class="mf-tabs">
   @for (tab of visibleTabs; track tab.id; let i = $index) { @if (i ===
   addSlotIndex) {
-  <button
-    type="button"
-    class="mf-tabs__add"
-    (click)="addTransaction()"
-    [attr.aria-label]="'LEDGER.ADD_TRANSACTION' | translate"
-  >
-    <span class="mf-tabs__add-mark" aria-hidden="true">
-      <ion-icon name="add"></ion-icon>
-    </span>
-  </button>
+  <span class="mf-tabs__gap" aria-hidden="true"></span>
   }
   <ion-tab-button
     (click)="navigateTab(tab.routerLink, $event)"
     [class.tab-selected]="isActiveTab(tab.routerLink, vm.activeRoute)"
-    [attr.aria-current]="
-      isActiveTab(tab.routerLink, vm.activeRoute) ? 'page' : null
-    "
+    [selected]="isActiveTab(tab.routerLink, vm.activeRoute)"
   >
     <ion-icon
       aria-hidden="true"
@@ -34,4 +23,17 @@
   </ion-tab-button>
   }
 </ion-tab-bar>
+<button
+  type="button"
+  class="mf-tabs__add"
+  [style.--mf-tabs-count]="visibleTabs.length"
+  [style.--mf-add-index]="addSlotIndex"
+  (click)="addTransaction()"
+  [attr.aria-label]="'LEDGER.ADD_TRANSACTION' | translate"
+>
+  <span class="mf-tabs__add-mark" aria-hidden="true">
+    <ion-icon name="add"></ion-icon>
+  </span>
+</button>
+
 } }
