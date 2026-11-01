@@ -1,3 +1,4 @@
+import { unwrapList } from '../utils/unwrap-list.util';
 import { Injectable, inject } from '@angular/core';
 import {
   Observable,
@@ -192,9 +193,7 @@ export class DashboardFacade {
     const endExclusive = endDate.getTime();
     return this.expenses.getExpenses().pipe(
       map((resp) => {
-        const expenses: Expense[] = Array.isArray(resp)
-          ? (resp as Expense[])
-          : (resp as any)?.data?.data || (resp as any)?.data || [];
+        const expenses: Expense[] = unwrapList<Expense>(resp);
         let count = 0;
         let sum = 0;
         for (const expense of expenses) {
@@ -261,9 +260,7 @@ export class DashboardFacade {
           })
         );
 
-        const expArr: Expense[] = Array.isArray(expenses)
-          ? (expenses as Expense[])
-          : (expenses as any)?.data?.data || (expenses as any)?.data || [];
+        const expArr: Expense[] = unwrapList<Expense>(expenses);
         const sums = new Map<string, number>();
         const colors = new Map<string, string>();
 
@@ -344,9 +341,7 @@ export class DashboardFacade {
           })
         );
 
-        const expArr: Expense[] = Array.isArray(expenses)
-          ? (expenses as Expense[])
-          : (expenses as any)?.data?.data || (expenses as any)?.data || [];
+        const expArr: Expense[] = unwrapList<Expense>(expenses);
         const sums = new Map<string, number>();
         const colors = new Map<string, string>();
 
@@ -406,9 +401,7 @@ export class DashboardFacade {
 
     return this.expenses.getExpenses().pipe(
       map((resp) => {
-        const expArr: Expense[] = Array.isArray(resp)
-          ? (resp as Expense[])
-          : (resp as any)?.data?.data || (resp as any)?.data || [];
+        const expArr: Expense[] = unwrapList<Expense>(resp);
         const daily = new Array<number>(daysDiff).fill(0);
         expArr
           .filter((e) => {
@@ -452,9 +445,7 @@ export class DashboardFacade {
     const endExclusive = new Date(year, month, 1).getTime();
     return this.expenses.getExpenses().pipe(
       map((resp) => {
-        const expArr: Expense[] = Array.isArray(resp)
-          ? (resp as Expense[])
-          : (resp as any)?.data?.data || (resp as any)?.data || [];
+        const expArr: Expense[] = unwrapList<Expense>(resp);
         const daily = new Array<number>(daysInMonth).fill(0);
         expArr
           .filter((e) => {
@@ -493,9 +484,7 @@ export class DashboardFacade {
     const endInclusive = endDate.getTime();
     return this.expenses.getExpenses().pipe(
       map((resp) => {
-        const expArr: Expense[] = Array.isArray(resp)
-          ? (resp as Expense[])
-          : (resp as any)?.data?.data || (resp as any)?.data || [];
+        const expArr: Expense[] = unwrapList<Expense>(resp);
         let income = 0;
         let expenses = 0;
         for (const e of expArr) {
