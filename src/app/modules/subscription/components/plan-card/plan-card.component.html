@@ -101,7 +101,7 @@
   </ion-button>
   } } @else if (isPaidPlan) {
   <p class="mf-plan__soon">{{ "SUBSCRIPTION.COMING_SOON" | translate }}</p>
-  } } @else {
+  } } @else if (!isLowerPlan) {
   <ion-button
     expand="block"
     class="mf-plan__action"

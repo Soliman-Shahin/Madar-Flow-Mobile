@@ -126,8 +126,13 @@
     <!-- ── Top Header Bar ── -->
     <div class="dash-header">
       <div class="dash-header__left">
-        <p class="dash-greeting">{{ "HOME.GREETING" | translate }}</p>
-        <h1 class="dash-name">{{ displayUsername }}</h1>
+        <span class="dash-avatar" aria-hidden="true">{{
+          displayUsername.charAt(0)
+        }}</span>
+        <div class="dash-header__text">
+          <p class="dash-greeting">{{ "HOME.GREETING" | translate }}</p>
+          <h1 class="dash-name">{{ displayUsername }}</h1>
+        </div>
       </div>
       <div class="dash-header__date">
         <span class="dash-date-day">

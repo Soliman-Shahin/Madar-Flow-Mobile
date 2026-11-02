@@ -11,94 +11,92 @@ import { PlanSlug } from '../../models/plan.model';
 @Component({
   selector: 'app-upgrade-prompt',
   template: `
-    <ion-card class="upgrade-prompt" [color]="color">
-      <ion-card-content>
-        <div class="prompt-content">
-          <div class="icon-section">
-            <ion-icon [name]="icon"></ion-icon>
-          </div>
-          <div class="text-section">
-            <h3>{{ title | translate }}</h3>
-            <p>{{ message | translate }}</p>
-          </div>
-          <div class="action-section">
-            @if (upgradeAvailable()) {
-            <ion-button
-              [color]="buttonColor"
-              size="small"
-              (click)="navigateToSubscription()"
-            >
-              <ion-icon name="arrow-up-circle" slot="start"></ion-icon>
-              {{ 'SUBSCRIPTION.UPGRADE_NOW' | translate }}
-            </ion-button>
-            } @else {
-            <ion-note>{{ 'SUBSCRIPTION.COMING_SOON' | translate }}</ion-note>
-            }
-          </div>
-        </div>
-      </ion-card-content>
-    </ion-card>
+    <section
+      class="upgrade-prompt"
+      role="region"
+      [attr.aria-label]="title | translate"
+    >
+      <span class="icon-section" aria-hidden="true">
+        <ion-icon [name]="icon"></ion-icon>
+      </span>
+      <div class="text-section">
+        <h3>{{ title | translate }}</h3>
+        <p>{{ message | translate }}</p>
+      </div>
+      @if (upgradeAvailable()) {
+      <ion-button
+        class="upgrade-action"
+        expand="block"
+        (click)="navigateToSubscription()"
+      >
+        {{ 'SUBSCRIPTION.UPGRADE_NOW' | translate }}
+      </ion-button>
+      } @else {
+      <ion-note>{{ 'SUBSCRIPTION.COMING_SOON' | translate }}</ion-note>
+      }
+    </section>
   `,
   styles: [
     `
+      :host {
+        display: block;
+      }
+
       .upgrade-prompt {
-        margin: 16px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--mf-space-3) var(--mf-space-4);
+        align-items: center;
+        margin: var(--mf-space-4) 0;
+        padding: var(--mf-space-4);
+        border-radius: var(--mf-radius-lg);
+        background: var(--mf-surface);
+        font-family: var(--mf-font-sans);
+        color: var(--mf-ink);
+      }
 
-        .prompt-content {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+      .icon-section {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: var(--mf-primary-soft);
+        color: var(--mf-primary);
+      }
 
-          .icon-section {
-            flex-shrink: 0;
+      .icon-section ion-icon {
+        font-size: 24px;
+      }
 
-            ion-icon {
-              font-size: 32px;
-            }
-          }
+      h3 {
+        margin: 0 0 2px;
+        font-size: var(--mf-text-headline);
+        font-weight: var(--mf-weight-semibold);
+        color: var(--mf-ink);
+      }
 
-          .text-section {
-            flex: 1;
+      p {
+        margin: 0;
+        font-size: var(--mf-text-footnote);
+        line-height: var(--mf-leading-snug);
+        color: var(--mf-ink-2);
+      }
 
-            h3 {
-              font-size: 16px;
-              font-weight: 700;
-              margin-bottom: 4px;
-            }
+      .upgrade-action,
+      ion-note {
+        grid-column: 1 / -1;
+      }
 
-            p {
-              font-size: 14px;
-              opacity: 0.9;
-              margin: 0;
-            }
-          }
-
-          .action-section {
-            flex-shrink: 0;
-
-            ion-button {
-              --border-radius: 8px;
-              font-weight: 600;
-            }
-          }
-        }
-
-        @media (max-width: 576px) {
-          .prompt-content {
-            flex-direction: column;
-            text-align: center;
-
-            .action-section {
-              width: 100%;
-
-              ion-button {
-                width: 100%;
-              }
-            }
-          }
-        }
+      .upgrade-action {
+        --background: var(--mf-primary);
+        --color: var(--mf-primary-contrast);
+        --border-radius: 14px;
+        min-height: 48px;
+        margin: 0;
+        font-weight: var(--mf-weight-semibold);
+        text-transform: none;
+        letter-spacing: 0;
       }
     `,
   ],
@@ -109,6 +107,7 @@ export class UpgradePromptComponent {
   @Input() title = 'SUBSCRIPTION.FEATURE_LOCKED';
   @Input() message = 'SUBSCRIPTION.FEATURE_LOCKED_MSG';
   @Input() icon = 'lock-closed';
+  /** Kept for existing callers; the ledger look uses one neutral style. */
   @Input() color: 'primary' | 'warning' | 'danger' = 'warning';
   @Input() buttonColor = 'primary';
   @Input() requiredPlan?: PlanSlug;

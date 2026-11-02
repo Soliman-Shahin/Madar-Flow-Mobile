@@ -107,12 +107,12 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
           : user?.signupType === 'normal'
           ? 'PROFILE.AUTH.PROVIDER_EMAIL'
           : null;
-      const statusLabelKey =
-        typeof user?.emailVerified === 'boolean'
-          ? user.emailVerified
-            ? 'PROFILE.AUTH.STATUS_VERIFIED'
-            : 'PROFILE.AUTH.STATUS_UNVERIFIED'
-          : null;
+      // The app has no e-mail verification step for password accounts, so an
+      // "unverified" label would tell the user to do something they cannot.
+      // Only the positive state is shown.
+      const statusLabelKey = user?.emailVerified
+        ? 'PROFILE.AUTH.STATUS_VERIFIED'
+        : null;
       return { providerLabelKey, statusLabelKey };
     })
   );

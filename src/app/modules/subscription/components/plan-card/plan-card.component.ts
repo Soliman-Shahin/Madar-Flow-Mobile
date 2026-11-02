@@ -20,6 +20,8 @@ export class PlanCardComponent {
   @Input() plan!: Plan;
   @Input() isCurrentPlan = false;
   @Input() isPopular = false;
+  /** A plan below the current one: offering it as an "upgrade" would be wrong. */
+  @Input() isLowerPlan = false;
   /** True when this device buys through the store (Google Play). */
   @Input() storeMode = false;
   /** Store offers that grant this plan, with the store's own prices. */

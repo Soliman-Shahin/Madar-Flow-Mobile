@@ -5,3 +5,12 @@
 [dir="rtl"] body {
   --ion-font-family: var(--mf-font-sans) !important;
 }
+
+// "Back" arrows point toward the start edge: in RTL that is the right side,
+// so the left-pointing glyph must be mirrored (Ionic only mirrors icons that
+// carry the flip-rtl attribute).
+html[dir="rtl"] ion-icon[name^="chevron-back"],
+html[dir="rtl"] ion-icon[name="arrow-back"],
+html[dir="rtl"] ion-icon[name^="arrow-back"] {
+  transform: scaleX(-1);
+}

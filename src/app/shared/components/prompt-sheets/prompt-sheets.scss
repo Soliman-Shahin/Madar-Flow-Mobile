@@ -1,0 +1,89 @@
+// Shared look for first-run prompts shown as bottom sheets.
+:host {
+  display: block;
+  font-family: var(--mf-font-sans);
+  color: var(--mf-ink);
+}
+
+.mf-prompt {
+  padding: var(--mf-space-2) var(--mf-space-5)
+    calc(env(safe-area-inset-bottom, 0px) + var(--mf-space-5));
+}
+
+.mf-prompt__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: var(--mf-space-4) 0 var(--mf-space-4);
+  border-radius: 18px;
+  background: var(--mf-primary-soft);
+  color: var(--mf-primary);
+
+  ion-icon {
+    font-size: 28px;
+  }
+}
+
+.mf-prompt__title {
+  margin: 0 0 var(--mf-space-2);
+  font-size: var(--mf-text-title-2);
+  font-weight: var(--mf-weight-bold);
+  line-height: var(--mf-leading-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.mf-prompt__lead {
+  margin: 0 0 var(--mf-space-5);
+  font-size: var(--mf-text-callout);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+  text-wrap: pretty;
+}
+
+.mf-prompt__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  margin-top: var(--mf-space-5);
+}
+
+.mf-prompt__primary,
+.mf-prompt__secondary {
+  min-height: 52px;
+  border: 0;
+  border-radius: 16px;
+  font: inherit;
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  cursor: pointer;
+  transition: transform var(--mf-dur-instant) var(--mf-ease-standard),
+    background-color var(--mf-dur-quick) var(--mf-ease-standard);
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.mf-prompt__primary {
+  background: var(--mf-primary);
+  color: var(--mf-primary-contrast);
+}
+
+.mf-prompt__secondary {
+  background: transparent;
+  color: var(--mf-ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-prompt__primary,
+  .mf-prompt__secondary {
+    transition: none;
+  }
+}

@@ -22,6 +22,7 @@
           @if (profile?.avatarUrl && !avatarFailed) {
           <img
             [src]="profile?.avatarUrl"
+            referrerpolicy="no-referrer"
             (error)="onAvatarError()"
             (load)="onAvatarLoad()"
             alt=""
@@ -131,6 +132,7 @@
           slot="end"
           [attr.aria-label]="'SETTINGS.DEVICE_PUSH_NOTIFICATIONS' | translate"
           [checked]="notificationsEnabled"
+          [disabled]="notificationStatus === 'SETTINGS.NOTIFICATIONS_UNAVAILABLE'"
           (ionChange)="toggleNotifications($event)"
         ></ion-toggle>
       </ion-item>

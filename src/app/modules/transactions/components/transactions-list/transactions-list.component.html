@@ -183,7 +183,7 @@
         >
           <ion-icon [name]="cat.icon || 'pricetag-outline'"></ion-icon>
         </span>
-        <span class="cat-option-name">{{ cat.title }}</span>
+        <span class="cat-option-name">{{ cat.title | categoryTitle }}</span>
         <!-- Checkmark -->
         @if (isCategorySelected(cat._id)) {
         <ion-icon name="checkmark-circle" class="cat-check-icon"></ion-icon>

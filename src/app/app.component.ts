@@ -19,7 +19,9 @@ import { BackupService } from './core/services/backup.service';
 import { environment } from '../environments/environment';
 import { LayoutComponent } from './layout/pages/layout-component/layout.component';
 import { OnboardingComponent } from './shared/components/onboarding/onboarding.component';
-import { AlertController, IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule, ModalController } from '@ionic/angular';
+import { ledgerDetailSheet } from './shared/ui/sheet/sheet-options';
+import { ConsentSheetComponent } from './shared/components/prompt-sheets/consent-sheet.component';
 import { takeUntil } from 'rxjs/operators';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { ConnectionService } from './core/services/connection.service';
@@ -46,6 +48,8 @@ export class AppComponent extends BaseComponent implements OnInit {
   private readonly telemetry = inject(TelemetryService);
   private readonly alertController = inject(AlertController);
   private consentPromptScheduled = false;
+  private readonly modalController = inject(ModalController);
+  private consentAlert: HTMLIonModalElement | null = null;
 
   constructor(
     private zone: NgZone,
@@ -81,6 +85,11 @@ export class AppComponent extends BaseComponent implements OnInit {
       } else {
         this.notificationService.clearForOwner();
         this.notificationPreferenceService.clearForOwner();
+        // The consent question belongs to a signed-in session; don't leave it
+        // blocking the sign-in screen after a logout.
+        void this.consentAlert?.dismiss();
+        this.consentAlert = null;
+        this.consentPromptScheduled = false;
       }
     });
     if (Capacitor.isNativePlatform()) {
@@ -238,23 +247,24 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.consentPromptScheduled = false;
         return;
       }
-      const alert = await this.alertController.create({
-        header: this.translate.instant('TELEMETRY.PROMPT_TITLE'),
-        message: this.translate.instant('TELEMETRY.PROMPT_MESSAGE'),
+      // Never stack two dialogs (e.g. the first-run currency picker): wait
+      // for the open one to close, then ask.
+      if ((await this.modalController.getTop()) || (await this.alertController.getTop())) {
+        this.consentPromptScheduled = false;
+        this.scheduleTelemetryConsentPrompt();
+        return;
+      }
+      const modal = await this.modalController.create({
+        component: ConsentSheetComponent,
         backdropDismiss: false,
-        buttons: [
-          {
-            text: this.translate.instant('TELEMETRY.PROMPT_DECLINE'),
-            role: 'cancel',
-            handler: () => void this.telemetry.setConsent(false),
-          },
-          {
-            text: this.translate.instant('TELEMETRY.PROMPT_ALLOW'),
-            handler: () => void this.telemetry.setConsent(true),
-          },
-        ],
+        ...ledgerDetailSheet(),
       });
-      await alert.present();
+      this.consentAlert = modal;
+      await modal.present();
+      const { data, role } = await modal.onDidDismiss<boolean>();
+      this.consentAlert = null;
+      // Only a real answer counts; a dismissal (e.g. on logout) asks again later.
+      if (role === 'answer') void this.telemetry.setConsent(data === true);
     }, 4000);
   }
 

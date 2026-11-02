@@ -1,0 +1,202 @@
+@use "src/theme/mobile-secondary" as secondary;
+@include secondary.settings;
+
+.mf-sessions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-5);
+  padding-block: var(--mf-space-2)
+    calc(var(--mf-space-6) + var(--mf-tabbar-clearance));
+  font-family: var(--mf-font-sans);
+}
+
+.mf-sessions__intro {
+  margin: var(--mf-space-1) var(--mf-space-1) 0;
+  font-size: var(--mf-text-footnote);
+  line-height: var(--mf-leading-body);
+  color: var(--mf-ink-2);
+}
+
+.mf-sessions__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+}
+
+.mf-sessions__label {
+  margin: 0 var(--mf-space-2);
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-ink-2);
+}
+
+.mf-sessions__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mf-session {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  color: var(--mf-ink);
+}
+
+.mf-session--current {
+  grid-template-columns: 44px minmax(0, 1fr);
+  background: var(--mf-primary-soft);
+}
+
+.mf-session__mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--mf-surface-sunken);
+  color: var(--mf-ink-2);
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+.mf-session--current .mf-session__mark {
+  background: var(--mf-surface);
+  color: var(--mf-primary);
+}
+
+.mf-session__body {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    line-height: var(--mf-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: var(--mf-text-footnote);
+    color: var(--mf-ink-2);
+  }
+
+  .mf-session__meta {
+    font-size: var(--mf-text-caption);
+    color: var(--mf-ink-3);
+  }
+}
+
+.mf-session__signout,
+.mf-sessions__btn {
+  min-height: 44px;
+  padding: 0 var(--mf-space-4);
+  border: 0;
+  border-radius: 14px;
+  background: var(--mf-surface-sunken);
+  color: var(--mf-ink);
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  cursor: pointer;
+  transition: transform var(--mf-dur-instant) var(--mf-ease-standard);
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.mf-session__signout {
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+}
+
+.mf-sessions__btn--danger {
+  margin-top: var(--mf-space-2);
+  min-height: 52px;
+  background: var(--mf-danger-soft);
+  color: var(--mf-danger);
+}
+
+.mf-sessions__empty {
+  margin: 0;
+  padding: var(--mf-space-5) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  font-size: var(--mf-text-callout);
+  text-align: center;
+  color: var(--mf-ink-2);
+}
+
+.mf-sessions__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-8) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  text-align: center;
+  color: var(--mf-ink-2);
+
+  ion-icon {
+    font-size: 32px;
+    color: var(--mf-ink-3);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--mf-text-callout);
+  }
+}
+
+.mf-sessions__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+
+  span {
+    display: block;
+    height: 76px;
+    border-radius: var(--mf-radius-lg);
+    background: var(--mf-surface);
+    animation: mf-sessions-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes mf-sessions-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-sessions__skeleton span {
+    animation: none;
+  }
+
+  .mf-session__signout,
+  .mf-sessions__btn {
+    transition: none;
+  }
+}

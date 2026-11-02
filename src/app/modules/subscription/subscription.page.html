@@ -83,6 +83,7 @@
         *ngFor="let plan of availablePlans"
         [plan]="plan"
         [isCurrentPlan]="isCurrentPlan(plan)"
+        [isLowerPlan]="isLowerPlan(plan)"
         [storeMode]="storeMode"
         [storePackages]="packagesFor(plan)"
         (upgrade)="onUpgrade(plan)"

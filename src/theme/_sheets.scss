@@ -17,6 +17,11 @@ ion-modal.mf-sheet {
   }
 }
 
+// First-run prompts (consent, currency) must read as the only thing on screen.
+ion-modal.mf-sheet--auto {
+  --backdrop-opacity: 0.55;
+}
+
 // Content-height sheet anchored to the bottom edge (read-only records).
 ion-modal.mf-sheet--auto {
   --height: auto;

@@ -1,0 +1,114 @@
+<ion-header mode="ios" class="settings-header" translucent="false">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button
+        routerLink="/settings/list"
+        class="modern-back-btn"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'SETTINGS.ACTIVE_SESSIONS' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="settings-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="settings-container mf-sessions">
+    <p class="mf-sessions__intro">
+      {{ 'SETTINGS.ACTIVE_SESSIONS_DESC' | translate }}
+    </p>
+
+    @if (loading && !sessions.length) {
+    <div class="mf-sessions__skeleton" role="status" [attr.aria-label]="'COMMON.LOADING' | translate">
+      <span></span><span></span>
+    </div>
+    } @else if (error) {
+    <div class="mf-sessions__state" role="status">
+      <ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+      <p>{{ 'SETTINGS.SESSIONS_LOAD_ERROR' | translate }}</p>
+      <button type="button" class="mf-sessions__btn" (click)="load()">
+        {{ 'COMMON.RETRY' | translate }}
+      </button>
+    </div>
+    } @else {
+
+    <!-- This device -->
+    @if (currentSession; as s) {
+    <section class="mf-sessions__group" aria-labelledby="sessions-this">
+      <h2 id="sessions-this" class="mf-sessions__label">
+        {{ 'SETTINGS.CURRENT_SESSION' | translate }}
+      </h2>
+      <article class="mf-session mf-session--current">
+        <span class="mf-session__mark" aria-hidden="true">
+          <ion-icon [name]="icon(s.platform)"></ion-icon>
+        </span>
+        <div class="mf-session__body">
+          <h3>{{ title(s) }}</h3>
+          <p>{{ 'SETTINGS.SESSION_ACTIVE_NOW' | translate }}</p>
+        </div>
+      </article>
+    </section>
+    }
+
+    <!-- Other devices -->
+    <section class="mf-sessions__group" aria-labelledby="sessions-others">
+      <h2 id="sessions-others" class="mf-sessions__label">
+        {{ 'SETTINGS.OTHER_DEVICES' | translate }}
+      </h2>
+
+      @if (!others.length) {
+      <p class="mf-sessions__empty">
+        {{ 'SETTINGS.NO_OTHER_SESSIONS' | translate }}
+      </p>
+      } @else {
+      <ul class="mf-sessions__list">
+        @for (s of others; track s.id) {
+        <li class="mf-session">
+          <span class="mf-session__mark" aria-hidden="true">
+            <ion-icon [name]="icon(s.platform)"></ion-icon>
+          </span>
+          <div class="mf-session__body">
+            <h3>{{ title(s) }}</h3>
+            @if (s.lastAuthenticatedAt) {
+            <p>
+              {{ 'SETTINGS.SESSION_LAST_ACTIVE' | translate }}
+              {{ relative(s.lastAuthenticatedAt) }}
+            </p>
+            } @if (s.createdAt) {
+            <p class="mf-session__meta">
+              {{ 'SETTINGS.SESSION_SIGNED_IN' | translate }}
+              {{ date(s.createdAt) }}
+            </p>
+            }
+          </div>
+          <button
+            type="button"
+            class="mf-session__signout"
+            [disabled]="busyId === s.id"
+            [attr.aria-label]="('SETTINGS.REVOKE_SESSION' | translate) + ': ' + title(s)"
+            (click)="revoke(s)"
+          >
+            {{ 'SETTINGS.REVOKE_SESSION' | translate }}
+          </button>
+        </li>
+        }
+      </ul>
+
+      <button
+        type="button"
+        class="mf-sessions__btn mf-sessions__btn--danger"
+        [disabled]="revokingOthers"
+        (click)="revokeOthers()"
+      >
+        {{ 'SETTINGS.SIGN_OUT_OTHER_SESSIONS' | translate }}
+      </button>
+      }
+    </section>
+    }
+  </div>
+</ion-content>

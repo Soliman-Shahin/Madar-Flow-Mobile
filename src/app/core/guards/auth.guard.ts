@@ -53,6 +53,17 @@ export const AuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   return inject(AuthGuardService).canActivate(route, state);
 };
 
+/**
+ * Sign-in and sign-up are for signed-out visitors. A signed-in user who lands
+ * on them (back button, stale link) is sent home instead of seeing the form
+ * with the app's tab bar underneath.
+ */
+export const GuestGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.isLoggedIn ? router.parseUrl('/home') : true;
+};
+
 export const AuthMatchGuard: CanMatchFn = (
   route: Route,
   segments: UrlSegment[]

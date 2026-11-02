@@ -76,8 +76,8 @@
             <ion-icon [name]="iconFor(item.type)"></ion-icon>
           </span>
           <span class="mf-note__text">
-            <span class="mf-note__title"><bdi>{{ item.title }}</bdi></span>
-            <span class="mf-note__preview"><bdi>{{ item.message }}</bdi></span>
+            <span class="mf-note__title"><bdi>{{ item | notificationText : 'title' }}</bdi></span>
+            <span class="mf-note__preview"><bdi>{{ item | notificationText : 'message' }}</bdi></span>
             <time class="mf-note__time"
               ><bdi>{{ timeLabel(item.createdAt) }}</bdi></time
             >

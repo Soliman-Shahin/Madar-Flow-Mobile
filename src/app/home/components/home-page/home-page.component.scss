@@ -534,12 +534,18 @@ app-line-chart {
 //  Calm Personal Ledger — hero and recent ledger
 // ===================================================================
 .mf-home-hero {
-  margin-block: var(--mf-space-2) var(--mf-space-2);
-  padding-inline: var(--mf-space-1);
+  margin-block: var(--mf-space-3) var(--mf-space-2);
 }
 
 .mf-home-recent {
-  margin-block-start: var(--mf-space-2);
+  margin-block-start: var(--mf-space-6);
+  animation: fadeUp 0.5s 0.12s var(--mf-ease-enter) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-home-recent {
+    animation: none;
+  }
 }
 
 .mf-home-recent__head {
@@ -610,9 +616,46 @@ app-line-chart {
     color: var(--mf-ink);
   }
 
+  .dash-header__left {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--mf-space-3);
+    min-width: 0;
+  }
+
+  .dash-header__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .dash-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dash-avatar {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--mf-primary-soft);
+    color: var(--mf-primary);
+    font-size: var(--mf-text-headline);
+    font-weight: var(--mf-weight-bold);
+    text-transform: uppercase;
+  }
+
   .dash-header__date {
-    padding: 0;
-    background: none;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: var(--mf-radius-md);
+    background: var(--mf-surface);
     border: 0;
     backdrop-filter: none;
     animation: none;

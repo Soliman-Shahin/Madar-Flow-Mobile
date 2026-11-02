@@ -282,10 +282,12 @@ export class SignupComponent extends BaseComponent implements OnInit {
     this.loading.next(true);
     this.errorMessage.next('');
 
-    const { email, password } = this.signupForm.value;
+    const { email, password, name } = this.signupForm.value;
 
     this.authService
       .signup(email, password, {
+        // The form requires a full name; it was validated but never sent.
+        username: String(name ?? '').trim(),
         termsAccepted: true,
         privacyAccepted: true,
         ...CONSENT_VERSIONS,
@@ -317,8 +319,14 @@ export class SignupComponent extends BaseComponent implements OnInit {
             errorKey = 'AUTH.INVALID_EMAIL';
           } else if (error.code === 'auth/weak-password') {
             errorKey = 'AUTH.WEAK_PASSWORD';
-          } else if (error.status === 400) {
-            // Handle HTTP 400 errors
+          } else if (
+            error.status === 409 ||
+            error.error?.code === 'CONFLICT' ||
+            error.code === 'CONFLICT'
+          ) {
+            // The API answers 409 CONFLICT for an e-mail that is already taken.
+            // (400 is a validation failure, e.g. a weak password, and must not
+            // be reported as "already registered".)
             errorKey = 'AUTH.EMAIL_ALREADY_EXISTS';
           } else if (error.status === 0) {
             // Handle network errors

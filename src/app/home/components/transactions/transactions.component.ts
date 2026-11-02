@@ -1,3 +1,4 @@
+import { categoryTitle } from 'src/app/shared/pipes/category-title.pipe';
 import {
   ledgerDetailSheet,
   ledgerFormSheet,
@@ -283,7 +284,11 @@ export class TransactionsComponent implements OnChanges, OnDestroy {
   getCategoryName(t: Expense): string {
     const cat = this.resolveCategory(t);
     if (!cat || typeof cat === 'string') return '—';
-    return (cat as any)?.title || (cat as any)?.name || '—';
+    return (
+      categoryTitle((cat as any)?.title, this.translateService) ||
+      (cat as any)?.name ||
+      '—'
+    );
   }
 
   getCategoryIcon(t: Expense): string {

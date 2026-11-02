@@ -281,6 +281,13 @@ export class SubscriptionPage implements OnInit {
     return this.currentPlan?.context.planSlug === plan.slug;
   }
 
+  isLowerPlan(plan: Plan): boolean {
+    const current = this.availablePlans.find(
+      (p) => p.slug === this.currentPlan?.context.planSlug
+    );
+    return !!current && plan.order < current.order;
+  }
+
   goBack() {
     if (this.from === 'settings') {
       this.router.navigate(['/settings']);

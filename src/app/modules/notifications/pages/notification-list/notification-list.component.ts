@@ -1,3 +1,4 @@
+import { NotificationTextPipe } from 'src/app/shared/pipes/notification-text.pipe';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -26,6 +27,7 @@ import { SkeletonBlockComponent } from 'src/app/shared/ui/skeleton-block/skeleto
     RouterModule,
     TranslateModule,
     SkeletonBlockComponent,
+    NotificationTextPipe,
   ],
   templateUrl: './notification-list.component.html',
   styleUrls: ['./notification-list.component.scss'],

@@ -1,3 +1,4 @@
+import { CategoryTitlePipe, categoryTitle } from 'src/app/shared/pipes/category-title.pipe';
 import {
   ledgerDetailSheet,
   ledgerFormSheet,
@@ -86,6 +87,7 @@ interface TransactionGroup {
     DatePipe,
     TranslateModule,
     PlanLimitBannerComponent,
+    CategoryTitlePipe,
   ],
 })
 export class TransactionsListComponent extends BaseComponent implements OnInit {
@@ -374,7 +376,7 @@ export class TransactionsListComponent extends BaseComponent implements OnInit {
     }
 
     const isPopulated = cat && typeof cat !== 'string';
-    const categoryName = isPopulated ? (cat as Category).title : '—';
+    const categoryName = isPopulated ? categoryTitle((cat as Category).title, this.translateService) : '—';
     const categoryColor = isPopulated
       ? (cat as Category).color || '#ccc'
       : '#ccc';

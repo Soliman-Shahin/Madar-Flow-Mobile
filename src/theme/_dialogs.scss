@@ -1,0 +1,141 @@
+// ===================================================================
+//  DIALOGS — Calm Personal Ledger
+// ===================================================================
+// Confirmations (delete, logout, discard...) share one look: a rounded
+// tonal card, bold title, readable message, full-width stacked actions with
+// the primary one filled. Colours come from the --mf-* tokens, so light and
+// dark follow the theme (the app toggles `.dark` on <html>/<body>).
+
+// :is(.md,.ios) lifts specificity above Ionic's scoped component styles.
+ion-alert:is(.md, .ios) {
+  --background: var(--mf-surface-raised);
+  --max-width: min(340px, calc(100vw - 40px));
+  --backdrop-opacity: 0.4;
+  font-family: var(--mf-font-sans);
+
+  .alert-wrapper {
+    border-radius: 24px;
+    background: var(--mf-surface-raised);
+    box-shadow: var(--mf-shadow-sheet);
+    overflow: hidden;
+  }
+
+  .alert-head {
+    padding: var(--mf-space-6) var(--mf-space-6) var(--mf-space-2);
+    text-align: start;
+  }
+
+  .alert-title {
+    margin: 0;
+    font-size: var(--mf-text-title-2);
+    font-weight: var(--mf-weight-bold);
+    line-height: var(--mf-leading-tight);
+    letter-spacing: -0.01em;
+    color: var(--mf-ink);
+  }
+
+  .alert-message {
+    padding: var(--mf-space-1) var(--mf-space-6) var(--mf-space-4);
+    max-height: 50dvh;
+    font-size: var(--mf-text-callout);
+    line-height: var(--mf-leading-body);
+    color: var(--mf-ink-2);
+    text-align: start;
+  }
+
+  .alert-button-group {
+    flex-direction: column-reverse;
+    gap: var(--mf-space-2);
+    padding: var(--mf-space-2) var(--mf-space-4) var(--mf-space-4);
+  }
+
+  .alert-button {
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    border-radius: 14px;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--mf-ink-2);
+    background: transparent;
+
+    .alert-button-inner {
+      justify-content: center;
+    }
+
+    // The last button of an Ionic alert is the affirmative action.
+    &:last-child {
+      background: var(--mf-primary);
+      color: var(--mf-primary-contrast);
+    }
+
+    &.alert-button-role-destructive {
+      background: var(--mf-danger);
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--mf-focus-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  .alert-radio-group,
+  .alert-checkbox-group {
+    border: 0;
+    max-height: 40dvh;
+  }
+}
+
+html.dark ion-alert:is(.md, .ios) .alert-button.alert-button-role-destructive,
+body.dark ion-alert:is(.md, .ios) .alert-button.alert-button-role-destructive {
+  color: #1a0507;
+}
+
+// ---- Toasts: a compact inverse pill above the tab bar ----------------
+// (the saturated full-width colour bars covered the tab bar and shouted).
+ion-toast.custom-toast:is(.md, .ios, [class]) {
+  --background: var(--mf-ink);
+  --color: var(--mf-bg);
+  --border-radius: 14px;
+  --box-shadow: var(--mf-shadow-sheet);
+  --max-width: min(420px, calc(100vw - 32px));
+  --button-color: var(--mf-bg);
+  border: 0;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+}
+
+// Ionic lifts a bottom toast by the safe-area inset: feed it the tab bar height.
+ion-toast.custom-toast[position="bottom"] {
+  --ion-safe-area-bottom: calc(var(--mf-tabbar-clearance) + var(--mf-space-2));
+}
+
+ion-toast.custom-toast.toast-color-danger {
+  --background: var(--mf-danger);
+  --color: #fff;
+}
+
+body.dark ion-toast.custom-toast.toast-color-danger {
+  --color: #1a0507;
+}
+
+// Coloured toasts take their fill from --ion-color-base, not --background.
+ion-toast.custom-toast.ion-color {
+  --ion-color-base: var(--mf-ink) !important;
+  --ion-color-contrast: var(--mf-bg) !important;
+  --ion-color-shade: var(--mf-ink) !important;
+  --ion-color-tint: var(--mf-ink) !important;
+}
+
+ion-toast.custom-toast.ion-color-danger {
+  --ion-color-base: var(--mf-danger) !important;
+  --ion-color-contrast: #fff !important;
+}
+
+body.dark ion-toast.custom-toast.ion-color-danger {
+  --ion-color-contrast: #1a0507 !important;
+}

@@ -115,8 +115,8 @@
         (click)="!reorderMode && presentActionSheet(item)"
         [attr.aria-label]="
           reorderMode
-            ? item.title
-            : ('MOBILE_UI.CATEGORY_ACTIONS' | translate) + ': ' + item.title
+            ? (item.title | categoryTitle)
+            : ('MOBILE_UI.CATEGORY_ACTIONS' | translate) + ': ' + (item.title | categoryTitle)
         "
       >
         <span
@@ -128,7 +128,7 @@
           <ion-icon [name]="item.icon || 'pricetag-outline'"></ion-icon>
         </span>
         <span class="mf-cat-item__text">
-          <bdi class="mf-cat-item__title">{{ item.title }}</bdi>
+          <bdi class="mf-cat-item__title">{{ item.title | categoryTitle }}</bdi>
           <span class="mf-cat-item__meta">
             {{
               (item.type === "income" ? "COMMON.INCOME" : "COMMON.OUTCOME")

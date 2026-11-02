@@ -93,8 +93,15 @@
     transform: none;
     &.selected {
       background: var(--ew-wallet-inset);
-      box-shadow: inset 0 -2px var(--ion-color-primary);
+      box-shadow: inset 0 -2px var(--mf-primary);
       transform: none;
+
+      // The legacy --ion-color-primary is only 3:1 on the dark surface;
+      // the ledger primary is tuned for both themes (AA).
+      .month-name,
+      .year {
+        color: var(--mf-primary);
+      }
     }
   }
 }

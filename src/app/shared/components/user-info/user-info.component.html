@@ -15,6 +15,7 @@
       @if (hasPhoto()) {
         <img
           [src]="currentUser()!.photoURL"
+          referrerpolicy="no-referrer"
           [alt]="currentUser()!.displayName"
           class="object-cover"
           />

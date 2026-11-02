@@ -1,3 +1,4 @@
+import { CategoryTitlePipe } from 'src/app/shared/pipes/category-title.pipe';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -45,6 +46,7 @@ import { ExpenseService } from 'src/app/core/services/expense.service';
     AsyncPipe,
     TranslateModule,
     PlanLimitBannerComponent,
+    CategoryTitlePipe,
   ],
 })
 export class CategoriesComponent

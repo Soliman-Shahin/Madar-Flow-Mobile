@@ -31,3 +31,30 @@
   font-weight: var(--mf-weight-medium);
   letter-spacing: 0.02em;
 }
+
+// Sizes (previously unstyled, so every amount rendered at the inherited size).
+:host(.mf-amount--hero) {
+  font-size: var(--mf-amount-hero-size, var(--mf-text-display));
+  font-weight: var(--mf-weight-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+:host(.mf-amount--lg) {
+  font-size: var(--mf-text-title-1);
+  font-weight: var(--mf-weight-bold);
+}
+
+:host(.mf-amount--md) {
+  font-size: inherit;
+  font-weight: var(--mf-weight-semibold);
+}
+
+:host(.mf-amount--sm) {
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-medium);
+}
+
+:host(.mf-amount--income) {
+  color: var(--mf-income);
+}

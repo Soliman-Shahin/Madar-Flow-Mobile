@@ -1,4 +1,8 @@
-<section class="mf-hero" aria-labelledby="mf-hero-label">
+<section
+  class="mf-hero"
+  [class.mf-hero--over]="isOver()"
+  aria-labelledby="mf-hero-label"
+>
   <div class="mf-hero__top">
     <h2 id="mf-hero-label" class="mf-hero__label">
       @if (isCurrentMonth()) {
@@ -53,29 +57,39 @@
     } }
   </p>
   } } @if (hasIncome()) {
-  <div
-    class="mf-hero__pace"
-    [class.mf-hero__pace--over]="isOver()"
-    role="progressbar"
-    aria-valuemin="0"
-    aria-valuemax="100"
-    [attr.aria-valuenow]="masked() ? null : roundedShare()"
-    [attr.aria-label]="
-      masked()
-        ? ('LEDGER.HIDDEN_AMOUNT' | translate)
-        : ('LEDGER.PACE_ARIA' | translate : { value: roundedShare() })
-    "
-  >
-    <span
-      class="mf-hero__pace-fill"
-      [style.inline-size.%]="masked() ? 0 : paceWidth()"
-    ></span>
+  <div class="mf-hero__pace-wrap">
+    <div
+      class="mf-hero__pace"
+      [class.mf-hero__pace--over]="isOver()"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="masked() ? null : roundedShare()"
+      [attr.aria-label]="
+        masked()
+          ? ('LEDGER.HIDDEN_AMOUNT' | translate)
+          : ('LEDGER.PACE_ARIA' | translate : { value: roundedShare() })
+      "
+    >
+      <span
+        class="mf-hero__pace-fill"
+        [style.inline-size.%]="masked() ? 0 : paceWidth()"
+      ></span>
+    </div>
+    @if (!masked()) {
+    <span class="mf-hero__pace-text">{{
+      "LEDGER.PACE_ARIA" | translate : { value: roundedShare() }
+    }}</span>
+    }
   </div>
   }
 
   <dl class="mf-hero__facts">
     <div class="mf-hero__fact">
-      <dt>{{ "LEDGER.INCOME" | translate }}</dt>
+      <dt>
+        <ion-icon name="arrow-down-circle-outline" aria-hidden="true"></ion-icon>
+        {{ "LEDGER.INCOME" | translate }}
+      </dt>
       <dd>
         <app-amount
           size="md"
@@ -88,11 +102,11 @@
         />
       </dd>
     </div>
-    <div
-      class="mf-hero__fact mf-hero__fact--end"
-      [class.mf-hero__fact--over]="isOver()"
-    >
-      <dt>{{ (isOver() ? "LEDGER.OVER" : "LEDGER.LEFT") | translate }}</dt>
+    <div class="mf-hero__fact" [class.mf-hero__fact--over]="isOver()">
+      <dt>
+        <ion-icon name="wallet-outline" aria-hidden="true"></ion-icon>
+        {{ (isOver() ? "LEDGER.OVER" : "LEDGER.LEFT") | translate }}
+      </dt>
       <dd>
         <app-amount
           size="md"

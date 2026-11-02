@@ -1,5 +1,9 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ledgerFormSheet } from 'src/app/shared/ui/sheet/sheet-options';
+import {
+  ledgerDetailSheet,
+  ledgerFormSheet,
+} from 'src/app/shared/ui/sheet/sheet-options';
+import { CurrencySheetComponent } from 'src/app/shared/components/prompt-sheets/currency-sheet.component';
 import { createInjectors } from './create-injectors';
 import {
   Injector,
@@ -16,7 +20,7 @@ import { RouterModule } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
-import { SUPPORTED_CURRENCIES } from 'src/app/shared/utils';
+import { SUPPORTED_CURRENCIES, suggestCurrency } from 'src/app/shared/utils';
 import { SyncStatusComponent } from 'src/app/shared/components/sync-status/sync-status.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -447,8 +451,15 @@ export class HomePageComponent
   }
 
   private buildChartSummaries(data: any, currency: string) {
+    // Isolate each amount as left-to-right so "US$ 2,888.50" does not get
+    // reordered into "$US" inside an Arabic sentence.
     const format = (value: number) =>
-      formatCurrency(value, currency, this.currentLang);
+      // Arabic formatting embeds a right-to-left mark; drop it so the whole
+      // amount reads as one left-to-right run.
+      `⁦${formatCurrency(value, currency, this.currentLang).replace(
+        /[‎‏؜]/g,
+        ''
+      )}⁩`;
     const incomeExpense = (data.incomeVsExpense || []) as Array<{
       name: string;
       value: number;
@@ -582,27 +593,18 @@ export class HomePageComponent
   private async promptForCurrency(profile: { currency?: string } | null): Promise<void> {
     if (!profile || profile.currency || HomePageComponent.currencyPromptShown) return;
     HomePageComponent.currencyPromptShown = true;
-    const alert = await this.alertController.create({
-      header: this.translateService.instant('MOBILE.CURRENCY_PROMPT_TITLE'),
-      message: this.translateService.instant('MOBILE.CURRENCY_PROMPT_MESSAGE'),
+    const suggested = suggestCurrency();
+    const modal = await this.modalCtrl.create({
+      component: CurrencySheetComponent,
+      componentProps: { suggested, locale: this.currentLang },
       backdropDismiss: false,
-      inputs: SUPPORTED_CURRENCIES.map((code, index) => ({
-        type: 'radio' as const,
-        label: code,
-        value: code,
-        checked: index === 0,
-      })),
-      buttons: [
-        { text: this.translateService.instant('MOBILE.CURRENCY_PROMPT_LATER'), role: 'cancel' },
-        {
-          text: this.translateService.instant('COMMON.SAVE'),
-          handler: (code: string) => {
-            if (code) this.profileData.updateProfile({ currency: code }).subscribe();
-          },
-        },
-      ],
+      ...ledgerDetailSheet(),
     });
-    await alert.present();
+    await modal.present();
+    const { data, role } = await modal.onDidDismiss<string | null>();
+    if (role === 'save' && data) {
+      this.profileData.updateProfile({ currency: data }).subscribe();
+    }
   }
 
   override ngOnInit(): void {

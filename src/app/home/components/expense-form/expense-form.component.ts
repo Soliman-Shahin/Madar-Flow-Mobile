@@ -1,3 +1,4 @@
+import { CategoryTitlePipe } from 'src/app/shared/pipes/category-title.pipe';
 import { expenseSyncLabel } from 'src/app/shared/utils/expense-presentation';
 import {
   AfterViewInit,
@@ -51,6 +52,7 @@ import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service
     DatePipe,
     NgTemplateOutlet,
     TranslateModule,
+    CategoryTitlePipe,
   ],
 })
 export class ExpenseFormComponent
@@ -84,6 +86,8 @@ export class ExpenseFormComponent
   private initialFormValue: Record<string, unknown> | null = null;
   isDeleteSubmitting = false;
   hasDraft = false;
+  /** Set once the transaction is saved, so a pending debounced draft write cannot resurrect it. */
+  private saved = false;
   private readonly ownerId = this.tokenService.getUserId();
   private readonly shortcutStoragePrefix =
     'madarflow.transaction-category-shortcuts.v1.';
@@ -138,6 +142,7 @@ export class ExpenseFormComponent
         takeUntil(this.destroy$)
       )
       .subscribe((value) => {
+        if (this.saved) return;
         const meaningful =
           !!String(value.amount ?? '').trim() ||
           !!String(value.category ?? '').trim() ||
@@ -360,6 +365,7 @@ export class ExpenseFormComponent
       )
       .subscribe({
         next: (response) => {
+          this.saved = true;
           if (!this.isEditMode) this.draftService.clear(this.ownerId);
           this.recordRecentCategory(String(payloadData.category));
           const message = this.isEditMode

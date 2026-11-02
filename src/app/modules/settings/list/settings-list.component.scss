@@ -73,3 +73,13 @@ ion-item.mf-account__item {
   font-size: var(--mf-text-caption);
   color: var(--mf-ink-3);
 }
+
+// Rows whose description wraps to two lines (e.g. Active sessions) must grow
+// instead of overflowing into the next block.
+.premium-list ion-item ion-label {
+  white-space: normal;
+}
+
+.premium-list + .premium-list {
+  margin-top: var(--mf-space-3);
+}

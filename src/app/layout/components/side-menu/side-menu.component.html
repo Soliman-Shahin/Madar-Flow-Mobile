@@ -23,6 +23,7 @@
           <img
             #img
             [src]="vm.storedProfile?.avatarUrl"
+            referrerpolicy="no-referrer"
             (error)="onAvatarError()"
             (load)="onAvatarLoad()"
             [alt]="'USER_AVATAR' | translate"

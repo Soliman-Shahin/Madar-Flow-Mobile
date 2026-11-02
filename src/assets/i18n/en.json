@@ -467,7 +467,12 @@
     "LOCK_TIMEOUT_IMMEDIATELY": "Immediately",
     "LOCK_TIMEOUT_30S": "After 30 seconds",
     "LOCK_TIMEOUT_1M": "After 1 minute",
-    "LOCK_TIMEOUT_5M": "After 5 minutes"
+    "LOCK_TIMEOUT_5M": "After 5 minutes",
+    "OTHER_DEVICES": "Other devices",
+    "NO_OTHER_SESSIONS": "No other devices are signed in.",
+    "SESSION_ACTIVE_NOW": "Active now",
+    "SESSION_LAST_ACTIVE": "Last active",
+    "SESSION_SIGNED_IN": "Signed in"
   },
   "BUDGET": {
     "TITLE": "Budget"
@@ -1172,6 +1177,20 @@
     "PROMPT_TITLE": "Help improve Madar Flow?",
     "PROMPT_MESSAGE": "Share anonymous usage data? We only count simple events like \"app opened\" or \"transaction added\", with a random ID that is not linked to your account. We never send your amounts, notes or personal details. You can change this any time in Settings > Privacy.",
     "PROMPT_ALLOW": "Share",
-    "PROMPT_DECLINE": "Not now"
+    "PROMPT_DECLINE": "Not now",
+    "PROMPT_LEAD": "Help us see which features people use, so we can make the app better. It is optional.",
+    "PROMPT_POINT_COUNT": "We only count simple events, like \"app opened\" or \"transaction added\", with a random ID.",
+    "PROMPT_POINT_NEVER": "Never your amounts, notes, categories, email or name.",
+    "PROMPT_POINT_CONTROL": "Change your mind any time in Settings > Privacy."
+  },
+  "DEFAULT_CATEGORIES": {
+    "UNCATEGORIZED": "Uncategorized",
+    "INCOME": "Income"
+  },
+  "NOTIFICATION_TEXT": {
+    "NEW_LOGIN_TITLE": "New login",
+    "NEW_LOGIN_MESSAGE": "A new session was signed in to your account.",
+    "SESSION_LIMIT_TITLE": "Signed out on another device",
+    "SESSION_LIMIT_MESSAGE": "{{devices}} was signed out because your plan's device limit ({{max}}) was reached. Upgrade your plan to use more devices."
   }
 }

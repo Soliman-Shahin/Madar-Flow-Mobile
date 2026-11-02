@@ -92,7 +92,7 @@
         <span class="mf-chip__mark" aria-hidden="true">
           <ion-icon [name]="category.icon || 'pricetag-outline'"></ion-icon>
         </span>
-        <bdi class="mf-chip__text">{{ category.title }}</bdi>
+        <bdi class="mf-chip__text">{{ category.title | categoryTitle }}</bdi>
       </button>
       }
     </div>
@@ -276,7 +276,7 @@
             >
               <ion-icon [name]="category.icon"></ion-icon>
             </div>
-            <bdi class="popover-item-text">{{ category.title }}</bdi>
+            <bdi class="popover-item-text">{{ category.title | categoryTitle }}</bdi>
             <ion-button
               fill="clear"
               class="favorite-button"

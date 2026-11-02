@@ -52,10 +52,29 @@
   }
 }
 
-ion-input[fill="outline"] {
+.delete-account-form ion-input {
   --border-color: var(--mf-outline);
+  --background: transparent;
   --border-radius: var(--mf-radius-md);
+  --padding-start: var(--mf-space-4);
+  --padding-end: var(--mf-space-4);
+  --color: var(--mf-ink);
   --highlight-color-focused: var(--mf-primary);
-  --background: var(--mf-surface);
+  --border-width: 1px;
+  min-height: 64px;
   font-family: var(--mf-font-sans);
+}
+
+.delete-account-form ion-button.delete-btn {
+  --background: var(--mf-danger);
+  --color: #fff;
+  --border-radius: 14px;
+  min-height: 52px;
+  font-weight: var(--mf-weight-semibold);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.dark .delete-account-form ion-button.delete-btn {
+  --color: #1a0507;
 }

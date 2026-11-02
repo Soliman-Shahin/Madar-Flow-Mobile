@@ -47,11 +47,24 @@ export class StorageService {
     }
   }
 
+  /**
+   * Device-level choices that must outlive a sign-out: replaying the whole
+   * onboarding, or flipping the language back, after every logout is wrong.
+   */
+  private static readonly DEVICE_KEYS = [
+    'onboarding_status',
+    'app_version',
+    'user-lang',
+    // The "share anonymous usage data" answer is asked once per device, not at every sign-in.
+    'telemetry_consent',
+  ];
+
   clear(): void {
     try {
-      // Only clear keys with our prefix
+      const keep = StorageService.DEVICE_KEYS.map((k) => this.prefix + k);
+      // Only clear keys with our prefix, except the device-level ones
       Object.keys(this.storage)
-        .filter((k) => k.startsWith(this.prefix))
+        .filter((k) => k.startsWith(this.prefix) && !keep.includes(k))
         .forEach((k) => this.storage.removeItem(k));
     } catch (error) {
       console.warn('Browser storage operation failed');

@@ -1,3 +1,4 @@
+import { NotificationTextPipe } from 'src/app/shared/pipes/notification-text.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -32,7 +33,13 @@ export function shouldOpenSyncConflict(notification: AppNotification): boolean {
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, IonicModule, TranslateModule, SkeletonBlockComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    TranslateModule,
+    SkeletonBlockComponent,
+    NotificationTextPipe,
+  ],
   template: `
     <ion-header mode="ios" class="mf-sub-header" translucent="false">
       <ion-toolbar>
@@ -68,11 +75,11 @@ export function shouldOpenSyncConflict(notification: AppNotification): boolean {
             ></ion-icon>
             {{ typePresentation(item.type).labelKey | translate }}
           </span>
-          <h1 class="mf-note-detail__title" dir="auto">{{ item.title }}</h1>
+          <h1 class="mf-note-detail__title" dir="auto">{{ item | notificationText : 'title' }}</h1>
           <time class="mf-note-detail__time"
             ><bdi>{{ formatDate(item.createdAt) }}</bdi></time
           >
-          <p class="mf-note-detail__message" dir="auto">{{ item.message }}</p>
+          <p class="mf-note-detail__message" dir="auto">{{ item | notificationText : 'message' }}</p>
           <ion-button
             *ngIf="canReviewSyncConflict(item)"
             expand="block"

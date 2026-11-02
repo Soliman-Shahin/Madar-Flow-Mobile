@@ -38,7 +38,7 @@
         name="password"
         autocomplete="current-password"
         fill="outline"
-        labelPlacement="stacked"
+        labelPlacement="floating"
         [label]="'SETTINGS.DELETE_ACCOUNT_PASSWORD' | translate"
         [(ngModel)]="password"
         [disabled]="deleting"
@@ -50,7 +50,7 @@
         autocomplete="off"
         autocapitalize="characters"
         fill="outline"
-        labelPlacement="stacked"
+        labelPlacement="floating"
         [label]="'SETTINGS.DELETE_ACCOUNT_CONFIRM_LABEL' | translate"
         [placeholder]="confirmationWord"
         [(ngModel)]="confirmation"
@@ -60,6 +60,7 @@
       <ion-button
         type="submit"
         expand="block"
+        class="delete-btn"
         color="danger"
         [disabled]="!canSubmit"
       >

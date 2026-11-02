@@ -81,8 +81,8 @@ export class AddCategoryComponent extends BaseComponent implements OnInit {
           Validators.pattern(/^(?!\s*$).+/), // not only whitespace
         ],
       ],
-      icon: [category?.icon || 'add', Validators.required],
-      color: [category?.color || '#28ba62', Validators.required],
+      icon: [category?.icon || 'folder-outline', Validators.required],
+      color: [category?.color || '#3880ff', Validators.required],
       type: [category?.type || 'outcome', Validators.required],
     });
   }
@@ -124,8 +124,8 @@ export class AddCategoryComponent extends BaseComponent implements OnInit {
           next: (category) => {
             this.categoryForm.patchValue({
               title: category.title || '',
-              icon: category.icon || 'add',
-              color: category.color || '#28ba62',
+              icon: category.icon || 'folder-outline',
+              color: category.color || '#3880ff',
               type: category.type || 'outcome',
             });
             this.cdr.markForCheck(); // Trigger change detection for OnPush
