@@ -89,12 +89,15 @@ export class AddCategoryComponent extends BaseComponent implements OnInit {
 
   selectColor(color: string) {
     this.categoryForm.patchValue({ color });
+    // patchValue alone leaves the form pristine, which keeps Update disabled.
+    this.categoryForm.markAsDirty();
     this.bumpPreview();
     this.addHapticFeedback();
   }
 
   selectIcon(icon: string) {
     this.categoryForm.patchValue({ icon });
+    this.categoryForm.markAsDirty();
     this.bumpPreview();
     this.addHapticFeedback();
   }
@@ -122,6 +125,9 @@ export class AddCategoryComponent extends BaseComponent implements OnInit {
         )
         .subscribe({
           next: (category) => {
+            // A later emission (cache, then server) must not wipe edits the user
+            // has already made.
+            if (this.categoryForm.dirty) return;
             this.categoryForm.patchValue({
               title: category.title || '',
               icon: category.icon || 'folder-outline',

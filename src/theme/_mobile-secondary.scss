@@ -285,7 +285,7 @@
     color: var(--mf-danger);
   }
 
-  // Icon mark: a small tinted square, the hue says what kind of setting it is.
+  // Icon mark: a small neutral square.
   .icon-wrapper {
     --mf-tone: var(--mf-cat-8);
     display: grid;
@@ -304,28 +304,8 @@
   .icon-wrapper ion-icon {
     font-size: 18px;
   }
-  .icon-wrapper.color-blue {
-    --mf-tone: var(--mf-cat-1);
-  }
-  .icon-wrapper.color-green {
-    --mf-tone: var(--mf-cat-2);
-  }
-  .icon-wrapper.color-orange {
-    --mf-tone: var(--mf-cat-3);
-  }
-  .icon-wrapper.color-purple,
-  .icon-wrapper.color-indigo {
-    --mf-tone: var(--mf-cat-4);
-  }
-  .icon-wrapper.color-red {
-    --mf-tone: var(--mf-cat-5);
-  }
-  .icon-wrapper.color-cyan {
-    --mf-tone: var(--mf-cat-6);
-  }
-  .icon-wrapper.color-dark {
-    --mf-tone: var(--mf-cat-8);
-  }
+  // One neutral tone for every row: colour is for data and for danger, not
+  // for telling settings apart (the colour-* classes stay as no-ops).
   ion-item:has(ion-label[color="danger"]) .icon-wrapper {
     --mf-tone: var(--mf-danger);
   }
@@ -357,4 +337,11 @@
     gap: var(--mf-space-2);
     padding: var(--mf-space-2) 0;
   }
+}
+
+// Locked or busy rows stay legible: Ionic's default 30% opacity falls well
+// under 4.5:1. The reason is always stated nearby (an upgrade prompt, a spinner).
+ion-item.item-interactive-disabled,
+ion-item[disabled] {
+  opacity: 0.62;
 }

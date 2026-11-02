@@ -154,7 +154,9 @@ export class NotificationListComponent implements OnInit, OnDestroy {
   trackById(_: number, item: AppNotification): string {
     return item.id;
   }
-  iconFor(type: AppNotification['type']): string {
+  iconFor(type: AppNotification['type'], event?: string): string {
+    // Sign-in events are security notes, not warnings.
+    if (event?.startsWith('security.')) return 'shield-checkmark-outline';
     return notificationTypePresentation(type).icon;
   }
   toneFor(type: AppNotification['type']): string {

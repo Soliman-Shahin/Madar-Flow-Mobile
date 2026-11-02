@@ -89,7 +89,6 @@
           [class.mm-item--active]="isActive(item.link, vm.activeLink)"
           [attr.aria-current]="isActive(item.link, vm.activeLink) ? 'page' : null"
           [style.--i]="i"
-          [style.--tone]="'var(--mf-cat-' + ((i % 6) + 1) + ')'"
           (click)="navigateFromMenu(item.link)"
         >
           <span class="mm-item__tile"

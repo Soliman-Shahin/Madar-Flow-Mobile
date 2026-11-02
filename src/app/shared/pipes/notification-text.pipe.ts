@@ -29,7 +29,7 @@ export class NotificationTextPipe implements PipeTransform {
     const key = `${base}_${part.toUpperCase()}`;
     const meta = item.metadata ?? {};
     const devices = Array.isArray(meta['endedDevices'])
-      ? (meta['endedDevices'] as unknown[]).map(String).join('، ')
+      ? (meta['endedDevices'] as unknown[]).map(String).join(this.translate.currentLang === 'ar' ? '، ' : ', ')
       : '';
     const text = this.translate.instant(key, {
       devices,

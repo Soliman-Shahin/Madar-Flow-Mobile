@@ -45,6 +45,7 @@ import { ProfileService } from 'src/app/modules/profile/services/profile.service
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 import { SkeletonBlockComponent } from 'src/app/shared/ui/skeleton-block/skeleton-block.component';
 import { ComponentStateService } from 'src/app/shared/services/component-state.service';
+import { QuickAddService } from 'src/app/shared/services/quick-add.service';
 import { ExpenseService } from 'src/app/core/services/expense.service';
 import { CategoryService } from 'src/app/modules/categories/services/categories.service';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -95,6 +96,7 @@ export class TransactionsComponent implements OnChanges, OnDestroy {
 
   // ─── Injected services ───────────────────────────────
   private readonly expenseSvc = inject(ExpenseService);
+  private readonly quickAdd = inject(QuickAddService);
   private readonly modalCtrl = inject(ModalController);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly alertService = inject(AlertService);
@@ -103,6 +105,11 @@ export class TransactionsComponent implements OnChanges, OnDestroy {
 
   private readonly profileService = inject(ProfileService);
   private readonly categoryService = inject(CategoryService);
+
+  /** First run: the empty list offers the one thing to do. */
+  addFirst(): void {
+    void this.quickAdd.requestAdd();
+  }
 
   constructor() {
     // Load user currency

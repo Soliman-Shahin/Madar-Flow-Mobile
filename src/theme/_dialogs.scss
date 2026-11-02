@@ -139,3 +139,165 @@ ion-toast.custom-toast.ion-color-danger {
 body.dark ion-toast.custom-toast.ion-color-danger {
   --ion-color-contrast: #1a0507 !important;
 }
+
+// Action sheets: the destructive row (Delete, Remove) is the only red one.
+ion-action-sheet {
+  .action-sheet-button.action-sheet-destructive {
+    --button-color: var(--mf-danger);
+    --color: var(--mf-danger);
+    color: var(--mf-danger);
+
+    .action-sheet-icon,
+    ion-icon {
+      color: var(--mf-danger);
+    }
+  }
+}
+
+// ===================================================================
+//  Action sheets (camera / gallery, category actions, select pickers).
+//  Ionic ships a fixed #262626 button colour, which is invisible on the
+//  dark ground (about 1.3:1). Everything here comes from the tokens, so it
+//  follows light/dark and reads at AA in both. `.hydrated` raises the
+//  specificity above Ionic's own host rule.
+// ===================================================================
+ion-action-sheet.hydrated {
+  --background: var(--mf-surface);
+  --color: var(--mf-ink-3);
+  --button-color: var(--mf-ink);
+  --button-color-activated: var(--mf-ink);
+  --button-color-selected: var(--mf-primary);
+  --button-background: transparent;
+  --button-background-activated: var(--mf-ink);
+  --button-background-activated-opacity: 0.08;
+  --button-background-selected: var(--mf-primary-soft);
+  --button-background-selected-opacity: 1;
+  --backdrop-opacity: 0.5;
+  font-family: var(--mf-font-sans);
+
+  .action-sheet-container {
+    gap: var(--mf-space-2);
+    padding-inline: var(--mf-gutter);
+    padding-bottom: calc(var(--mf-space-3) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .action-sheet-group {
+    overflow: hidden;
+    border-radius: var(--mf-radius-lg);
+    background: var(--mf-surface);
+    // one tone step plus a hairline: it must read as a card on the ground
+    box-shadow: inset 0 0 0 1px var(--mf-separator);
+  }
+
+  .action-sheet-title {
+    padding: var(--mf-space-3) var(--mf-space-4) var(--mf-space-2);
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-medium);
+    letter-spacing: 0;
+    text-align: center;
+    color: var(--mf-ink-3);
+  }
+
+  .action-sheet-button {
+    min-height: 52px;
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink);
+  }
+
+  .action-sheet-button-inner {
+    gap: var(--mf-space-3);
+    justify-content: flex-start;
+  }
+
+  .action-sheet-icon {
+    margin: 0;
+    font-size: 22px;
+    color: var(--mf-ink-2);
+  }
+
+  .action-sheet-cancel {
+    border-radius: var(--mf-radius-lg);
+
+    .action-sheet-button {
+      justify-content: center;
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-primary);
+    }
+
+    .action-sheet-button-inner {
+      justify-content: center;
+    }
+  }
+
+  .action-sheet-selected {
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-primary);
+  }
+}
+
+// Alert option lists (currency picker, radio and checkbox choices): the
+// labels were Ionic's near-black grey, unreadable on the dark surface.
+ion-alert:is(.md, .ios) {
+  .alert-radio-label,
+  .alert-checkbox-label {
+    padding-block: var(--mf-space-3);
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink);
+    white-space: normal;
+  }
+
+  .alert-tappable {
+    min-height: 48px;
+    contain: none;
+  }
+
+  .alert-radio-icon {
+    border-color: var(--mf-ink-3);
+  }
+
+  .alert-radio-inner {
+    background-color: var(--mf-primary);
+  }
+
+  .alert-checkbox-icon {
+    border-color: var(--mf-ink-3);
+  }
+
+  [aria-checked='true'] {
+    .alert-radio-label,
+    .alert-checkbox-label {
+      font-weight: var(--mf-weight-semibold);
+      color: var(--mf-primary);
+    }
+
+    .alert-radio-icon {
+      border-color: var(--mf-primary);
+    }
+  }
+
+  .alert-message,
+  .alert-sub-title {
+    color: var(--mf-ink-2);
+  }
+}
+
+// The selected option: Ionic's own checked rule outranks the block above.
+ion-alert:is(.md, .ios) .alert-radio-button[aria-checked='true'] .alert-radio-label,
+ion-alert:is(.md, .ios) .alert-checkbox-button[aria-checked='true'] .alert-checkbox-label {
+  color: var(--mf-primary) !important;
+  font-weight: var(--mf-weight-semibold);
+}
+
+// The calendar's selected day uses the app's own primary, not Ionic's default blue.
+ion-datetime {
+  --ion-color-primary: var(--mf-primary);
+  --ion-color-primary-contrast: var(--mf-primary-contrast);
+  --ion-color-primary-rgb: 31, 79, 209;
+}
+
+html.dark ion-datetime,
+body.dark ion-datetime {
+  --ion-color-primary-rgb: 126, 162, 255;
+}

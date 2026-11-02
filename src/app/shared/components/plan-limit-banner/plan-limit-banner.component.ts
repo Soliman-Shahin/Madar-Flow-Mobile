@@ -1,133 +1,151 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 
+/**
+ * Plan usage notice: one flat panel, a label with "used of limit", a thin
+ * track at the true ratio, and the upgrade action only when it matters.
+ * Red appears only once the limit is actually reached.
+ */
 @Component({
   selector: 'app-plan-limit-banner',
   template: `
-    <ion-card
-      class="limit-banner"
-      [class.warning]="percentage >= 75"
-      [class.danger]="percentage >= 90"
+    <section
+      class="plb"
+      [class.plb--full]="percentage >= 100"
+      [class.plb--near]="percentage >= 90 && percentage < 100"
+      role="status"
     >
-      <ion-card-content>
-        <div class="banner-content">
-          <div class="info">
-            <ion-icon [name]="getIcon()"></ion-icon>
-            <div>
-              <h4>{{ limitType | translate }}</h4>
-              <p>{{ used }} / {{ limit === null ? '∞' : limit }}</p>
-            </div>
-          </div>
-          <div class="progress">
-            <ion-progress-bar
-              [value]="percentage / 100"
-              [color]="getColor()"
-            ></ion-progress-bar>
-            <span class="percentage">{{ percentage }}%</span>
-          </div>
-          <ion-button
-            *ngIf="percentage >= 90"
-            size="small"
-            color="primary"
-            (click)="navigateToSubscription()"
-          >
-            {{ 'SUBSCRIPTION.UPGRADE' | translate }}
-          </ion-button>
+      <div class="plb__row">
+        <div class="plb__text">
+          <strong class="plb__title">{{ limitType | translate }}</strong>
+          <span class="plb__figure">{{
+            limit === null
+              ? ('SUBSCRIPTION.UNLIMITED' | translate)
+              : ('SUBSCRIPTION.USED_OF'
+                | translate : { used: used, limit: limit })
+          }}</span>
         </div>
-      </ion-card-content>
-    </ion-card>
+        @if (percentage >= 90) {
+        <button
+          type="button"
+          class="plb__action"
+          (click)="navigateToSubscription()"
+        >
+          {{ 'SUBSCRIPTION.UPGRADE' | translate }}
+        </button>
+        }
+      </div>
+      <div
+        class="plb__track"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-valuenow]="clamped"
+        [attr.aria-label]="limitType | translate"
+      >
+        <i [style.width.%]="clamped"></i>
+      </div>
+      @if (percentage >= 100) {
+      <p class="plb__note">
+        {{ 'SUBSCRIPTION.LIMIT_REACHED_MSG' | translate }}
+      </p>
+      }
+    </section>
   `,
   styles: [
     `
-      .limit-banner {
-        margin: 16px;
-        border-radius: 12px;
-        border-left: 4px solid var(--ion-color-success);
-        transition: all 0.3s ease;
+      :host {
+        display: block;
+      }
 
-        &.warning {
-          border-left-color: var(--ion-color-warning);
-        }
+      .plb {
+        margin: var(--mf-space-3) var(--mf-gutter);
+        padding: var(--mf-space-4);
+        border-radius: var(--mf-radius-lg);
+        background: var(--mf-surface);
+        box-shadow: inset 0 0 0 1px var(--mf-separator);
+        font-family: var(--mf-font-sans);
+      }
 
-        &.danger {
-          border-left-color: var(--ion-color-danger);
-        }
+      .plb__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--mf-space-3);
+        min-height: 28px;
+      }
 
-        .banner-content {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+      .plb__text {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 2px var(--mf-space-2);
+        min-width: 0;
+      }
 
-          .info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
+      .plb__title {
+        font-size: var(--mf-text-callout);
+        font-weight: var(--mf-weight-semibold);
+        color: var(--mf-ink);
+      }
 
-            ion-icon {
-              font-size: 24px;
-              color: var(--ion-color-primary);
-            }
+      .plb__figure {
+        font-size: var(--mf-text-footnote);
+        font-variant-numeric: tabular-nums;
+        color: var(--mf-ink-2);
+      }
 
-            h4 {
-              font-size: 14px;
-              font-weight: 700;
-              margin: 0 0 4px 0;
-            }
+      .plb__action {
+        flex: none;
+        min-height: var(--mf-touch-target);
+        margin-block: -8px;
+        padding: 0 var(--mf-space-2);
+        border: 0;
+        background: transparent;
+        font: inherit;
+        font-size: var(--mf-text-callout);
+        font-weight: var(--mf-weight-semibold);
+        color: var(--mf-primary);
+        cursor: pointer;
+      }
 
-            p {
-              font-size: 12px;
-              opacity: 0.7;
-              margin: 0;
-            }
-          }
+      .plb__action:focus-visible {
+        outline: 2px solid var(--mf-focus-ring);
+        outline-offset: 2px;
+        border-radius: var(--mf-radius-sm);
+      }
 
-          .progress {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+      .plb__track {
+        height: 6px;
+        margin-top: var(--mf-space-3);
+        overflow: hidden;
+        border-radius: var(--mf-radius-pill);
+        background: var(--mf-surface-sunken);
+      }
 
-            ion-progress-bar {
-              height: 6px;
-              border-radius: 3px;
-            }
+      .plb__track i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--mf-primary);
+      }
 
-            .percentage {
-              font-size: 12px;
-              font-weight: 700;
-              color: var(--ion-color-primary);
-              text-align: end;
-            }
-          }
+      .plb--full .plb__track i {
+        background: var(--mf-danger);
+      }
 
-          ion-button {
-            --border-radius: 8px;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .banner-content {
-            flex-direction: column;
-
-            .info,
-            .progress {
-              width: 100%;
-            }
-
-            ion-button {
-              width: 100%;
-            }
-          }
-        }
+      .plb__note {
+        margin: var(--mf-space-3) 0 0;
+        font-size: var(--mf-text-footnote);
+        line-height: var(--mf-leading-snug);
+        color: var(--mf-ink-2);
       }
     `,
   ],
   standalone: true,
-  imports: [CommonModule, IonicModule, TranslateModule],
+  imports: [CommonModule, TranslateModule],
 })
 export class PlanLimitBannerComponent {
   @Input() limitType = 'SUBSCRIPTION.CATEGORIES_LIMIT';
@@ -137,16 +155,8 @@ export class PlanLimitBannerComponent {
 
   constructor(private router: Router) {}
 
-  getIcon(): string {
-    if (this.percentage >= 90) return 'alert-circle';
-    if (this.percentage >= 75) return 'warning';
-    return 'information-circle';
-  }
-
-  getColor(): string {
-    if (this.percentage >= 90) return 'danger';
-    if (this.percentage >= 75) return 'warning';
-    return 'success';
+  get clamped(): number {
+    return Math.max(0, Math.min(100, Math.round(this.percentage)));
   }
 
   navigateToSubscription() {

@@ -37,6 +37,15 @@ import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service';
+import { ReceiptScanComponent } from 'src/app/shared/components/receipt-scan/receipt-scan.component';
+import { ScanResult } from 'src/app/core/receipts/receipt-scan.service';
+import { ReceiptStoreService } from 'src/app/core/receipts/receipt-store.service';
+import { inject } from '@angular/core';
+import {
+  readMerchantMemory,
+  rememberMerchantCategory,
+  suggestCategory,
+} from 'src/app/core/receipts/receipt-category';
 
 @Component({
   selector: 'app-expense-form',
@@ -53,6 +62,7 @@ import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service
     NgTemplateOutlet,
     TranslateModule,
     CategoryTitlePipe,
+    ReceiptScanComponent,
   ],
 })
 export class ExpenseFormComponent
@@ -60,6 +70,35 @@ export class ExpenseFormComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   readonly syncLabel = expenseSyncLabel;
+  private readonly receiptStore = inject(ReceiptStoreService);
+  /** The receipt this transaction was filled from (picture kept after saving). */
+  receiptScan: ScanResult | null = null;
+  /** Fields the reader was not sure about, shown with a "check this" note. */
+  checkAmount = false;
+  checkDate = false;
+  checkDescription = false;
+  /** True while the selected category was suggested by a scan, not chosen. */
+  categoryFromScan = false;
+  @ViewChild(ReceiptScanComponent) scanner?: ReceiptScanComponent;
+
+  /** Width of the amount field in characters, so the currency sits right after the figure. */
+  get amountWidthCh(): number {
+    const v = this.expenseForm?.get('amount')?.value;
+    const len = v === null || v === undefined || v === '' ? 4 : String(v).length + 0.5;
+    return Math.min(12, Math.max(4, len));
+  }
+
+  /** The first thing still missing before a new transaction can be created. */
+  get submitHint(): string {
+    if (this.isEditMode || !this.expenseForm) return '';
+    const f = this.expenseForm;
+    if (f.get('amount')?.invalid) return 'EXPENSE.HINT_AMOUNT';
+    if (f.get('category')?.invalid || !f.get('category')?.value) {
+      return 'EXPENSE.HINT_CATEGORY';
+    }
+    if (f.get('description')?.invalid) return 'EXPENSE.HINT_DESCRIPTION';
+    return '';
+  }
   @Input() expense?: Expense;
   @Input() onClose: () => void = () => {};
 
@@ -366,6 +405,7 @@ export class ExpenseFormComponent
       .subscribe({
         next: (response) => {
           this.saved = true;
+          void this.keepReceipt(response as Expense).catch(() => undefined);
           if (!this.isEditMode) this.draftService.clear(this.ownerId);
           this.recordRecentCategory(String(payloadData.category));
           const message = this.isEditMode
@@ -381,6 +421,79 @@ export class ExpenseFormComponent
           this.handleError(message, error, true);
         },
       });
+  }
+
+  /** Fills the form from a scanned receipt; the person reviews and saves. */
+  onReceiptScanned(result: ScanResult): void {
+    this.receiptScan = result;
+    const e = result.extraction;
+    // A new scan replaces what an earlier scan or draft left in these fields,
+    // so a number from a previous receipt is never kept by mistake.
+    this.expenseForm.patchValue({
+      amount: e.total ?? null,
+      description: e.merchant ?? '',
+    });
+    if (e.date) {
+      const [y, m, d] = e.date.split('-').map(Number);
+      const noon = new Date(y, m - 1, d, 12, 0, 0);
+      this.expenseForm.patchValue({ date: noon.toISOString() });
+    }
+    // A reading made on the device can be one digit off without any sign of
+    // it, so the amount is always flagged for a look; an online reading only
+    // when it was unsure.
+    // Suggest a category from this person's own habit and the kind of shop.
+    const suggestion = suggestCategory(
+      e,
+      this.allCategories,
+      this.ownerId ? readMerchantMemory(this.ownerId) : {}
+    );
+    if (suggestion) {
+      this.expenseForm.patchValue({ category: suggestion.id });
+      this.categoryFromScan = true;
+    } else if (this.categoryFromScan) {
+      // an earlier scan's suggestion must not stay for a different receipt
+      this.expenseForm.patchValue({ category: '' });
+      this.categoryFromScan = false;
+    }
+    this.checkAmount =
+      e.total === undefined ||
+      e.confidence.total === 'low' ||
+      e.source === 'offline';
+    this.checkDate = !e.date;
+    this.checkDescription = !e.merchant;
+    this.expenseForm.markAsDirty();
+    this.cdr.markForCheck();
+  }
+
+  onReceiptCleared(): void {
+    this.receiptScan = null;
+    this.checkAmount = this.checkDate = this.checkDescription = false;
+    this.cdr.markForCheck();
+  }
+
+  private async keepReceipt(saved: Expense): Promise<void> {
+    const scan = this.receiptScan;
+    if (!scan || !this.ownerId) return;
+    // next time this shop is scanned, the same category is suggested
+    rememberMerchantCategory(
+      this.ownerId,
+      scan.extraction.merchant,
+      String(this.expenseForm.get('category')?.value ?? '')
+    );
+    const id = (saved as any)?._clientId || saved?._id;
+    if (!id) return;
+    await this.receiptStore.save({
+      id: String(id),
+      ownerUserId: this.ownerId,
+      thumb: scan.thumb,
+      image: scan.image,
+      merchant: scan.extraction.merchant,
+      total: scan.extraction.total,
+      currency: scan.extraction.currency,
+      items: scan.extraction.items,
+      scannedAt: new Date().toISOString(),
+      source: scan.extraction.source,
+    });
   }
 
   discardDraft(): void {

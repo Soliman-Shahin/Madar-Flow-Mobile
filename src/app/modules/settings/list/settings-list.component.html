@@ -257,6 +257,21 @@
           (ionChange)="toggleTelemetry($event)"
         ></ion-toggle>
       </ion-item>
+      <ion-item lines="none">
+        <div slot="start" class="icon-wrapper">
+          <ion-icon name="scan-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label class="ion-text-wrap">
+          <h3>{{ "RECEIPT.SETTING" | translate }}</h3>
+          <p>{{ "RECEIPT.SETTING_DESC" | translate }}</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          [attr.aria-label]="'RECEIPT.SETTING' | translate"
+          [checked]="receiptsOnline"
+          (ionChange)="toggleReceiptsOnline($event)"
+        ></ion-toggle>
+      </ion-item>
     </ion-list>
     <p class="section-note">{{ "TELEMETRY.NOTE" | translate }}</p>
 

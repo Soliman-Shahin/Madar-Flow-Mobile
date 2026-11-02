@@ -55,3 +55,12 @@ ion-modal.mf-sheet--auto {
   border-radius: var(--mf-radius-pill);
   background: var(--mf-outline);
 }
+
+// Receipt viewer: a true full-screen modal on black (no sheet, no rounding).
+ion-modal.mf-receipt-viewer {
+  --width: 100%;
+  --height: 100%;
+  --border-radius: 0;
+  --background: #000;
+  --box-shadow: none;
+}

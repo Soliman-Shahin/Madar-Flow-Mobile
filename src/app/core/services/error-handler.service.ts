@@ -70,8 +70,9 @@ export class ErrorHandlerService implements ErrorHandler {
         typeof backendError?.code === 'string' ? backendError.code : null;
 
       // 1) If we have an error code, try to map it to a translation key
-      if (code) {
-        message = `ERROR_CODES.${code}`;
+      const codeKey = code ? `ERROR_CODES.${code}` : null;
+      if (codeKey && this.translate.instant(codeKey) !== codeKey) {
+        message = codeKey;
       } else if (
         typeof backendError?.message === 'string' &&
         backendError.message.trim()

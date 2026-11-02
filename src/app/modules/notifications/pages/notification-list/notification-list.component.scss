@@ -49,25 +49,20 @@ ion-item.mf-note {
   }
 }
 
+// A plain grey glyph: the bold title and the unread dot carry the row, an icon
+// box repeated down a list does not.
 .mf-note__mark {
-  --mf-note-tone: var(--mf-primary);
   display: grid;
   place-items: center;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
-  margin: var(--mf-space-3) var(--mf-space-3) 0 0;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   margin-inline: 0 var(--mf-space-3);
-  border-radius: var(--mf-radius-sm);
-  background: color-mix(
-    in srgb,
-    var(--mf-note-tone) var(--mf-cat-soft-mix),
-    var(--mf-surface)
-  );
-  color: color-mix(in srgb, var(--mf-note-tone) 80%, var(--mf-ink));
+  margin-top: var(--mf-space-3);
+  color: var(--mf-ink-3);
 
   ion-icon {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 

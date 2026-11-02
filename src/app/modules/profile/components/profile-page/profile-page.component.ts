@@ -141,10 +141,17 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(50),
+          Validators.pattern(/\S/),
         ],
       ],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.maxLength(20)]],
+      phone: [
+        '',
+        [
+          Validators.maxLength(20),
+          Validators.pattern(/^(\+?[0-9\s\-()]{6,20})?$/),
+        ],
+      ],
     });
 
     this.salaryForm = this.fb.group({
@@ -167,7 +174,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
           this.avatarUrl = null;
           this.personalForm.reset({}, { emitEvent: false });
           while (this.details.length) this.details.removeAt(0);
-          this.details.push(this.createDetailGroup('Salary', 0));
+          this.details.push(this.createDetailGroup(this.defaultSalaryLabel(), 0));
           this.salaryForm.patchValue({ currency: '' }, { emitEvent: false });
           this.personalForm.markAsPristine();
           this.salaryForm.markAsPristine();
@@ -230,7 +237,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
       );
     } else {
       // Ensure at least one row exists for UX
-      arr.push(this.createDetailGroup('Salary', 0));
+      arr.push(this.createDetailGroup(this.defaultSalaryLabel(), 0));
     }
     this.salaryForm.patchValue(
       { currency: profile.currency },
@@ -265,7 +272,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
     if (
       !savedSalary.length &&
       currentSalary.length === 1 &&
-      currentSalary[0].label === 'Salary' &&
+      currentSalary[0].label === this.defaultSalaryLabel() &&
       currentSalary[0].amount === 0
     )
       currentSalary = [];
@@ -335,7 +342,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
   }
 
   addDetail(): void {
-    this.details.push(this.createDetailGroup('Salary', 0));
+    this.details.push(this.createDetailGroup(this.defaultSalaryLabel(), 0));
     this.details.updateValueAndValidity();
     this.salaryForm.markAsDirty();
     this.isSalaryFormDirty = true;
@@ -428,6 +435,44 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
   }
 
   // Calculate profile completion percentage
+  /** Sum of the amounts as typed, so the card shows what will be saved. */
+  get salaryTotal(): number {
+    return this.details.controls.reduce((sum, g) => {
+      const n = Number(g.get('amount')?.value);
+      return Number.isFinite(n) ? sum + n : sum;
+    }, 0);
+  }
+
+  /** Label for a brand-new salary row, in the app language. */
+  private defaultSalaryLabel(): string {
+    return this.translate.instant('LEDGER.SAMPLE_SALARY');
+  }
+
+  /** First letter of the name, shown when there is no photo. */
+  get avatarInitial(): string {
+    const name = String(this.personalForm?.get('username')?.value ?? '').trim();
+    return name ? Array.from(name)[0].toUpperCase() : '?';
+  }
+
+  /** Profile items still empty, in the order the completion score counts them. */
+  get missingProfileItems(): string[] {
+    const p = this.profileService.getProfile();
+    if (!p) return [];
+    const out: string[] = [];
+    if (!p.avatarUrl?.trim()) out.push('PROFILE.COMPLETION.ITEM_PHOTO');
+    if (!p.phone?.trim()) out.push('PROFILE.COMPLETION.ITEM_PHONE');
+    if (!(p.salary?.length && p.salary[0].amount > 0)) {
+      out.push('PROFILE.COMPLETION.ITEM_SALARY');
+    }
+    return out;
+  }
+
+  get missingLabels(): string {
+    return this.missingProfileItems
+      .map((k) => this.translate.instant(k))
+      .join(this.translate.currentLang === 'ar' ? '، ' : ', ');
+  }
+
   get profileCompletion(): number {
     const profile = this.profileService.getProfile();
     if (!profile) return 0;

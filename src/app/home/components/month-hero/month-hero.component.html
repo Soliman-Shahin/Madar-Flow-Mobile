@@ -38,7 +38,7 @@
     [maskedLabel]="'LEDGER.HIDDEN_AMOUNT' | translate"
   />
 
-  @if (comparison(); as c) { @if (c.status === 'ready' && !masked()) {
+  @if (comparison(); as c) { @if (c.status === 'ready' && !masked() && !(!expenses() && c.direction !== 'new' && c.direction !== 'less' && c.direction !== 'more')) {
   <p
     class="mf-hero__delta"
     [class.mf-hero__delta--less]="c.direction === 'less'"

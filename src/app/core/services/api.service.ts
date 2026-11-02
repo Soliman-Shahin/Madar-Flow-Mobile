@@ -91,7 +91,12 @@ export class ApiService {
   post<T>(
     path: string,
     body: any,
-    options: { headers?: HttpHeaders; params?: HttpParams } = {}
+    options: {
+      headers?: HttpHeaders;
+      params?: HttpParams;
+      /** Overrides the default wait, for slow work such as reading a photo. */
+      timeoutMs?: number;
+    } = {}
   ): Observable<T> {
     const defaultHeaders = this.getHeadersObject();
 
@@ -108,9 +113,9 @@ export class ApiService {
       ...extraHeaders,
     });
 
-    const timeoutDuration = this.connectionService.isBackendReachable()
-      ? 15000
-      : 2000;
+    const timeoutDuration =
+      options.timeoutMs ??
+      (this.connectionService.isBackendReachable() ? 15000 : 2000);
 
     return this.http
       .post<any>(`${this.baseUrl}${path}`, body, {

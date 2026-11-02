@@ -28,6 +28,16 @@
                 "output": "assets"
               },
               {
+                "glob": "worker.min.js",
+                "input": "node_modules/tesseract.js/dist",
+                "output": "assets/ocr"
+              },
+              {
+                "glob": "tesseract-core{,-simd}-lstm.wasm.js",
+                "input": "node_modules/tesseract.js-core",
+                "output": "assets/ocr"
+              },
+              {
                 "glob": "**/*",
                 "input": "src/fcm",
                 "output": "fcm"

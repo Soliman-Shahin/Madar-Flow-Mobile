@@ -72,6 +72,30 @@
       <dd>{{ syncDescriptionKey | translate }}</dd>
     </div>
   </dl>
+  @if (receipt(); as r) {
+  <section class="mf-detail__receipt" aria-label="{{ 'RECEIPT.RECEIPT' | translate }}">
+    <button type="button" class="mf-detail__receipt-open" (click)="openReceipt()" [attr.aria-label]="'RECEIPT.OPEN' | translate">
+      <img [src]="r.thumb" alt="" class="mf-detail__receipt-img" />
+      <ion-icon name="expand-outline" class="mf-detail__receipt-expand" aria-hidden="true"></ion-icon>
+    </button>
+    <div class="mf-detail__receipt-text">
+      <strong>{{ "RECEIPT.RECEIPT" | translate }}</strong>
+      @if (r.merchant) {
+      <span dir="auto">{{ r.merchant }}</span>
+      } @if (r.items.length) {
+      <button type="button" class="mf-detail__receipt-toggle" (click)="showReceiptItems.set(!showReceiptItems())" [attr.aria-expanded]="showReceiptItems()">
+        {{ "RECEIPT.ITEMS" | translate }} ({{ r.items.length }})
+      </button>
+      }
+    </div>
+  </section>
+  @if (showReceiptItems() && receipt()?.items?.length) {
+  <ul class="mf-detail__receipt-items">
+    @for (item of receipt()!.items; track $index) {
+    <li><span dir="auto">{{ item.name }}</span><bdi class="mf-detail__receipt-amount">{{ item.amount | number : "1.2-2" }}</bdi></li>
+    }
+  </ul>
+  } }
   } @if (!isUnavailable()) {
   <div class="mf-detail__actions">
     <ion-button class="mf-detail__edit" expand="block" (click)="edit()">

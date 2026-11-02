@@ -126,3 +126,27 @@ ion-button.mf-empty__action {
     margin-top: var(--mf-space-2);
   }
 }
+
+// First-run empty state: the one action, as a real control.
+.mf-empty__action {
+  min-height: var(--mf-touch-target);
+  margin-top: var(--mf-space-2);
+  padding: 0 var(--mf-space-4);
+  border: 0;
+  border-radius: var(--mf-radius-md);
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-primary);
+  cursor: pointer;
+
+  &:active {
+    background: var(--mf-primary-soft);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+  }
+}

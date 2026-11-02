@@ -59,7 +59,7 @@
           [attr.aria-label]="'PROFILE.AVATAR' | translate"
         >
           @if (!vm.profile?.avatarUrl && !vm.isLoadingAvatar) {
-          <ion-icon name="person"></ion-icon>
+          <span class="avatar-initial" aria-hidden="true">{{ avatarInitial }}</span>
           }
         </div>
         <button
@@ -171,7 +171,11 @@
         </div>
         <div class="strip-text">
           <strong>{{ "PROFILE.COMPLETION.TITLE" | translate }}</strong>
-          <span>{{ "PROFILE.COMPLETION.SUBTITLE" | translate }}</span>
+          <span>{{
+            missingProfileItems.length
+              ? ("PROFILE.COMPLETION.MISSING" | translate : { items: missingLabels })
+              : ("PROFILE.COMPLETION.DONE" | translate)
+          }}</span>
         </div>
       </div>
       <div class="strip-progress">
@@ -313,6 +317,11 @@
               </div>
               }
               <div class="salary-items-list">
+                <div class="salary-head" aria-hidden="true">
+                  <span class="salary-head__label">{{ "PROFILE.SALARY.LABEL" | translate }}</span>
+                  <span class="salary-head__amount">{{ "PROFILE.SALARY.AMOUNT" | translate }}</span>
+                  <span class="salary-head__spacer"></span>
+                </div>
                 <ion-reorder-group
                   [disabled]="false"
                   (ionItemReorder)="onReorder($event)"
@@ -397,8 +406,8 @@
                 class="add-detail-btn"
                 (click)="addDetail()"
               >
-                <ion-icon name="add-circle-outline"></ion-icon>
-                <span>{{ "COMMON.ADD" | translate }}</span>
+                <ion-icon name="add-outline"></ion-icon>
+                <span>{{ "PROFILE.SALARY.ADD" | translate }}</span>
               </button>
             </div>
             <!-- Currency Selection -->
@@ -423,6 +432,13 @@
                   class="dropdown-icon"
                 ></ion-icon>
               </div>
+            </div>
+            <div class="salary-total">
+              <span>{{ "PROFILE.SALARY.TOTAL" | translate }}</span>
+              <strong dir="ltr"
+                >{{ salaryTotal | number : "1.2-2" }}
+                <small>{{ salaryForm.get("currency")?.value }}</small></strong
+              >
             </div>
             <div class="form-actions">
               <ion-button

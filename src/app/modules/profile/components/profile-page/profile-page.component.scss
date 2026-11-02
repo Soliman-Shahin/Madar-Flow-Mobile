@@ -919,3 +919,225 @@ ion-button.btn-gradient {
   min-width: 132px;
   padding-inline: var(--mf-space-3);
 }
+
+// ===================================================================
+//  Profile polish
+// ===================================================================
+// Initial instead of a generic silhouette when there is no photo.
+.avatar-initial {
+  font-family: var(--mf-font-sans);
+  font-size: 38px;
+  font-weight: var(--mf-weight-bold);
+  line-height: 1;
+  color: var(--mf-primary);
+}
+
+// Salary row: label and amount share one line, the delete button stays 44px.
+.salary-item-main {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--mf-space-2);
+}
+
+.salary-fields-row {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: end;
+  gap: var(--mf-space-2);
+}
+
+.salary-item-main .delete-item-btn {
+  flex: 0 0 var(--mf-touch-target);
+  align-self: flex-end;
+}
+
+.salary-item-main .reorder-handle {
+  align-self: flex-end;
+  min-height: var(--mf-touch-target);
+  display: grid;
+  place-items: center;
+}
+
+// ===================================================================
+//  Salary & currency: a quiet settings form.
+//  Labels sit above the fields once (a column head, not floating text in
+//  every box), controls are one 44px height, flat, with a 1px border; the
+//  card ends with the total it will save and one Save.
+// ===================================================================
+.salary-form {
+  display: grid;
+  gap: var(--mf-space-4);
+
+  .salary-head,
+  .salary-item-main {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) var(--mf-touch-target);
+    column-gap: var(--mf-space-2);
+    align-items: center;
+  }
+
+  .salary-head {
+    padding-bottom: var(--mf-space-2);
+    font-size: var(--mf-text-footnote);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink-2);
+  }
+
+  .salary-item {
+    padding: 0;
+  }
+
+  .salary-items-list {
+    display: grid;
+    gap: var(--mf-space-2);
+  }
+
+  // Row order carries no meaning, so the drag handle is not shown
+  .reorder-handle {
+    display: none;
+  }
+
+  .salary-item-main {
+    display: grid;
+  }
+
+  .salary-fields-row {
+    display: contents;
+  }
+
+  .field-col,
+  .input-wrapper,
+  .input-content {
+    min-width: 0;
+    display: block;
+  }
+
+  // one bordered field: the input itself, no box around it
+  .field-col,
+  .input-wrapper,
+  .input-content {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .floating-label {
+    display: none;
+  }
+
+  .input-content input {
+    width: 100%;
+    height: var(--mf-touch-target);
+    min-height: var(--mf-touch-target);
+    padding: 0 var(--mf-space-3);
+    border: 1px solid var(--mf-outline);
+    border-radius: var(--mf-radius-md);
+    background: var(--mf-surface);
+    box-shadow: none;
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-text-body);
+    color: var(--mf-ink);
+
+    &:focus {
+      border-color: var(--mf-primary);
+      outline: 2px solid color-mix(in srgb, var(--mf-primary) 30%, transparent);
+      outline-offset: 0;
+    }
+
+    &::placeholder {
+      color: var(--mf-ink-3);
+    }
+  }
+
+  .delete-item-btn {
+    width: var(--mf-touch-target);
+    height: var(--mf-touch-target);
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: var(--mf-radius-md);
+    background: transparent;
+    color: var(--mf-ink-2);
+    font-size: 20px;
+
+    &:disabled {
+      color: var(--mf-ink-3);
+      opacity: 0.5;
+    }
+  }
+
+  .add-detail-btn {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mf-space-2);
+    min-height: var(--mf-touch-target);
+    padding: 0 var(--mf-space-1);
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-primary);
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  .currency-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mf-space-3);
+    padding-top: var(--mf-space-3);
+    border-top: 1px solid var(--mf-separator);
+  }
+
+  .currency-label {
+    font-size: var(--mf-text-callout);
+    font-weight: var(--mf-weight-medium);
+    color: var(--mf-ink);
+  }
+
+  .currency-picker-wrap {
+    min-width: 128px;
+    min-height: var(--mf-touch-target);
+    border: 1px solid var(--mf-outline);
+    border-radius: var(--mf-radius-md);
+    background: var(--mf-surface);
+    box-shadow: none;
+  }
+
+  .salary-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--mf-space-3);
+    padding: var(--mf-space-3) var(--mf-space-4);
+    border-radius: var(--mf-radius-md);
+    background: var(--mf-surface-sunken);
+    font-size: var(--mf-text-callout);
+    color: var(--mf-ink-2);
+
+    strong {
+      font-size: var(--mf-text-headline);
+      font-weight: var(--mf-weight-semibold);
+      font-variant-numeric: tabular-nums;
+      color: var(--mf-ink);
+    }
+
+    small {
+      font-size: var(--mf-text-footnote);
+      font-weight: var(--mf-weight-medium);
+      color: var(--mf-ink-3);
+    }
+  }
+}
+
+// Card header marks are neutral; colour is reserved for data and danger.
+.header-icon {
+  background: var(--mf-surface-sunken);
+  color: var(--mf-ink-2);
+}

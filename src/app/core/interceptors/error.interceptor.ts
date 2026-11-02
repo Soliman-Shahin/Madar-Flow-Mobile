@@ -49,6 +49,10 @@ async function handleError(
   request: HttpRequest<unknown>,
   toastService: ToastService
 ): Promise<void> {
+  // Online receipt reading is an optional extra: when it fails the app reads
+  // the receipt on the device instead, so the person must not see an error.
+  if (request.url.includes('/receipts/extract')) return;
+
   let errorMessage = 'An unexpected error occurred';
   let shouldShowToast = true;
 

@@ -73,7 +73,7 @@
           detail="false"
         >
           <span class="mf-note__mark" slot="start" aria-hidden="true">
-            <ion-icon [name]="iconFor(item.type)"></ion-icon>
+            <ion-icon [name]="iconFor(item.type, item.event)"></ion-icon>
           </span>
           <span class="mf-note__text">
             <span class="mf-note__title"><bdi>{{ item | notificationText : 'title' }}</bdi></span>

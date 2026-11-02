@@ -20,8 +20,28 @@
             | translate
         }}
       </h1>
+      @if (!isEditMode) {
+      <button
+        type="button"
+        class="mf-form__scan"
+        (click)="scanner?.openPicker()"
+        [attr.aria-label]="'RECEIPT.SCAN' | translate"
+      >
+        <ion-icon name="scan-outline" aria-hidden="true"></ion-icon>
+        <span>{{ "RECEIPT.SCAN_SHORT" | translate }}</span>
+      </button>
+      } @else {
       <span class="mf-form__head-spacer" aria-hidden="true"></span>
+      }
     </header>
+
+    @if (!isEditMode) {
+    <app-receipt-scan
+      [currency]="userCurrency"
+      (scanned)="onReceiptScanned($event)"
+      (cleared)="onReceiptCleared()"
+    ></app-receipt-scan>
+    }
 
     <!-- Type -->
     <div class="mf-form__type" role="group">
@@ -55,13 +75,18 @@
           [attr.aria-label]="'EXPENSE.AMOUNT' | translate"
           formControlName="amount"
           class="mf-form__amount-input"
+          [style.width.ch]="amountWidthCh"
           [placeholder]="'0.00'"
         ></ion-input>
         <bdi class="mf-form__currency">{{
           userCurrency || ("MOBILE.CURRENCY_UNAVAILABLE" | translate)
         }}</bdi>
       </div>
-      @if (expenseForm.get("amount")?.touched &&
+      @if (checkAmount) {
+      <p class="mf-form__check" role="note">
+        {{ "RECEIPT.CHECK_AMOUNT" | translate }}
+      </p>
+      } @if (expenseForm.get("amount")?.touched &&
       expenseForm.get("amount")?.invalid) {
       <p class="mf-form__error" role="alert">
         {{ "MOBILE.AMOUNT_ERROR" | translate }}
@@ -120,7 +145,15 @@
             "EXPENSE.CATEGORY" | translate
           }}</span>
           @if (expenseForm.get('category')?.value) {
-          <bdi class="mf-form__value">{{ getSelectedCategoryText() }}</bdi>
+          <span class="mf-form__value mf-form__value--category">
+            <ion-icon
+              class="mf-form__value-icon"
+              [name]="getSelectedCategoryIcon()"
+              [style.color]="getSelectedCategoryColor() || null"
+              aria-hidden="true"
+            ></ion-icon>
+            <bdi>{{ getSelectedCategoryText() }}</bdi>
+          </span>
           } @else {
           <span class="mf-form__value mf-form__value--placeholder">{{
             "LEDGER.CHOOSE_CATEGORY" | translate
@@ -148,7 +181,6 @@
           labelPlacement="stacked"
           [label]="'EXPENSE.DESCRIPTION' | translate"
           [errorText]="'VALIDATION.REQUIRED' | translate"
-          [helperText]="'EXPENSE.DESCRIPTION_REQUIRED' | translate"
           enterkeyhint="done"
           [placeholder]="'EXPENSE.DESCRIPTION_PLACEHOLDER' | translate"
           class="mf-form__input"
@@ -315,6 +347,10 @@
   </form>
 </ion-content>
 <ion-footer class="mf-form__footer">
+  <!-- Why Create is not available yet: one calm line, never a surprise -->
+  @if (submitHint; as hint) {
+  <p class="mf-form__hint" role="status">{{ hint | translate }}</p>
+  }
   <!-- Actions: ion-footer stays at the bottom of the visible sheet -->
   <div class="mf-form__actions">
     @if (isEditMode) {

@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { BiometricService } from 'src/app/core/services/biometric.service';
 import { TelemetryService } from 'src/app/core/services/telemetry.service';
+import { ReceiptPrefsService } from 'src/app/core/receipts/receipt-prefs.service';
 import { BiometricSignInService } from 'src/app/modules/auth/services/biometric-signin.service';
 import { IonicModule, IonSelect } from '@ionic/angular';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
@@ -89,6 +90,8 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
   private biometricService = inject(BiometricService);
   private telemetry = inject(TelemetryService);
   telemetryEnabled = false;
+  private receiptPrefs = inject(ReceiptPrefsService);
+  receiptsOnline = this.receiptPrefs.onlineAllowed;
   private biometricSignInService = inject(BiometricSignInService);
   private pushNotificationService = inject(PushNotificationService);
   private profileService = inject(ProfileService);
@@ -283,6 +286,12 @@ export class SettingsListComponent extends BaseComponent implements OnInit {
       }
     }
     this.cdr.markForCheck();
+  }
+
+  toggleReceiptsOnline(event: any): void {
+    const on = !!event?.detail?.checked;
+    this.receiptPrefs.onlineReading = on ? 'on' : 'off';
+    this.receiptsOnline = on;
   }
 
   async toggleTelemetry(event: any): Promise<void> {

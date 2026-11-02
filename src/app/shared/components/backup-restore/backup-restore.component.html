@@ -82,7 +82,9 @@
         "BACKUP.LAST_AUTO_BACKUP" | translate
       }}</span>
       <span class="mf-bk__setting-value">
-        <bdi>{{ lastAutoBackup.timestamp | date : "short" }}</bdi>
+        <bdi>{{
+          lastAutoBackup.timestamp | date : "short" : undefined : currentLang
+        }}</bdi>
         <bdi class="mf-bk__muted">({{ formatSize(lastAutoBackup.size) }})</bdi>
       </span>
     </div>
@@ -91,7 +93,11 @@
 
   <!-- Actions -->
   <section class="mf-bk__group mf-bk__group--spaced">
-    <button class="mf-bk__row mf-bk__row--action" type="button" (click)="createBackup()">
+    <button
+      class="mf-bk__row mf-bk__row--action"
+      type="button"
+      (click)="createBackup()"
+    >
       <span class="mf-bk__icon mf-bk__icon--accent" aria-hidden="true">
         <ion-icon name="cloud-upload-outline"></ion-icon>
       </span>
@@ -99,10 +105,18 @@
         <h3>{{ "BACKUP.CREATE_NEW" | translate }}</h3>
         <p>{{ "BACKUP.CREATE_DESC" | translate }}</p>
       </span>
-      <ion-icon class="mf-bk__chevron" name="chevron-forward" aria-hidden="true"></ion-icon>
+      <ion-icon
+        class="mf-bk__chevron"
+        name="chevron-forward"
+        aria-hidden="true"
+      ></ion-icon>
     </button>
 
-    <button class="mf-bk__row mf-bk__row--action" type="button" (click)="triggerImport()">
+    <button
+      class="mf-bk__row mf-bk__row--action"
+      type="button"
+      (click)="triggerImport()"
+    >
       <span class="mf-bk__icon" aria-hidden="true">
         <ion-icon name="cloud-download-outline"></ion-icon>
       </span>
@@ -110,7 +124,11 @@
         <h3>{{ "BACKUP.RESTORE" | translate }}</h3>
         <p>{{ "BACKUP.RESTORE_DESC" | translate }}</p>
       </span>
-      <ion-icon class="mf-bk__chevron" name="chevron-forward" aria-hidden="true"></ion-icon>
+      <ion-icon
+        class="mf-bk__chevron"
+        name="chevron-forward"
+        aria-hidden="true"
+      ></ion-icon>
     </button>
     <input
       type="file"
@@ -130,7 +148,11 @@
   </h2>
   @if (backupHistory.length === 0) {
   <div class="mf-empty" role="status">
-    <ion-icon class="mf-bk__empty-icon" name="time-outline" aria-hidden="true"></ion-icon>
+    <ion-icon
+      class="mf-bk__empty-icon"
+      name="time-outline"
+      aria-hidden="true"
+    ></ion-icon>
     <p class="mf-empty__title">{{ "BACKUP.NO_HISTORY" | translate }}</p>
   </div>
   } @else {
@@ -144,11 +166,16 @@
         <h3>
           {{ "BACKUP.RECORD" | translate }}
           <span class="mf-bk__muted"
-            ><bdi>{{ backup.timestamp | date : "shortTime" }}</bdi></span
+            ><bdi>{{
+              backup.timestamp | date : "shortTime" : undefined : currentLang
+            }}</bdi></span
           >
         </h3>
         <p>
-          <bdi>{{ backup.timestamp | date : "medium" }}</bdi> ·
+          <bdi>{{
+            backup.timestamp | date : "medium" : undefined : currentLang
+          }}</bdi>
+          ·
           <bdi>{{ formatSize(backup.size) }}</bdi>
         </p>
         <div class="mf-bk__tags">
@@ -158,8 +185,11 @@
             {{ "BACKUP.ENCRYPTED" | translate }}
           </span>
           }
-          <span class="mf-bk__tag" [class.mf-bk__tag--warn]="backup.itemCount === 0"
-            ><bdi>{{ backup.itemCount }}</bdi> {{ "BACKUP.ITEMS" | translate }}</span
+          <span
+            class="mf-bk__tag"
+            [class.mf-bk__tag--warn]="backup.itemCount === 0"
+            ><bdi>{{ backup.itemCount }}</bdi>
+            {{ "BACKUP.ITEMS" | translate }}</span
           >
         </div>
       </div>
@@ -187,7 +217,11 @@
   </h2>
   @if (!isLoadingDriveBackups && googleDriveBackups.length === 0) {
   <div class="mf-empty" role="status">
-    <ion-icon class="mf-bk__empty-icon" name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+    <ion-icon
+      class="mf-bk__empty-icon"
+      name="cloud-offline-outline"
+      aria-hidden="true"
+    ></ion-icon>
     <p class="mf-empty__title">{{ "BACKUP.NO_DRIVE_BACKUPS" | translate }}</p>
   </div>
   } @if (!isLoadingDriveBackups && googleDriveBackups.length > 0) {
@@ -205,7 +239,10 @@
         <span class="mf-bk__text">
           <h3>{{ backup.name }}</h3>
           <p>
-            <bdi>{{ backup.modifiedTime | date : "medium" }}</bdi> ·
+            <bdi>{{
+              backup.modifiedTime | date : "medium" : undefined : currentLang
+            }}</bdi>
+            ·
             <bdi>{{ formatSize(backup.size) }}</bdi>
           </p>
         </span>

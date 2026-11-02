@@ -101,8 +101,8 @@ ion-input.mf-form__amount-input {
   --padding-end: 0;
   flex: 0 1 auto;
   width: auto;
-  min-width: 4ch;
-  max-width: 11ch;
+  min-width: 0;
+  max-width: 12ch;
   min-height: 0;
   font-family: var(--mf-font-sans);
   font-size: clamp(2.25rem, 12vw, 3rem);
@@ -489,4 +489,109 @@ ion-button.mf-form__submit {
   .mf-chip {
     transition: none;
   }
+}
+
+// A quiet "check this" under a field a receipt scan was not sure about.
+.mf-form__check {
+  margin: var(--mf-space-1) 0 0;
+  text-align: center;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-warning);
+}
+
+// ===================================================================
+//  Form polish (app-screen rules): the amount leads, one quiet scan
+//  action in the header, no icon boxes repeated down the list, and a
+//  plain reason whenever Create is not available.
+// ===================================================================
+
+// "Scan" sits where the header was empty, opposite Cancel.
+.mf-form__scan {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--mf-touch-target);
+  margin-inline-end: calc(var(--mf-space-2) * -1);
+  padding-inline: var(--mf-space-2);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--mf-text-body);
+  font-weight: var(--mf-weight-semibold);
+  color: var(--mf-primary);
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mf-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--mf-radius-sm);
+  }
+}
+
+// Plain fields carry no icon box; only the category keeps its own mark,
+// because that colour and glyph are the category itself.
+// (all of them: the category's colour and glyph now sit inline in its value,
+// so every row's text starts on the same left edge)
+.mf-form__mark {
+  display: none;
+}
+
+.mf-form__value--category {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+}
+
+.mf-form__value-icon {
+  flex: none;
+  font-size: 20px;
+}
+
+// The Description label matches the other rows' small grey caption.
+:host ::ng-deep ion-input.mf-form__input .label-text {
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-regular);
+  color: var(--mf-ink-3);
+}
+
+ion-item.mf-form__field {
+  --padding-start: var(--mf-space-4);
+}
+
+// The currency belongs to the figure: small, grey, right after it.
+.mf-form__amount-row {
+  align-items: baseline;
+}
+
+.mf-form__currency {
+  font-size: var(--mf-text-headline);
+  letter-spacing: 0.02em;
+}
+
+// Why Create is not available yet.
+.mf-form__hint {
+  margin: 0;
+  padding: var(--mf-space-2) var(--mf-gutter) 0;
+  text-align: center;
+  font-family: var(--mf-font-sans);
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
+}
+
+// A disabled Create stays readable (AA) instead of fading into the footer.
+ion-button.mf-form__submit.button-disabled {
+  --background: var(--mf-surface-sunken);
+  --color: var(--mf-ink-2);
+}
+
+// Ionic shrinks a stacked label with a transform; undo it so the size set
+// above is the size shown (same as the Category and Date captions).
+:host ::ng-deep ion-input.mf-form__input .label-text-wrapper {
+  transform: none;
+  max-width: 100%;
 }

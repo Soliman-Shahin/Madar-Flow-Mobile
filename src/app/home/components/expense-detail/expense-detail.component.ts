@@ -11,6 +11,9 @@ import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Expense } from 'src/app/shared/models/expense.model';
+import { ReceiptStoreService } from 'src/app/core/receipts/receipt-store.service';
+import { ReceiptViewerComponent } from 'src/app/shared/components/receipt-viewer/receipt-viewer.component';
+import { StoredReceipt } from 'src/app/core/receipts/receipt.types';
 import { AmountComponent } from 'src/app/shared/ui/amount/amount.component';
 import { OfflineStorageService } from 'src/app/core/services/offline-storage.service';
 import { ExpenseService } from 'src/app/core/services/expense.service';
@@ -34,6 +37,12 @@ export class ExpenseDetailComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly ownerId = this.authService.getUserId();
   readonly detailExpense = signal<Expense>(null as unknown as Expense);
+  private readonly receiptStore = inject(ReceiptStoreService);
+  // Not named `modal`: Ionic sets a `modal` property on components it presents.
+  private readonly modals = inject(ModalController);
+  /** The picture kept from a scanned receipt, if this transaction has one. */
+  readonly receipt = signal<StoredReceipt | null>(null);
+  readonly showReceiptItems = signal(false);
   readonly isUnavailable = signal(false);
   private logicalId = '';
   private syncOperations: any[] = [];
@@ -50,11 +59,40 @@ export class ExpenseDetailComponent implements OnInit {
   @Input() locale = 'en';
   private readonly modal = inject(ModalController);
 
+  /** Opens the receipt picture full screen (pinch to zoom). */
+  async openReceipt(): Promise<void> {
+    const r = this.receipt();
+    if (!r) return;
+    const viewer = await this.modals.create({
+      component: ReceiptViewerComponent,
+      componentProps: { src: r.image ?? r.thumb, title: r.merchant ?? '' },
+      cssClass: 'mf-receipt-viewer',
+      backdropDismiss: false,
+      showBackdrop: false,
+      animated: true,
+    });
+    await viewer.present();
+  }
+
+  private async loadReceipt(): Promise<void> {
+    const e = this.expense as Expense & { _clientId?: string };
+    if (!this.ownerId) return;
+    try {
+      this.receipt.set(
+        (await this.receiptStore.find(this.ownerId, [e._clientId, e._id])) ?? null
+      );
+    } catch {
+      this.receipt.set(null);
+    }
+  }
+
   ngOnInit(): void {
     this.detailExpense.set(this.expense);
     this.logicalId =
       (this.expense as Expense & { _clientId?: string })._clientId ||
       this.expense._id;
+
+    void this.loadReceipt();
 
     this.authService.userChanges
       .pipe(takeUntilDestroyed(this.destroyRef))

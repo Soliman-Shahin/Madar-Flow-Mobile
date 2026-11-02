@@ -153,7 +153,8 @@ import { APP_ROUTES } from 'src/app/core/constants';
               <p>
                 {{
                   (syncMetadata$ | async)?.lastSyncTime
-                    ? ((syncMetadata$ | async)?.lastSyncTime | date : 'medium')
+                    ? ((syncMetadata$ | async)?.lastSyncTime
+                      | date : 'medium' : undefined : currentLang)
                     : ('SYNC.NEVER' | translate)
                 }}
               </p>

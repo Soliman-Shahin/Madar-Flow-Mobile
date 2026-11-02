@@ -28,7 +28,7 @@ describe('NotificationTextPipe', () => {
     };
     expect(pipe.transform(item, 'title')).toBe('Signed out on another device');
     expect(pipe.transform(item, 'message')).toBe(
-      'Laptop، Phone signed out; plan allows 1.'
+      'Laptop, Phone signed out; plan allows 1.'
     );
   });
 

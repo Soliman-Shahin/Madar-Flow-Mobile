@@ -84,7 +84,9 @@
   } @else {
   <div class="mf-empty" role="status">
     <p class="mf-empty__title">{{ "TRANSACTIONS.NO_RECENT" | translate }}</p>
-    <p class="mf-empty__hint">{{ "TRANSACTIONS.ADD_NEW" | translate }}</p>
+    <button type="button" class="mf-empty__action" (click)="addFirst()">
+      {{ "LEDGER.ADD_TRANSACTION" | translate }}
+    </button>
   </div>
   }
   <!-- Empty State -->

@@ -120,3 +120,9 @@
   font-size: var(--mf-text-body);
   color: var(--mf-ink);
 }
+
+// The "required, cannot be turned off" sentence is said once (the first
+// required card); the pill on every card already marks the rest.
+.notification-category ~ .notification-category .notification-required-note {
+  display: none;
+}
