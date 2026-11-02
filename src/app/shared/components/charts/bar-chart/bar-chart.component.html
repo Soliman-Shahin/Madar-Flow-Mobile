@@ -41,6 +41,7 @@
                 <div
                   class="bar"
                   [style.height]="getBarHeight(item.value)"
+                  [style.min-height]="item.value > 0 ? null : '0'"
                   [style.background]="getBarColor(i)"
                   [attr.aria-label]="item.name + ': ' + item.value"
                   role="img"

@@ -8,151 +8,161 @@
   (ionDidOpen)="onMenuOpen()"
 >
   <ion-content
-    class="ion-padding"
     role="navigation"
     [attr.aria-label]="'SIDEBAR.MAIN_MENU' | translate"
     tabindex="0"
   >
     @if (vm$ | async; as vm) {
-    <!-- Profile Header or Login Prompt -->
-    @if (vm.profile.isLoggedIn) {
-    <div class="user-info" (click)="navigateFromMenu('/profile')" role="link">
-      <div class="avatar">
-        <div class="avatar-circle">
-          @if (vm.storedProfile?.avatarUrl && !avatarFailed) {
-          <img
-            #img
-            [src]="vm.storedProfile?.avatarUrl"
-            referrerpolicy="no-referrer"
-            (error)="onAvatarError()"
-            (load)="onAvatarLoad()"
-            [alt]="'USER_AVATAR' | translate"
-          />
-          } @else {
-          <span aria-hidden="true">{{ initials(vm.profile.user) }}</span>
-          }
-        </div>
-      </div>
-      <div class="user-details">
-        <h3>
-          {{ vm.profile.user?.username ||
-          vm.profile.user?.fullName ||
-          ("USER.DEFAULT_NAME" | translate) }}
-        </h3>
-        <p>
-          {{ vm.profile.user?.email || "" }}
-        </p>
-      </div>
-      <ion-icon
-        class="profile-chevron"
-        name="chevron-forward-outline"
-        aria-hidden="true"
-      ></ion-icon>
-    </div>
-    } @else {
-    <div class="login-prompt">
-      <ion-button
-        expand="block"
-        fill="clear"
-        routerLink="/auth/login"
-        (click)="closeMenu()"
-      >
-        <ion-icon slot="start" name="log-in-outline"></ion-icon>
-        {{ "LOGIN" | translate }}
-      </ion-button>
-    </div>
-    }
-    <!-- Dynamic Menu Items -->
-    <ion-list lines="none" role="menu" class="main-menu-list">
-      @for (item of vm.links; track item) {
-      <ion-item
-        (click)="navigateFromMenu(item.link)"
-        [class.active]="isActive(item.link, vm.activeLink)"
-        button
-        role="menuitem"
-      >
-        <ion-icon [name]="item.icon" slot="start"></ion-icon>
-        <ion-label>{{ item.title | translate }}</ion-label>
-        @if (item.link === '/notifications' && (notificationUnreadCount$ |
-        async); as unread) {
-        <ion-badge
-          slot="end"
-          [attr.aria-label]="
-            ('SETTINGS.NOTIFICATIONS' | translate) + ': ' + unread
-          "
-          >{{ unread > 99 ? "99+" : unread }}</ion-badge
-        >
-        }
-      </ion-item>
-      }
-    </ion-list>
-    <!-- Sync and utility actions -->
-    <ion-list lines="none" class="bottom-menu" role="menu">
-      <!-- Sync Status Widget (only when logged in) -->
-      @if (vm.profile.isLoggedIn) {
-      <div class="sync-status-wrapper">
-        <app-sync-status></app-sync-status>
-      </div>
-      }
+    <div class="mm">
+      <!-- Hero: brand + identity on the brand gradient -->
+      <header class="mm-hero">
+        <span class="mm-hero__shape mm-hero__shape--a" aria-hidden="true"></span>
+        <span class="mm-hero__shape mm-hero__shape--b" aria-hidden="true"></span>
 
-      <!-- Language Toggle -->
-      <ion-item
-        (click)="changeLanguage()"
-        button
-        role="menuitem"
-        tabindex="0"
-        [attr.aria-label]="'LANG.CHANGE_LANG' | translate"
-      >
-        <ion-icon
-          [name]="
-            vm.language === 'ar' ? 'language-outline' : 'language-outline'
-          "
-          slot="start"
-        ></ion-icon>
-        <ion-label>{{
-          (vm.language === "en" ? "ARABIC" : "ENGLISH") | translate
-        }}</ion-label>
-        <ion-icon
-          [name]="vm.language === 'ar' ? 'chevron-left' : 'chevron-right'"
-          slot="end"
-        ></ion-icon>
-      </ion-item>
-      <!-- Theme Toggle -->
-      <ion-item>
-        <ion-icon name="contrast-outline" slot="start"></ion-icon>
-        <ion-label>{{ "THEME" | translate }}</ion-label>
-        <app-theme-toggle slot="end"></app-theme-toggle>
-      </ion-item>
-      <!-- Help & About -->
-      <ion-item
-        (click)="navigateFromMenu('/help')"
-        button
-        role="menuitem"
-        tabindex="0"
-        [attr.aria-current]="isActive('/help', vm.activeLink) ? 'page' : null"
-      >
-        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
-        <ion-label>{{ "HELP" | translate }}</ion-label>
-      </ion-item>
-      <!-- App Version -->
-      <ion-item class="version-info" tabindex="-1" role="none">
-        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
-        <ion-label>{{ "VERSION" | translate }}</ion-label>
-      </ion-item>
-      <!-- Logout is intentionally last in the actionable menu. -->
-      @if (vm.profile.isLoggedIn) {
-      <ion-item
-        class="logout-item"
-        (click)="onLogout()"
-        button
-        role="menuitem"
-        tabindex="0"
-      >
-        <ion-icon name="log-out-outline" slot="start"></ion-icon>
-        <ion-label>{{ "LOGOUT" | translate }}</ion-label>
-      </ion-item>
-      }
-    </ion-list>
+        <div class="mm-brand">
+          <img src="assets/icon/icon.png" alt="" class="mm-brand__logo" />
+          <span class="mm-brand__name">Madar Flow</span>
+          <button
+            type="button"
+            class="mm-close"
+            (click)="closeMenu()"
+            [attr.aria-label]="'SIDEBAR.CLOSE_MENU' | translate"
+          >
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+
+        @if (vm.profile.isLoggedIn) {
+        <button
+          type="button"
+          class="mm-profile"
+          (click)="navigateFromMenu('/profile')"
+        >
+          <span class="mm-avatar">
+            @if (vm.storedProfile?.avatarUrl && !avatarFailed) {
+            <img
+              #img
+              [src]="vm.storedProfile?.avatarUrl"
+              referrerpolicy="no-referrer"
+              (error)="onAvatarError()"
+              (load)="onAvatarLoad()"
+              [alt]="'USER_AVATAR' | translate"
+            />
+            } @else {
+            <span aria-hidden="true">{{ initials(vm.profile.user) }}</span>
+            }
+          </span>
+          <span class="mm-profile__text">
+            <strong>{{
+              vm.profile.user?.username ||
+                vm.profile.user?.fullName ||
+                ("USER.DEFAULT_NAME" | translate)
+            }}</strong>
+            <small dir="ltr">{{ vm.profile.user?.email || "" }}</small>
+          </span>
+          <ion-icon
+            class="mm-profile__chev"
+            name="chevron-forward-outline"
+            aria-hidden="true"
+          ></ion-icon>
+        </button>
+        } @else {
+        <ion-button
+          class="mm-login"
+          expand="block"
+          routerLink="/auth/login"
+          (click)="closeMenu()"
+        >
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+          {{ "LOGIN" | translate }}
+        </ion-button>
+        }
+      </header>
+
+      <!-- Navigation -->
+      <nav class="mm-nav" role="menu">
+        @for (item of vm.links; track item; let i = $index) {
+        <button
+          type="button"
+          role="menuitem"
+          class="mm-item"
+          [class.mm-item--active]="isActive(item.link, vm.activeLink)"
+          [attr.aria-current]="isActive(item.link, vm.activeLink) ? 'page' : null"
+          [style.--i]="i"
+          [style.--tone]="'var(--mf-cat-' + ((i % 6) + 1) + ')'"
+          (click)="navigateFromMenu(item.link)"
+        >
+          <span class="mm-item__tile"
+            ><ion-icon [name]="item.icon" aria-hidden="true"></ion-icon
+          ></span>
+          <span class="mm-item__label">{{ item.title | translate }}</span>
+          @if (item.link === '/notifications' && (notificationUnreadCount$ |
+          async); as unread) {
+          <span
+            class="mm-badge"
+            [attr.aria-label]="
+              ('SETTINGS.NOTIFICATIONS' | translate) + ': ' + unread
+            "
+            >{{ unread > 99 ? "99+" : unread }}</span
+          >
+          }
+        </button>
+        }
+      </nav>
+
+      <!-- Utilities -->
+      <section class="mm-tools" role="menu">
+        @if (vm.profile.isLoggedIn) {
+        <div class="mm-sync"><app-sync-status></app-sync-status></div>
+        }
+        <button
+          type="button"
+          role="menuitem"
+          class="mm-row"
+          (click)="changeLanguage()"
+          [attr.aria-label]="'LANG.CHANGE_LANG' | translate"
+        >
+          <span class="mm-row__icon"
+            ><ion-icon name="language-outline" aria-hidden="true"></ion-icon
+          ></span>
+          <span class="mm-row__label">{{
+            (vm.language === "en" ? "ARABIC" : "ENGLISH") | translate
+          }}</span>
+        </button>
+        <div class="mm-row mm-row--static">
+          <span class="mm-row__icon"
+            ><ion-icon name="contrast-outline" aria-hidden="true"></ion-icon
+          ></span>
+          <span class="mm-row__label">{{ "THEME" | translate }}</span>
+          <app-theme-toggle class="mm-row__end"></app-theme-toggle>
+        </div>
+        <button
+          type="button"
+          role="menuitem"
+          class="mm-row"
+          [class.mm-row--active]="isActive('/help', vm.activeLink)"
+          [attr.aria-current]="isActive('/help', vm.activeLink) ? 'page' : null"
+          (click)="navigateFromMenu('/help')"
+        >
+          <span class="mm-row__icon"
+            ><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon
+          ></span>
+          <span class="mm-row__label">{{ "HELP" | translate }}</span>
+        </button>
+      </section>
+
+      <footer class="mm-foot">
+        @if (vm.profile.isLoggedIn) {
+        <button type="button" role="menuitem" class="mm-logout" (click)="onLogout()">
+          <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
+          <span>{{ "LOGOUT" | translate }}</span>
+        </button>
+        }
+        <p class="mm-version">
+          {{ "SETTINGS.VERSION" | translate }} <bdi>1.0.0</bdi>
+        </p>
+      </footer>
+    </div>
     }
   </ion-content>
 </ion-menu>

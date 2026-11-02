@@ -148,6 +148,7 @@
           labelPlacement="stacked"
           [label]="'EXPENSE.DESCRIPTION' | translate"
           [errorText]="'VALIDATION.REQUIRED' | translate"
+          [helperText]="'EXPENSE.DESCRIPTION_REQUIRED' | translate"
           enterkeyhint="done"
           [placeholder]="'EXPENSE.DESCRIPTION_PLACEHOLDER' | translate"
           class="mf-form__input"
@@ -276,7 +277,9 @@
             >
               <ion-icon [name]="category.icon"></ion-icon>
             </div>
-            <bdi class="popover-item-text">{{ category.title | categoryTitle }}</bdi>
+            <bdi class="popover-item-text">{{
+              category.title | categoryTitle
+            }}</bdi>
             <ion-button
               fill="clear"
               class="favorite-button"

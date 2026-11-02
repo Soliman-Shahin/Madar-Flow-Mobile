@@ -207,12 +207,23 @@
 }
 
 .chart-legend {
+  // Chips wrap into rows; a long list scrolls inside a capped height instead
+  // of stretching the card.
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-start;
   gap: var(--mf-space-1) var(--mf-space-2);
+  max-height: 136px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   margin-top: var(--mf-space-5);
+  padding: 0;
 }
 
 .legend-item {
+  flex: 0 0 auto;
+  max-width: 100%;
   min-height: 44px;
   padding: var(--mf-space-1) var(--mf-space-3);
   border-radius: var(--mf-radius-pill);

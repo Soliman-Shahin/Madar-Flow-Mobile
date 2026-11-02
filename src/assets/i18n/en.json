@@ -153,7 +153,9 @@
     "SETTINGS": "Settings",
     "MAIN_MENU": "Main menu",
     "CHARTS": "Charts",
-    "TRANSACTIONS": "Transactions"
+    "TRANSACTIONS": "Transactions",
+    "OPEN_MENU": "Open menu",
+    "CLOSE_MENU": "Close menu"
   },
   "DASHBOARD": "Dashboard",
   "TRANSACTIONS": {
@@ -352,7 +354,8 @@
     "UPDATE_ERROR": "Failed to update transaction.",
     "CREATE_ERROR": "Failed to create transaction.",
     "DELETE_SUCCESS_TOAST": "Transaction deleted successfully.",
-    "DELETE_ERROR_TOAST": "Error deleting transaction. Please try again."
+    "DELETE_ERROR_TOAST": "Error deleting transaction. Please try again.",
+    "DESCRIPTION_REQUIRED": "Required"
   },
   "SETTINGS": {
     "GENERAL": "General Settings",
@@ -472,7 +475,8 @@
     "NO_OTHER_SESSIONS": "No other devices are signed in.",
     "SESSION_ACTIVE_NOW": "Active now",
     "SESSION_LAST_ACTIVE": "Last active",
-    "SESSION_SIGNED_IN": "Signed in"
+    "SESSION_SIGNED_IN": "Signed in",
+    "SUPPORT": "Support"
   },
   "BUDGET": {
     "TITLE": "Budget"

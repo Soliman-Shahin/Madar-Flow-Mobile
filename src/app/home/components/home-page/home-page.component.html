@@ -126,9 +126,25 @@
     <!-- ── Top Header Bar ── -->
     <div class="dash-header">
       <div class="dash-header__left">
-        <span class="dash-avatar" aria-hidden="true">{{
-          displayUsername.charAt(0)
-        }}</span>
+        <button
+          type="button"
+          class="dash-avatar"
+          (click)="openMenu()"
+          [attr.aria-label]="'SIDEBAR.OPEN_MENU' | translate"
+        >
+          @if ((avatarUrl$ | async); as url) { @if (!avatarFailed) {
+          <img
+            [src]="url"
+            alt=""
+            referrerpolicy="no-referrer"
+            (error)="avatarFailed = true"
+          />
+          } @else {
+          {{ displayUsername.charAt(0) }}
+          } } @else {
+          {{ displayUsername.charAt(0) }}
+          }
+        </button>
         <div class="dash-header__text">
           <p class="dash-greeting">{{ "HOME.GREETING" | translate }}</p>
           <h1 class="dash-name">{{ displayUsername }}</h1>

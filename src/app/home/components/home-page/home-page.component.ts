@@ -23,6 +23,7 @@ import { ProfileService } from 'src/app/modules/profile/services/profile.service
 import { SUPPORTED_CURRENCIES, suggestCurrency } from 'src/app/shared/utils';
 import { SyncStatusComponent } from 'src/app/shared/components/sync-status/sync-status.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { categoryTitle } from '../../../shared/pipes/category-title.pipe';
 import {
   BehaviorSubject,
   catchError,
@@ -340,6 +341,16 @@ export class HomePageComponent
     shareReplay(1)
   );
 
+  /** Profile photo for the header avatar; the initial is the fallback. */
+  readonly avatarUrl$ = this.profileData.profile$.pipe(
+    map((p) => p?.avatarUrl || null)
+  );
+  avatarFailed = false;
+
+  openMenu(): void {
+    void this.menuCtrl.open('main-menu');
+  }
+
   private readonly expenseByCategoryByMonth$ = combineLatest([
     this.chartsMonthSelection$,
     this.dashboardProfile$,
@@ -357,6 +368,13 @@ export class HomePageComponent
       }
       return this.dashboard.expenseByCategoryForMonth(m.month, m.year);
     }),
+    // Starter categories are stored in English; show them in the app language.
+    map((rows) =>
+      (rows as Array<{ name: string }>).map((row) => ({
+        ...row,
+        name: categoryTitle(row.name, this.translateService),
+      }))
+    ),
     catchError(() => of([])),
     startWith([])
   );

@@ -42,6 +42,10 @@ ion-item.mf-account__item {
   text-align: match-parent;
 }
 
+:host-context([dir="rtl"]) .premium-list p.mf-account__email {
+  text-align: right;
+}
+
 // About footer: quiet, centered.
 .mf-about {
   display: flex;

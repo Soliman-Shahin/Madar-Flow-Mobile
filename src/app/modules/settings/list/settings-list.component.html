@@ -297,6 +297,19 @@
       </ion-item>
     </ion-list>
 
+    <!-- Support -->
+    <h2 class="section-label">{{ "SETTINGS.SUPPORT" | translate }}</h2>
+    <ion-list class="premium-list">
+      <ion-item button detail="true" lines="none" routerLink="/help">
+        <div slot="start" class="icon-wrapper color-blue">
+          <ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <ion-label>
+          <h3>{{ "HELP_PAGE.TITLE" | translate }}</h3>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
     <!-- Danger zone -->
     <h2 class="section-label">{{ "SETTINGS.DANGER_ZONE" | translate }}</h2>
     <ion-list class="premium-list">

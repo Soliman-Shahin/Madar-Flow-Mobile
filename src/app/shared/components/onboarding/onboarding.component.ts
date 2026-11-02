@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ElementRef, AfterViewInit, OnInit, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   OnboardingService,
@@ -17,8 +17,9 @@ import { BRAND_TRANSLATION_PARAMS } from 'src/app/config/brand.config';
     standalone: true,
     imports: [IonicModule, TranslateModule]
 })
-export class OnboardingComponent extends BaseComponent implements OnInit {
+export class OnboardingComponent extends BaseComponent implements OnInit, AfterViewInit {
   readonly brandParams = BRAND_TRANSLATION_PARAMS;
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   @ViewChild('slidesContainer') slidesContainer!: ElementRef;
 
   steps: OnboardingStep[] = [];
@@ -33,6 +34,15 @@ export class OnboardingComponent extends BaseComponent implements OnInit {
     const state = this.onboardingService.getCurrentState();
     this.steps = state.steps;
     this.currentStepIndex = state.currentStep;
+  }
+
+  ngAfterViewInit(): void {
+    // Resume on the saved step (e.g. after a reload) without animating.
+    if (this.currentStepIndex > 0) {
+      const slide = this.slidesContainer?.nativeElement.querySelectorAll('.slide')[this.currentStepIndex];
+      slide?.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' });
+      this.host.nativeElement.style.setProperty('--p', String(this.currentStepIndex));
+    }
   }
 
   get isLastStep(): boolean {
@@ -53,6 +63,8 @@ export class OnboardingComponent extends BaseComponent implements OnInit {
     // Note: In RTL mode, scrollLeft behavior varies by browser.
     // A safer way is to rely on the index updated by buttons, but for swipe support:
     const index = Math.abs(Math.round(scrollPosition / width));
+    // Drive the ambient glow parallax (0..steps-1).
+    this.host.nativeElement.style.setProperty('--p', String(Math.abs(scrollPosition / width)));
     if (index !== this.currentStepIndex && index < this.steps.length) {
       this.currentStepIndex = index;
       this.onboardingService.goToStep(index);

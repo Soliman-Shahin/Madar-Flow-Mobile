@@ -2,6 +2,12 @@
   class="onboarding-page mf-onb"
   [dir]="translationService.getCurrentLanguage() === 'ar' ? 'rtl' : 'ltr'"
 >
+  <!-- Ambient backdrop: soft brand glow that drifts as you swipe -->
+  <div class="mf-onb__ambient" aria-hidden="true">
+    <span class="mf-onb__glow mf-onb__glow--a"></span>
+    <span class="mf-onb__glow mf-onb__glow--b"></span>
+  </div>
+
   <!-- Top actions -->
   <div class="mf-onb__top">
     <button type="button" class="mf-onb__lang" (click)="toggleLanguage()">
@@ -32,21 +38,134 @@
         [attr.aria-hidden]="i !== currentStepIndex"
       >
         <div class="mf-onb__slide">
-          @if (i === 0) {
-          <img
-            src="assets/icon/icon.png"
-            [alt]="brandParams.productName"
-            class="mf-onb__logo"
-          />
-          } @else {
-          <span
-            class="mf-onb__mark"
-            [style.--mf-onb-tone]="'var(--mf-cat-' + (((i - 1) % 6) + 1) + ')'"
-            aria-hidden="true"
-          >
-            <ion-icon [name]="step.icon"></ion-icon>
-          </span>
-          }
+          <!-- Illustration stage (decorative) -->
+          <div class="mf-onb__stage" aria-hidden="true">
+            @switch (step.id) { @case ('welcome') {
+            <div class="art art-welcome">
+              <span class="ring ring--1"></span>
+              <span class="ring ring--2"></span>
+              <span class="ring ring--3"></span>
+              <img
+                src="assets/icon/icon.png"
+                alt=""
+                class="art-welcome__logo"
+              />
+              <span class="orb orb--1"
+                ><ion-icon name="cart-outline"></ion-icon
+              ></span>
+              <span class="orb orb--2"
+                ><ion-icon name="cafe-outline"></ion-icon
+              ></span>
+              <span class="orb orb--3"
+                ><ion-icon name="car-outline"></ion-icon
+              ></span>
+            </div>
+            } @case ('expenses') {
+            <div class="art art-expenses">
+              <div class="card">
+                <div class="row row--1">
+                  <span class="mark" style="--c: var(--mf-cat-3)"
+                    ><ion-icon name="restaurant-outline"></ion-icon
+                  ></span>
+                  <span class="lines"><i></i><i></i></span>
+                  <b>−12.40</b>
+                </div>
+                <div class="row row--2">
+                  <span class="mark" style="--c: var(--mf-cat-1)"
+                    ><ion-icon name="bus-outline"></ion-icon
+                  ></span>
+                  <span class="lines"><i></i><i></i></span>
+                  <b>−3.80</b>
+                </div>
+                <div class="row row--3">
+                  <span class="mark" style="--c: var(--mf-cat-2)"
+                    ><ion-icon name="cart-outline"></ion-icon
+                  ></span>
+                  <span class="lines"><i></i><i></i></span>
+                  <b>−46.00</b>
+                </div>
+              </div>
+              <span class="fab"><ion-icon name="add"></ion-icon></span>
+            </div>
+            } @case ('categories') {
+            <div class="art art-cats">
+              <span class="hub"
+                ><ion-icon name="pricetags-outline"></ion-icon
+              ></span>
+              <span class="chip chip--1" style="--c: var(--mf-cat-3)"
+                ><ion-icon name="restaurant-outline"></ion-icon
+              ></span>
+              <span class="chip chip--2" style="--c: var(--mf-cat-1)"
+                ><ion-icon name="bus-outline"></ion-icon
+              ></span>
+              <span class="chip chip--3" style="--c: var(--mf-cat-4)"
+                ><ion-icon name="game-controller-outline"></ion-icon
+              ></span>
+              <span class="chip chip--4" style="--c: var(--mf-cat-2)"
+                ><ion-icon name="medkit-outline"></ion-icon
+              ></span>
+              <span class="chip chip--5" style="--c: var(--mf-cat-5)"
+                ><ion-icon name="gift-outline"></ion-icon
+              ></span>
+              <span class="chip chip--6" style="--c: var(--mf-cat-6)"
+                ><ion-icon name="home-outline"></ion-icon
+              ></span>
+            </div>
+            } @case ('analytics') {
+            <div class="art art-stats">
+              <div class="card">
+                <div class="bars">
+                  <i style="--h: 38%"></i><i style="--h: 62%"></i
+                  ><i style="--h: 46%"></i><i style="--h: 84%"></i
+                  ><i style="--h: 58%"></i>
+                </div>
+              </div>
+              <svg class="donut" viewBox="0 0 64 64">
+                <circle class="donut__bg" cx="32" cy="32" r="24" />
+                <circle
+                  class="donut__arc donut__arc--1"
+                  cx="32"
+                  cy="32"
+                  r="24"
+                  pathLength="100"
+                />
+                <circle
+                  class="donut__arc donut__arc--2"
+                  cx="32"
+                  cy="32"
+                  r="24"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+            } @case ('backup') {
+            <div class="art art-shield">
+              <span class="pulse pulse--1"></span>
+              <span class="pulse pulse--2"></span>
+              <svg class="shield" viewBox="0 0 64 72">
+                <path
+                  class="shield__body"
+                  d="M32 4 56 13v20c0 16-10 29-24 35C18 62 8 49 8 33V13z"
+                />
+                <path class="shield__tick" d="M21 36l8 8 15-17" />
+              </svg>
+            </div>
+            } @default {
+            <div class="art art-offline">
+              <span class="cloud"
+                ><ion-icon name="cloud-outline"></ion-icon
+              ></span>
+              <span class="sync"
+                ><ion-icon name="sync-outline"></ion-icon
+              ></span>
+              <span class="phone"
+                ><ion-icon name="phone-portrait-outline"></ion-icon
+              ></span>
+              <span class="badge"><ion-icon name="checkmark"></ion-icon></span>
+            </div>
+            } }
+          </div>
+
           <h2 class="mf-onb__title">
             {{ step.title | translate : brandParams }}
           </h2>
@@ -67,12 +186,17 @@
         role="tab"
         [class.mf-onb__dot--on]="i === currentStepIndex"
         [attr.aria-selected]="i === currentStepIndex"
-        [attr.aria-label]="(i + 1) + ' / ' + steps.length"
+        [attr.aria-label]="i + 1 + ' / ' + steps.length"
         (click)="goToStep(i)"
       ></button>
       }
     </div>
-    <button type="button" class="mf-onb__next" (click)="next()">
+    <button
+      type="button"
+      class="mf-onb__next"
+      [class.mf-onb__next--final]="isLastStep"
+      (click)="next()"
+    >
       <span>{{
         (isLastStep ? "ONBOARDING.START" : "ONBOARDING.NEXT") | translate
       }}</span>

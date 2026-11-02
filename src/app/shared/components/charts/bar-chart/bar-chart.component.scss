@@ -42,6 +42,8 @@
 
 .chart-wrapper {
   display: flex;
+  box-sizing: border-box;
+  padding-top: 8px;
   height: 220px;
   position: relative;
 }
@@ -50,14 +52,20 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  /* Only the bar area carries the scale; the label row sits below it. */
+  height: calc(100% - var(--bar-meta-height, 56px));
   padding-inline-end: var(--ew-space-3);
   border-inline-end: 1px solid var(--ion-border-color);
 
   .y-axis-label {
     font-size: var(--ew-font-xs);
     color: var(--ew-text-color-muted);
-    transform: translateY(50%); /* Center align with grid lines */
+    /* Zero-height boxes spread by space-between sit exactly on the grid lines. */
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    white-space: nowrap;
     text-align: end;
   }
 }
@@ -73,7 +81,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: var(--bar-meta-height, 56px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -162,7 +170,9 @@
 }
 
 .bar-meta {
-  margin-top: var(--ew-space-3);
+  height: var(--bar-meta-height, 56px);
+  box-sizing: border-box;
+  padding-top: var(--ew-space-3);
   text-align: center;
   width: 100%;
 }

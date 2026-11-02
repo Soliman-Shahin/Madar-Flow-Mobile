@@ -31,12 +31,203 @@
       })();
     </script>
 
+    <style>
+      #mf-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: radial-gradient(
+          120% 90% at 50% 18%,
+          #2f63e6 0%,
+          #1f4fd1 45%,
+          #12308a 100%
+        );
+        transition: opacity 520ms ease, transform 520ms ease,
+          visibility 0s 520ms;
+      }
+      #mf-splash.mf-splash--out {
+        opacity: 0;
+        transform: scale(1.04);
+        visibility: hidden;
+      }
+      #mf-splash .mf-splash__stack {
+        position: relative;
+        display: grid;
+        justify-items: center;
+        gap: 22px;
+      }
+      #mf-splash .mf-splash__halo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        opacity: 0;
+        animation: mf-halo 2.4s 500ms ease-out infinite;
+      }
+      #mf-splash .mf-splash__halo:nth-child(2) {
+        animation-delay: 1.3s;
+      }
+      #mf-splash .mf-splash__logo-wrap {
+        position: relative;
+        width: 116px;
+        height: 116px;
+        opacity: 0;
+        transform: scale(0.4) rotate(-8deg);
+        animation: mf-logo 900ms 120ms cubic-bezier(0.34, 1.56, 0.64, 1)
+          forwards;
+      }
+      #mf-splash .mf-splash__logo {
+        width: 100%;
+        height: 100%;
+        border-radius: 30px;
+        display: block;
+        box-shadow: 0 28px 48px -16px rgba(4, 14, 60, 0.7);
+      }
+      #mf-splash .mf-splash__shine {
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      #mf-splash .mf-splash__shine::after {
+        content: "";
+        position: absolute;
+        top: -20%;
+        bottom: -20%;
+        width: 40%;
+        left: -60%;
+        background: linear-gradient(
+          100deg,
+          transparent,
+          rgba(255, 255, 255, 0.55),
+          transparent
+        );
+        transform: skewX(-18deg);
+        animation: mf-shine 1100ms 900ms ease-in-out forwards;
+      }
+      #mf-splash .mf-splash__name {
+        margin: 0;
+        color: #fff;
+        font: 700 26px/1.1 system-ui, -apple-system, "Segoe UI", sans-serif;
+        letter-spacing: -0.01em;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: mf-rise 600ms 700ms ease-out forwards;
+      }
+      #mf-splash .mf-splash__bar {
+        width: 44px;
+        height: 3px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.25);
+        overflow: hidden;
+        opacity: 0;
+        animation: mf-rise 400ms 1000ms ease-out forwards;
+      }
+      #mf-splash .mf-splash__bar::after {
+        content: "";
+        display: block;
+        height: 100%;
+        width: 40%;
+        border-radius: 3px;
+        background: #fff;
+        animation: mf-load 1200ms 1000ms ease-in-out infinite;
+      }
+      @keyframes mf-logo {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes mf-rise {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes mf-halo {
+        0% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(2.2);
+        }
+      }
+      @keyframes mf-shine {
+        to {
+          left: 130%;
+        }
+      }
+      @keyframes mf-load {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(250%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #mf-splash *,
+        #mf-splash *::after {
+          animation-duration: 1ms !important;
+          animation-delay: 0s !important;
+          animation-iteration-count: 1 !important;
+        }
+        #mf-splash {
+          transition-duration: 1ms;
+        }
+      }
+    </style>
+
     <!-- Google API -->
     <script src="https://apis.google.com/js/api.js"></script>
     <link rel="manifest" href="manifest.webmanifest" />
   </head>
 
   <body>
+    <div id="mf-splash" aria-hidden="true">
+      <div class="mf-splash__stack">
+        <span class="mf-splash__halo"></span>
+        <span class="mf-splash__halo"></span>
+        <div class="mf-splash__logo-wrap">
+          <img class="mf-splash__logo" src="assets/icon/icon.png" alt="" />
+          <span class="mf-splash__shine"></span>
+        </div>
+        <p class="mf-splash__name">Madar Flow</p>
+        <span class="mf-splash__bar"></span>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var start = Date.now();
+        var el = document.getElementById("mf-splash");
+        function hide() {
+          if (!el) return;
+          el.classList.add("mf-splash--out");
+          setTimeout(function () {
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+            el = null;
+          }, 700);
+        }
+        // Keep the brand moment for at least ~2s, never longer than 5s.
+        function ready() {
+          var wait = Math.max(0, 2000 - (Date.now() - start));
+          setTimeout(hide, wait);
+        }
+        if (document.readyState === "complete") ready();
+        else window.addEventListener("load", ready);
+        setTimeout(hide, 5000);
+      })();
+    </script>
     <app-root></app-root>
     <noscript
       >Please enable JavaScript to continue using this application.</noscript

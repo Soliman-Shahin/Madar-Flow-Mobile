@@ -1,7 +1,13 @@
 <ion-header mode="ios" class="mf-sub-header" translucent="false">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-button
+        routerLink="/settings/list"
+        class="modern-back-btn"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ "HELP_PAGE.TITLE" | translate }}</ion-title>
   </ion-toolbar>
