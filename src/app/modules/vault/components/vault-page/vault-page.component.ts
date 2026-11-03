@@ -6,17 +6,31 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { AlertController, IonicModule, ModalController, RefresherCustomEvent } from '@ionic/angular';
+import {
+  AlertController,
+  IonicModule,
+  ModalController,
+  RefresherCustomEvent,
+} from '@ionic/angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription, combineLatest } from 'rxjs';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { CurrencySheetComponent } from 'src/app/shared/components/prompt-sheets/currency-sheet.component';
 import { PlanLimitBannerComponent } from 'src/app/shared/components/plan-limit-banner/plan-limit-banner.component';
-import { ledgerDetailSheet, ledgerFormSheet } from 'src/app/shared/ui/sheet/sheet-options';
+import {
+  ledgerDetailSheet,
+  ledgerFormSheet,
+} from 'src/app/shared/ui/sheet/sheet-options';
 import { formatCurrency, suggestCurrency } from 'src/app/shared/utils';
 import { VaultService } from 'src/app/core/vault/vault.service';
-import { ASSET_META, ASSET_TYPES, VAULT_CURRENCIES, currencyName, formatNumber } from 'src/app/core/vault/vault-meta';
+import {
+  ASSET_META,
+  ASSET_TYPES,
+  VAULT_CURRENCIES,
+  currencyName,
+  formatNumber,
+} from 'src/app/core/vault/vault-meta';
 import {
   GoldPriceOverride,
   convert,
@@ -206,7 +220,10 @@ export class VaultPageComponent implements OnInit, OnDestroy {
       }
       case 'investment': {
         const d = a.details as InvestmentDetails;
-        return t('VAULT.SUB_INVEST', { qty: n(d.quantity, 4), symbol: d.symbol });
+        return t('VAULT.SUB_INVEST', {
+          qty: n(d.quantity, 4),
+          symbol: d.symbol,
+        });
       }
       default:
         return a.note ?? t('VAULT.TYPE_other');
@@ -237,29 +254,45 @@ export class VaultPageComponent implements OnInit, OnDestroy {
     if (f === null) return '';
     return (
       (f > 0 ? '+' : f < 0 ? '−' : '') +
-      new Intl.NumberFormat(this.locale, { maximumFractionDigits: 1 }).format(Math.abs(f) * 100) +
+      new Intl.NumberFormat(this.locale, { maximumFractionDigits: 1 }).format(
+        Math.abs(f) * 100
+      ) +
       '%'
     );
   }
 
   share(f: number): string {
-    return new Intl.NumberFormat(this.locale, { style: 'percent', maximumFractionDigits: 0 }).format(f);
+    return new Intl.NumberFormat(this.locale, {
+      style: 'percent',
+      maximumFractionDigits: 0,
+    }).format(f);
   }
 
   get pricesAge(): string | null {
     const p = this.prices;
     if (!p) return null;
-    const mins = Math.max(0, Math.round((Date.now() - new Date(p.updatedAt).getTime()) / 60000));
+    const mins = Math.max(
+      0,
+      Math.round((Date.now() - new Date(p.updatedAt).getTime()) / 60000)
+    );
     if (mins < 2) return this.translate.instant('VAULT.PRICES_NOW');
-    if (mins < 60) return this.translate.instant('VAULT.PRICES_MIN', { n: mins });
-    if (mins < 60 * 24) return this.translate.instant('VAULT.PRICES_HOURS', { n: Math.round(mins / 60) });
-    return this.translate.instant('VAULT.PRICES_DAYS', { n: Math.round(mins / 1440) });
+    if (mins < 60)
+      return this.translate.instant('VAULT.PRICES_MIN', { n: mins });
+    if (mins < 60 * 24)
+      return this.translate.instant('VAULT.PRICES_HOURS', {
+        n: Math.round(mins / 60),
+      });
+    return this.translate.instant('VAULT.PRICES_DAYS', {
+      n: Math.round(mins / 1440),
+    });
   }
 
   get goldPriceLine(): string | null {
     const p = goldPerGram24(this.base, this.prices, this.override);
     if (p === null) return null;
-    return this.translate.instant('VAULT.GOLD_LINE', { price: this.isolate(this.money(p)) });
+    return this.translate.instant('VAULT.GOLD_LINE', {
+      price: this.isolate(this.money(p)),
+    });
   }
 
   // ---- actions ------------------------------------------------------------
@@ -319,7 +352,10 @@ export class VaultPageComponent implements OnInit, OnDestroy {
       }),
       buttons: [
         { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
-        { text: this.translate.instant('SUBSCRIPTION.UPGRADE'), role: 'upgrade' },
+        {
+          text: this.translate.instant('SUBSCRIPTION.UPGRADE'),
+          role: 'upgrade',
+        },
       ],
     });
     await alert.present();
@@ -348,7 +384,12 @@ export class VaultPageComponent implements OnInit, OnDestroy {
       buttons: [
         { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
         ...(this.override
-          ? [{ text: this.translate.instant('VAULT.USE_MARKET'), role: 'clear' }]
+          ? [
+              {
+                text: this.translate.instant('VAULT.USE_MARKET'),
+                role: 'clear',
+              },
+            ]
           : []),
         { text: this.translate.instant('VAULT.NEXT'), role: 'confirm' },
       ],
@@ -366,11 +407,18 @@ export class VaultPageComponent implements OnInit, OnDestroy {
 
     // 2. the price of one gram of that karat
     const market = goldPerGram24(this.base, this.prices, null);
-    const marketK = market !== null ? Math.round(((market * karat) / 24) * 100) / 100 : undefined;
-    const same = this.override?.karat === karat ? this.override.entered : undefined;
+    const marketK =
+      market !== null
+        ? Math.round(((market * karat) / 24) * 100) / 100
+        : undefined;
+    const same =
+      this.override?.karat === karat ? this.override.entered : undefined;
     const alert = await this.alerts.create({
       header: this.translate.instant('VAULT.GOLD_PRICE_TITLE'),
-      message: this.translate.instant('VAULT.GOLD_PRICE_MESSAGE', { currency: this.base, karat }),
+      message: this.translate.instant('VAULT.GOLD_PRICE_MESSAGE', {
+        currency: this.base,
+        karat,
+      }),
       inputs: [
         {
           name: 'price',
@@ -390,11 +438,15 @@ export class VaultPageComponent implements OnInit, OnDestroy {
     if (role === 'confirm') {
       const n = Number(data?.values?.price);
       if (Number.isFinite(n) && n > 0) {
+        const p24 = perGram24From(n, karat);
+        const market24 = goldPerGram24(this.base, this.prices, null);
         this.override = {
-          perGram24: perGram24From(n, karat),
+          perGram24: p24,
           currency: this.base,
           karat,
           entered: n,
+          enteredAt: new Date().toISOString(),
+          premium: market24 ? p24 / market24 - 1 : undefined,
         };
         this.vault.goldOverride = this.override;
       }
@@ -402,16 +454,72 @@ export class VaultPageComponent implements OnInit, OnDestroy {
     this.recompute();
   }
 
-  get goldRows(): Array<{ key: number | string; label: string; price: number }> {
-    const p24 = goldPerGram24(this.base, this.prices, this.override);
-    if (p24 === null) return [];
-    const rows: Array<{ key: number | string; label: string; price: number }> = [24, 22, 21, 18, 14].map((k) => ({
-      key: k,
+  get goldRows(): Array<{
+    key: number | string;
+    label: string;
+    global: number;
+    local: number | null;
+  }> {
+    const g24 = goldPerGram24(this.base, this.prices, null);
+    if (g24 === null) return [];
+    const l24 = this.override
+      ? goldPerGram24(this.base, this.prices, this.override)
+      : null;
+    const at = (p24: number | null, k: number) =>
+      p24 === null ? null : (p24 * k) / 24;
+    const rows = [24, 22, 21, 18, 14].map((k) => ({
+      key: k as number | string,
       label: this.translate.instant('VAULT.KARAT_N', { k }),
-      price: (p24 * k) / 24,
+      global: at(g24, k) as number,
+      local: at(l24, k),
     }));
-    rows.push({ key: 'pound', label: this.translate.instant('VAULT.GOLD_POUND'), price: 8 * (21 / 24) * p24 });
+    rows.push({
+      key: 'pound',
+      label: this.translate.instant('VAULT.GOLD_POUND'),
+      global: 8 * (21 / 24) * g24,
+      local: l24 === null ? null : 8 * (21 / 24) * l24,
+    });
     return rows;
+  }
+
+  /** "Local is 4% above international", from the live prices. */
+  get premiumLine(): string | null {
+    const g = goldPerGram24(this.base, this.prices, null);
+    const l = this.override
+      ? goldPerGram24(this.base, this.prices, this.override)
+      : null;
+    if (!g || !l) return null;
+    const f = l / g - 1;
+    if (Math.abs(f) < 0.0005) return null;
+    const pct =
+      new Intl.NumberFormat(this.locale, { maximumFractionDigits: 1 }).format(
+        Math.abs(f) * 100
+      ) + '%';
+    return this.translate.instant(
+      f > 0 ? 'VAULT.PREMIUM_ABOVE' : 'VAULT.PREMIUM_BELOW',
+      { pct }
+    );
+  }
+
+  /** Days since the local price was entered, once it is old enough to question. */
+  get localAgeDays(): number | null {
+    const at = this.override?.enteredAt;
+    if (!at) return null;
+    const d = Math.floor((Date.now() - new Date(at).getTime()) / 86400000);
+    return d >= 7 ? d : null;
+  }
+
+  /** Which gold price the savings are valued at, when there is gold. */
+  get valuedAt(): string | null {
+    if (
+      !this.rows.some(
+        (r) => r.asset.type === 'gold' && r.asset.status === 'held'
+      )
+    )
+      return null;
+    return this.translate.instant(
+      this.override ? 'VAULT.VALUED_LOCAL' : 'VAULT.VALUED_GLOBAL'
+    );
   }
 
   get fxRows(): Array<{ code: string; name: string; rate: number }> {
@@ -424,7 +532,12 @@ export class VaultPageComponent implements OnInit, OnDestroy {
       const rate = convert(1, code, this.base, usd);
       if (rate === null) continue;
       const name = currencyName(code, this.locale);
-      if (q && !code.toLowerCase().includes(q) && !name.toLowerCase().includes(q)) continue;
+      if (
+        q &&
+        !code.toLowerCase().includes(q) &&
+        !name.toLowerCase().includes(q)
+      )
+        continue;
       out.push({ code, name, rate });
     }
     return out;
@@ -436,5 +549,4 @@ export class VaultPageComponent implements OnInit, OnDestroy {
   }
 
   trackRow = (_: number, r: Row) => r.asset.id;
-
 }

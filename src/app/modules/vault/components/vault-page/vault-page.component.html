@@ -2,14 +2,20 @@
   <ion-toolbar class="title-toolbar">
     <ion-title>
       <div class="header-title-container">
-        <span class="main-title">{{ 'VAULT.TITLE' | translate }}</span>
+        <span class="main-title">{{ "VAULT.TITLE" | translate }}</span>
         @if (rows.length) {
-        <span class="sub-title">{{ (rows.length === 1 ? 'VAULT.COUNT_ONE' : 'VAULT.COUNT_OTHER') | translate : { n: rows.length } }}</span>
+        <span class="sub-title">{{
+          (rows.length === 1 ? "VAULT.COUNT_ONE" : "VAULT.COUNT_OTHER")
+            | translate : { n: rows.length }
+        }}</span>
         }
       </div>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="add()" [attr.aria-label]="'VAULT.ADD_TITLE' | translate">
+      <ion-button
+        (click)="add()"
+        [attr.aria-label]="'VAULT.ADD_TITLE' | translate"
+      >
         <ion-icon slot="icon-only" name="add"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -17,8 +23,26 @@
   @if (base) {
   <ion-toolbar class="vp__tabs-bar">
     <div class="vp__tabs" role="tablist">
-      <button type="button" role="tab" class="vp__tab" [class.vp__tab--on]="view === 'savings'" [attr.aria-selected]="view === 'savings'" (click)="view = 'savings'">{{ 'VAULT.TAB_SAVINGS' | translate }}</button>
-      <button type="button" role="tab" class="vp__tab" [class.vp__tab--on]="view === 'prices'" [attr.aria-selected]="view === 'prices'" (click)="view = 'prices'">{{ 'VAULT.TAB_PRICES' | translate }}</button>
+      <button
+        type="button"
+        role="tab"
+        class="vp__tab"
+        [class.vp__tab--on]="view === 'savings'"
+        [attr.aria-selected]="view === 'savings'"
+        (click)="view = 'savings'"
+      >
+        {{ "VAULT.TAB_SAVINGS" | translate }}
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="vp__tab"
+        [class.vp__tab--on]="view === 'prices'"
+        [attr.aria-selected]="view === 'prices'"
+        (click)="view = 'prices'"
+      >
+        {{ "VAULT.TAB_PRICES" | translate }}
+      </button>
     </div>
   </ion-toolbar>
   }
@@ -37,98 +61,172 @@
   </div>
   } @else if (!base) {
   <section class="mf-empty mf-empty--page">
-    <ion-icon class="mf-empty__icon" name="wallet-outline" aria-hidden="true"></ion-icon>
-    <h2 class="mf-empty__title">{{ 'VAULT.NEED_CURRENCY_TITLE' | translate }}</h2>
-    <p class="mf-empty__hint">{{ 'VAULT.NEED_CURRENCY_HINT' | translate }}</p>
+    <ion-icon
+      class="mf-empty__icon"
+      name="wallet-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <h2 class="mf-empty__title">
+      {{ "VAULT.NEED_CURRENCY_TITLE" | translate }}
+    </h2>
+    <p class="mf-empty__hint">{{ "VAULT.NEED_CURRENCY_HINT" | translate }}</p>
     <ion-button class="mf-empty__action" (click)="chooseCurrency()">
-      {{ 'VAULT.CHOOSE_CURRENCY' | translate }}
+      {{ "VAULT.CHOOSE_CURRENCY" | translate }}
     </ion-button>
   </section>
   } @else if (view === 'prices') {
   <div class="vp__body">
     <section class="vp__card">
-      <h2 class="vp__h">{{ 'VAULT.PRICES_GOLD' | translate }}</h2>
+      <h2 class="vp__h">{{ "VAULT.PRICES_GOLD" | translate }}</h2>
       @if (goldRows.length) {
-      <ul class="vp__plist">
+      <div class="vp__gold" role="table">
+        <div class="vp__gold-row vp__gold-row--head" role="row">
+          <span role="columnheader"></span>
+          <span role="columnheader">{{ "VAULT.COL_GLOBAL" | translate }}</span>
+          <span role="columnheader">{{ "VAULT.COL_LOCAL" | translate }}</span>
+        </div>
         @for (g of goldRows; track g.key) {
-        <li><span>{{ g.label }}</span><strong dir="ltr">{{ money(g.price) }}</strong></li>
+        <div class="vp__gold-row" role="row">
+          <span role="rowheader">{{ g.label }}</span>
+          <strong dir="ltr" role="cell">{{ money(g.global) }}</strong>
+          @if (g.local !== null) {
+          <strong dir="ltr" role="cell">{{ money(g.local) }}</strong>
+          } @else {
+          <span class="vp__dash" role="cell">—</span>
+          }
+        </div>
         }
-      </ul>
-      } @else {
-      <p class="vp__note">{{ 'VAULT.NO_PRICES' | translate }}</p>
+      </div>
+      @if (premiumLine) {
+      <p class="vp__note">{{ premiumLine }}</p>
+      } @if (localAgeDays !== null) {
+      <p class="vp__note vp__note--warn">
+        {{ "VAULT.LOCAL_OLD" | translate : { n: localAgeDays } }}
+      </p>
+      } } @else {
+      <p class="vp__note">{{ "VAULT.NO_PRICES" | translate }}</p>
       }
       <div class="vp__pmeta">
-        <span>@if (override) { {{ 'VAULT.OWN_PRICE' | translate }} } @else if (pricesAge) { {{ 'VAULT.PRICES_UPDATED' | translate : { when: pricesAge } }}@if (prices?.stale) { · {{ 'VAULT.PRICES_STALE' | translate }} } }</span>
-        <button type="button" class="vp__prices-btn" (click)="setGoldPrice()">{{ 'VAULT.SET_GOLD_PRICE' | translate }}</button>
+        <span
+          >@if (override) { {{ "VAULT.OWN_PRICE" | translate }} } @else if
+          (pricesAge) {
+          {{ "VAULT.PRICES_UPDATED" | translate : { when: pricesAge } }}@if
+          (prices?.stale) { · {{ "VAULT.PRICES_STALE" | translate }} } }</span
+        >
+        <button type="button" class="vp__prices-btn" (click)="setGoldPrice()">
+          {{ "VAULT.SET_GOLD_PRICE" | translate }}
+        </button>
       </div>
       @if (override) {
-      <button type="button" class="vp__reset" (click)="useMarketPrice()">{{ 'VAULT.USE_MARKET' | translate }}</button>
+      <button type="button" class="vp__reset" (click)="useMarketPrice()">
+        {{ "VAULT.USE_MARKET" | translate }}
+      </button>
       }
     </section>
     <section class="vp__card">
-      <h2 class="vp__h">{{ 'VAULT.PRICES_FX' | translate }}</h2>
-      <input class="vp__search" type="search" autocomplete="off" [placeholder]="'VAULT.CURRENCY_SEARCH' | translate" [attr.aria-label]="'VAULT.CURRENCY_SEARCH' | translate" (input)="setFxQuery($any($event.target).value)" />
+      <h2 class="vp__h">{{ "VAULT.PRICES_FX" | translate }}</h2>
+      <input
+        class="vp__search"
+        type="search"
+        autocomplete="off"
+        [placeholder]="'VAULT.CURRENCY_SEARCH' | translate"
+        [attr.aria-label]="'VAULT.CURRENCY_SEARCH' | translate"
+        (input)="setFxQuery($any($event.target).value)"
+      />
       @if (fxRows.length) {
       <ul class="vp__plist">
         @for (r of fxRows; track r.code) {
-        <li><span>{{ 'VAULT.FX_ONE' | translate : { code: r.code } }} <small>{{ r.name }}</small></span><strong dir="ltr">{{ money(r.rate) }}</strong></li>
+        <li>
+          <span
+            >{{ "VAULT.FX_ONE" | translate : { code: r.code } }}
+            <small>{{ r.name }}</small></span
+          ><strong dir="ltr">{{ money(r.rate) }}</strong>
+        </li>
         }
       </ul>
       } @else {
-      <p class="vp__note">{{ 'VAULT.NO_MATCH' | translate }}</p>
+      <p class="vp__note">{{ "VAULT.NO_MATCH" | translate }}</p>
       }
     </section>
-    <p class="vp__foot">{{ 'VAULT.DISCLAIMER' | translate }}</p>
+    <p class="vp__foot">{{ "VAULT.DISCLAIMER" | translate }}</p>
   </div>
   } @else if (!rows.length) {
   <section class="mf-empty mf-empty--page">
-    <ion-icon class="mf-empty__icon" name="diamond-outline" aria-hidden="true"></ion-icon>
-    <h2 class="mf-empty__title">{{ 'VAULT.EMPTY_TITLE' | translate }}</h2>
-    <p class="mf-empty__hint">{{ 'VAULT.EMPTY_HINT' | translate : { currency: base } }}</p>
+    <ion-icon
+      class="mf-empty__icon"
+      name="diamond-outline"
+      aria-hidden="true"
+    ></ion-icon>
+    <h2 class="mf-empty__title">{{ "VAULT.EMPTY_TITLE" | translate }}</h2>
+    <p class="mf-empty__hint">
+      {{ "VAULT.EMPTY_HINT" | translate : { currency: base } }}
+    </p>
     <ion-button class="mf-empty__action" (click)="add()">
-      {{ 'VAULT.EMPTY_ACTION' | translate }}
+      {{ "VAULT.EMPTY_ACTION" | translate }}
     </ion-button>
   </section>
   } @else {
   <div class="vp__body">
     <section class="vp__hero" aria-labelledby="vp-total-label">
-      <span class="vp__eyebrow" id="vp-total-label">{{ 'VAULT.TOTAL' | translate }}</span>
+      <span class="vp__eyebrow" id="vp-total-label">{{
+        "VAULT.TOTAL" | translate
+      }}</span>
       <strong class="vp__total" dir="ltr">{{ money(summary.value) }}</strong>
       @if (hasHeld) {
       <div class="vp__meta">
-        <span>{{ 'VAULT.PAID_LINE' | translate : { amount: isolate(money(summary.cost)) } }}</span>
+        <span>{{
+          "VAULT.PAID_LINE"
+            | translate : { amount: isolate(money(summary.cost)) }
+        }}</span>
         <span
           class="vp__gain"
           dir="ltr"
           [class.vp__gain--pos]="summary.gain > 0"
           [class.vp__gain--neg]="summary.gain < 0"
         >
-          {{ signed(summary.gain) }}{{ summary.gainPct !== null ? ' (' + pct(summary.gainPct) + ')' : '' }}
+          {{ signed(summary.gain)
+          }}{{
+            summary.gainPct !== null ? " (" + pct(summary.gainPct) + ")" : ""
+          }}
         </span>
       </div>
-      }
-      @if (summary.skipped) {
-      <p class="vp__warn">{{ 'VAULT.SKIPPED' | translate : { n: summary.skipped } }}</p>
-      }
-
-      @if (summary.byType.length > 1) {
-      <div class="vp__bar" role="img" [attr.aria-label]="'VAULT.ALLOCATION' | translate">
+      } @if (valuedAt) {
+      <p class="vp__warn">{{ valuedAt }}</p>
+      } @if (summary.skipped) {
+      <p class="vp__warn">
+        {{ "VAULT.SKIPPED" | translate : { n: summary.skipped } }}
+      </p>
+      } @if (summary.byType.length > 1) {
+      <div
+        class="vp__bar"
+        role="img"
+        [attr.aria-label]="'VAULT.ALLOCATION' | translate"
+      >
         @for (s of summary.byType; track s.type) {
-        <span class="vp__seg" [style.flex-grow]="s.share" [style.background]="meta[s.type].color"></span>
+        <span
+          class="vp__seg"
+          [style.flex-grow]="s.share"
+          [style.background]="meta[s.type].color"
+        ></span>
         }
       </div>
       <ul class="vp__legend">
         @for (s of summary.byType; track s.type) {
         <li>
-          <span class="vp__dot" [style.background]="meta[s.type].color" aria-hidden="true"></span>
-          <span class="vp__legend-name">{{ 'VAULT.TYPE_' + s.type | translate }}</span>
+          <span
+            class="vp__dot"
+            [style.background]="meta[s.type].color"
+            aria-hidden="true"
+          ></span>
+          <span class="vp__legend-name">{{
+            "VAULT.TYPE_" + s.type | translate
+          }}</span>
           <span class="vp__legend-share">{{ share(s.share) }}</span>
         </li>
         }
       </ul>
       }
     </section>
-
 
     @if (usage && usage.limit !== null && limitPercent >= 75) {
     <app-plan-limit-banner
@@ -137,16 +235,32 @@
       [limit]="usage.limit"
       [percentage]="limitPercent"
     ></app-plan-limit-banner>
-    }
-
-    @if (presentTypes.length > 1) {
-    <div class="vp__filters" role="tablist" [attr.aria-label]="'VAULT.KIND' | translate">
-      <button type="button" role="tab" class="vp__filter" [class.vp__filter--on]="filter === 'all'" [attr.aria-selected]="filter === 'all'" (click)="setFilter('all')">
-        {{ 'COMMON.ALL' | translate }}
+    } @if (presentTypes.length > 1) {
+    <div
+      class="vp__filters"
+      role="tablist"
+      [attr.aria-label]="'VAULT.KIND' | translate"
+    >
+      <button
+        type="button"
+        role="tab"
+        class="vp__filter"
+        [class.vp__filter--on]="filter === 'all'"
+        [attr.aria-selected]="filter === 'all'"
+        (click)="setFilter('all')"
+      >
+        {{ "COMMON.ALL" | translate }}
       </button>
       @for (t of presentTypes; track t) {
-      <button type="button" role="tab" class="vp__filter" [class.vp__filter--on]="filter === t" [attr.aria-selected]="filter === t" (click)="setFilter(t)">
-        {{ 'VAULT.TYPE_' + t | translate }}
+      <button
+        type="button"
+        role="tab"
+        class="vp__filter"
+        [class.vp__filter--on]="filter === t"
+        [attr.aria-selected]="filter === t"
+        (click)="setFilter(t)"
+      >
+        {{ "VAULT.TYPE_" + t | translate }}
       </button>
       }
     </div>
@@ -156,13 +270,18 @@
       @for (r of shown; track trackRow($index, r)) {
       <li>
         <button type="button" class="vp__row" (click)="edit(r)">
-          <span class="vp__mark" [style.--vp-color]="meta[r.asset.type].color" aria-hidden="true">
+          <span
+            class="vp__mark"
+            [style.--vp-color]="meta[r.asset.type].color"
+            aria-hidden="true"
+          >
             <ion-icon [name]="meta[r.asset.type].icon"></ion-icon>
           </span>
           <span class="vp__row-text">
             <span class="vp__row-name">{{ r.asset.name }}</span>
             <span class="vp__row-sub">
-              {{ r.subtitle }}@if (r.asset.status === 'sold') { · {{ 'VAULT.SOLD' | translate }} }
+              {{ r.subtitle }}@if (r.asset.status === 'sold') { ·
+              {{ "VAULT.SOLD" | translate }} }
             </span>
           </span>
           <span class="vp__row-figures" dir="ltr">
@@ -173,17 +292,19 @@
               class="vp__row-gain"
               [class.vp__gain--pos]="r.valuation.gain > 0"
               [class.vp__gain--neg]="r.valuation.gain < 0"
-            >{{ signed(r.valuation.gain) }}</span>
-            }
-            } @else {
-            <span class="vp__row-value vp__row-value--muted">{{ 'VAULT.PRICE_NEEDED' | translate }}</span>
+              >{{ signed(r.valuation.gain) }}</span
+            >
+            } } @else {
+            <span class="vp__row-value vp__row-value--muted">{{
+              "VAULT.PRICE_NEEDED" | translate
+            }}</span>
             }
           </span>
         </button>
       </li>
       }
     </ul>
-    <p class="vp__foot">{{ 'VAULT.DISCLAIMER' | translate }}</p>
+    <p class="vp__foot">{{ "VAULT.DISCLAIMER" | translate }}</p>
   </div>
   }
 </ion-content>

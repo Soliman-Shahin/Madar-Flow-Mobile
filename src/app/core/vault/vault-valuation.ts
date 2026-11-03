@@ -35,6 +35,10 @@ export interface GoldPriceOverride {
   /** The karat the person priced and the price as typed, to show it back to them. */
   karat?: number;
   entered?: number;
+  /** Local price over the international one when it was entered (0.04 = 4% above). */
+  premium?: number;
+  /** ISO time it was entered. */
+  enteredAt?: string;
 }
 
 /** Price of one gram of 24-karat gold in `currency`, or null if unknown. */
@@ -43,12 +47,23 @@ export function goldPerGram24(
   prices: MarketPrices | null,
   override?: GoldPriceOverride | null
 ): number | null {
+  if (
+    override &&
+    override.premium !== undefined &&
+    prices &&
+    prices.usdPer[currency]
+  ) {
+    // the local price keeps its distance from the live international price
+    return (
+      prices.goldUsdPerGram24 * prices.usdPer[currency] * (1 + override.premium)
+    );
+  }
   if (override && override.perGram24 > 0) {
     return override.currency === currency
       ? override.perGram24
       : prices
-        ? convert(override.perGram24, override.currency, currency, prices.usdPer)
-        : null;
+      ? convert(override.perGram24, override.currency, currency, prices.usdPer)
+      : null;
   }
   if (!prices) return null;
   const rate = prices.usdPer[currency];
@@ -60,8 +75,10 @@ export const priceForKarat = (perGram24: number, karat: number): number =>
   perGram24 * goldPurity(karat);
 
 /** The 24-karat price implied by a price paid for another karat. */
-export const perGram24From = (priceForKaratValue: number, karat: number): number =>
-  priceForKaratValue / goldPurity(karat);
+export const perGram24From = (
+  priceForKaratValue: number,
+  karat: number
+): number => priceForKaratValue / goldPurity(karat);
 
 export function goldWorth(
   d: GoldDetails,
@@ -99,7 +116,10 @@ export function certificateInterest(
   purchasedAt: string,
   now: Date
 ): number {
-  const elapsed = Math.min(monthsBetween(new Date(purchasedAt), now), d.termMonths);
+  const elapsed = Math.min(
+    monthsBetween(new Date(purchasedAt), now),
+    d.termMonths
+  );
   return d.principal * (d.annualRate / 100) * (elapsed / 12);
 }
 
@@ -159,7 +179,13 @@ export function valuate(
   const value = own === null ? null : convert(own, a.cost.currency, base, usd);
 
   if (value === null || cost === null) {
-    return { value, cost, gain: null, gainPct: null, needsPrice: value === null };
+    return {
+      value,
+      cost,
+      gain: null,
+      gainPct: null,
+      needsPrice: value === null,
+    };
   }
   const gain = value - cost;
   return {
@@ -208,5 +234,12 @@ export function totals(
   const byType = [...per.entries()]
     .map(([type, v]) => ({ type, value: v, share: value > 0 ? v / value : 0 }))
     .sort((x, y) => y.value - x.value);
-  return { value, cost, gain, gainPct: cost > 0 ? gain / cost : null, skipped, byType };
+  return {
+    value,
+    cost,
+    gain,
+    gainPct: cost > 0 ? gain / cost : null,
+    skipped,
+    byType,
+  };
 }

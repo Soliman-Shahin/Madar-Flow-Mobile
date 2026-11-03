@@ -141,6 +141,15 @@ describe('vault valuation', () => {
     expect(none.value).toBe(40000);
   });
 
+  it('keeps a local gold price a fixed distance above the live market', () => {
+    const local = { perGram24: 5200, currency: 'EGP', premium: 0.04, karat: 24, entered: 5200 };
+    expect(goldPerGram24('EGP', prices, local)).toBeCloseTo(5200, 6);
+    const later = { ...prices, goldUsdPerGram24: 110 };
+    expect(goldPerGram24('EGP', later, local)).toBeCloseTo(110 * 50 * 1.04, 6);
+    // offline with no prices: falls back to the price as entered
+    expect(goldPerGram24('EGP', null, local)).toBe(5200);
+  });
+
   it('ignores deleted items', () => {
     expect(totals([gold({ deleted: true })], 'EGP', prices).value).toBe(0);
   });

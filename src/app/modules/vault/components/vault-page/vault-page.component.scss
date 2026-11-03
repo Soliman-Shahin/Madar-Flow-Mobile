@@ -11,7 +11,8 @@ ion-content.vp {
   display: flex;
   flex-direction: column;
   gap: var(--mf-space-4);
-  padding: var(--mf-space-4) var(--mf-gutter) calc(var(--mf-tabbar-clearance) + var(--mf-space-6));
+  padding: var(--mf-space-4) var(--mf-gutter)
+    calc(var(--mf-tabbar-clearance) + var(--mf-space-6));
 }
 
 .vp__skeleton {
@@ -243,7 +244,11 @@ ion-content.vp {
   width: 40px;
   height: 40px;
   border-radius: var(--mf-radius-sm);
-  background: color-mix(in srgb, var(--vp-color) var(--mf-cat-soft-mix), var(--mf-surface));
+  background: color-mix(
+    in srgb,
+    var(--vp-color) var(--mf-cat-soft-mix),
+    var(--mf-surface)
+  );
   color: color-mix(in srgb, var(--vp-color) 78%, var(--mf-ink));
 
   ion-icon {
@@ -313,20 +318,147 @@ ion-content.vp {
   color: var(--mf-ink-3);
 }
 
-.vp__tabs-bar { --background: var(--mf-bg); --border-width: 0; --padding-start: var(--mf-gutter); --padding-end: var(--mf-gutter); }
-.vp__tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; border-radius: var(--mf-radius-md); background: var(--mf-surface-sunken); }
-.vp__tab { min-height: 40px; border: 0; border-radius: calc(var(--mf-radius-md) - 2px); background: transparent; color: var(--mf-ink-2); font: inherit; font-size: var(--mf-text-callout); cursor: pointer; }
-.vp__tab--on { background: var(--mf-surface); color: var(--mf-ink); font-weight: var(--mf-weight-semibold); }
-.vp__card { display: flex; flex-direction: column; gap: var(--mf-space-3); padding: var(--mf-space-4); border-radius: var(--mf-radius-lg); background: var(--mf-surface); }
-.vp__h { margin: 0; font-size: var(--mf-text-footnote); font-weight: var(--mf-weight-medium); color: var(--mf-ink-2); }
-.vp__plist { margin: 0; padding: 0; list-style: none; }
-.vp__plist li { display: flex; align-items: center; justify-content: space-between; gap: var(--mf-space-3); min-height: 48px; font-size: var(--mf-text-body); }
-.vp__plist li + li { box-shadow: inset 0 1px 0 var(--mf-separator); }
-.vp__plist small { display: block; font-size: var(--mf-text-footnote); color: var(--mf-ink-2); }
-.vp__plist strong { font-variant-numeric: tabular-nums; font-weight: var(--mf-weight-semibold); }
-.vp__pmeta { display: flex; align-items: center; justify-content: space-between; gap: var(--mf-space-3); font-size: var(--mf-text-footnote); color: var(--mf-ink-3); }
-.vp__note { margin: 0; color: var(--mf-ink-2); font-size: var(--mf-text-callout); }
-.vp__search { box-sizing: border-box; width: 100%; min-height: 48px; padding: 0 var(--mf-space-3); border: 1px solid var(--mf-separator); border-radius: var(--mf-radius-md); background: var(--mf-bg); color: var(--mf-ink); font: inherit; font-size: var(--mf-text-body); }
-.vp__search::placeholder { color: var(--mf-ink-3); opacity: 1; }
+.vp__tabs-bar {
+  --background: var(--mf-bg);
+  --border-width: 0;
+  --padding-start: var(--mf-gutter);
+  --padding-end: var(--mf-gutter);
+}
+.vp__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface-sunken);
+}
+.vp__tab {
+  min-height: 40px;
+  border: 0;
+  border-radius: calc(var(--mf-radius-md) - 2px);
+  background: transparent;
+  color: var(--mf-ink-2);
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  cursor: pointer;
+}
+.vp__tab--on {
+  background: var(--mf-surface);
+  color: var(--mf-ink);
+  font-weight: var(--mf-weight-semibold);
+}
+.vp__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+}
+.vp__h {
+  margin: 0;
+  font-size: var(--mf-text-footnote);
+  font-weight: var(--mf-weight-medium);
+  color: var(--mf-ink-2);
+}
+.vp__plist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vp__plist li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  min-height: 48px;
+  font-size: var(--mf-text-body);
+}
+.vp__plist li + li {
+  box-shadow: inset 0 1px 0 var(--mf-separator);
+}
+.vp__plist small {
+  display: block;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
+}
+.vp__plist strong {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--mf-weight-semibold);
+}
+.vp__pmeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-3);
+}
+.vp__note {
+  margin: 0;
+  color: var(--mf-ink-2);
+  font-size: var(--mf-text-callout);
+}
+.vp__search {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--mf-space-3);
+  border: 1px solid var(--mf-separator);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-bg);
+  color: var(--mf-ink);
+  font: inherit;
+  font-size: var(--mf-text-body);
+}
+.vp__search::placeholder {
+  color: var(--mf-ink-3);
+  opacity: 1;
+}
 
-.vp__reset { min-height: 48px; border: 1px solid var(--mf-separator); border-radius: var(--mf-radius-md); background: transparent; color: var(--mf-ink); font: inherit; font-size: var(--mf-text-callout); cursor: pointer; }
+.vp__reset {
+  min-height: 48px;
+  border: 1px solid var(--mf-separator);
+  border-radius: var(--mf-radius-md);
+  background: transparent;
+  color: var(--mf-ink);
+  font: inherit;
+  font-size: var(--mf-text-callout);
+  cursor: pointer;
+}
+
+.vp__gold {
+  display: flex;
+  flex-direction: column;
+}
+.vp__gold-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  align-items: center;
+  gap: var(--mf-space-2);
+  min-height: 48px;
+  font-size: var(--mf-text-callout);
+}
+.vp__gold-row + .vp__gold-row {
+  box-shadow: inset 0 1px 0 var(--mf-separator);
+}
+.vp__gold-row strong {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--mf-weight-semibold);
+  text-align: end;
+}
+.vp__gold-row--head {
+  min-height: 32px;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
+}
+.vp__gold-row--head span:not(:first-child) {
+  text-align: end;
+}
+.vp__dash {
+  text-align: end;
+  color: var(--mf-ink-3);
+}
+.vp__note--warn {
+  color: var(--mf-warning);
+}
