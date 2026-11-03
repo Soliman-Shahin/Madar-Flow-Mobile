@@ -22,6 +22,9 @@ export const APP_ROUTES = {
     INDEX: 'transactions',
     LIST: 'list',
   },
+  VAULT: {
+    INDEX: 'vault',
+  },
   SETTINGS: {
     INDEX: 'settings',
     LIST: 'list',

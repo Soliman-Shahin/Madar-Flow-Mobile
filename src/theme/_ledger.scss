@@ -128,7 +128,7 @@ ion-button.mf-empty__action {
 }
 
 // First-run empty state: the one action, as a real control.
-.mf-empty__action {
+button.mf-empty__action {
   min-height: var(--mf-touch-target);
   margin-top: var(--mf-space-2);
   padding: 0 var(--mf-space-4);

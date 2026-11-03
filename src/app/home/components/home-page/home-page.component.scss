@@ -751,3 +751,43 @@ app-line-chart {
   padding-top: var(--mf-space-5);
   border-top: 1px solid var(--mf-separator);
 }
+
+// Entry to the vault, between the month summary and recent activity.
+.mf-home-vault {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  min-height: 56px;
+  margin-block: var(--mf-space-4) 0;
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  color: var(--mf-ink);
+  text-decoration: none;
+
+  > ion-icon:first-child {
+    flex: 0 0 auto;
+    font-size: 22px;
+    color: var(--mf-ink-2);
+  }
+}
+
+.mf-home-vault__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--mf-text-footnote);
+  color: var(--mf-ink-2);
+
+  strong {
+    font-size: var(--mf-text-body);
+    font-weight: var(--mf-weight-semibold);
+    color: var(--mf-ink);
+  }
+}
+
+.mf-home-vault__go {
+  flex: 0 0 auto;
+  color: var(--mf-ink-3);
+}

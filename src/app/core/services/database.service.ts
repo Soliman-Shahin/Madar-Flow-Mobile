@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Dexie, { Table } from 'dexie';
 import { SyncOperation } from 'src/app/shared/models/sync.model';
 import { StoredReceipt } from 'src/app/core/receipts/receipt.types';
+import { VaultAsset } from 'src/app/core/vault/vault.types';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,8 @@ export class DatabaseService extends Dexie {
   syncOperations!: Table<SyncOperation, string>;
   /** Receipt pictures and details, kept on this device only. */
   receipts!: Table<StoredReceipt, string>;
+  /** Vault items (gold, cash, certificates...); synced to the account. */
+  assets!: Table<VaultAsset, string>;
 
   constructor() {
     super('MadarFlowDB');
@@ -37,6 +40,10 @@ export class DatabaseService extends Dexie {
     // Additive: a table for receipt thumbnails. Existing tables are untouched.
     this.version(3).stores({
       receipts: 'id, ownerUserId',
+    });
+    // Additive: the vault.
+    this.version(4).stores({
+      assets: 'id, ownerUserId, [ownerUserId+synced], type',
     });
   }
 

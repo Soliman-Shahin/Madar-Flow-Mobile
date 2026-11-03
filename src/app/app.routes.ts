@@ -42,6 +42,13 @@ export const routes: Routes = [
     canLoad: [AuthGuardService],
   },
   {
+    path: APP_ROUTES.VAULT.INDEX,
+    loadChildren: () =>
+      import('./modules/vault/vault.routes').then((m) => m.routes),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuardService],
+  },
+  {
     path: APP_ROUTES.SETTINGS.INDEX,
     loadChildren: () =>
       import('./modules/settings/settings.routes').then((m) => m.routes),

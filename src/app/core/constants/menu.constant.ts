@@ -21,6 +21,12 @@ export const MENU_ITEMS: MenuItem[] = [
     requiresAuth: true,
   },
   {
+    title: 'SIDEBAR.VAULT',
+    icon: 'diamond-outline',
+    link: APP_ROUTES.BASE + APP_ROUTES.VAULT.INDEX,
+    requiresAuth: true,
+  },
+  {
     title: 'SETTINGS.NOTIFICATIONS',
     icon: 'notifications-outline',
     link: APP_ROUTES.BASE + APP_ROUTES.NOTIFICATIONS.INDEX,
