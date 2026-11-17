@@ -15,6 +15,8 @@ import {
   IonicModule,
 } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { VaultService } from 'src/app/core/vault/vault.service';
+import { convert as convertAmount } from 'src/app/core/vault/vault-valuation';
 import { ConnectionService } from 'src/app/core/services/connection.service';
 import { ReceiptPrefsService } from 'src/app/core/receipts/receipt-prefs.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -70,14 +72,42 @@ import {
           <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
         </button>
       </div>
-      @if (currencyMismatch) {
+      @if (converted) {
+      <p class="rs__note" role="status">
+        {{
+          'RECEIPT.CONVERTED'
+            | translate
+              : {
+                  from: converted.from,
+                  to: converted.to,
+                  rate: converted.rate
+                }
+        }}
+        <button type="button" class="rs__link" (click)="undoConvert()">
+          {{ 'RECEIPT.CONVERT_UNDO' | translate }}
+        </button>
+      </p>
+      } @else if (currencyMismatch) {
       <p class="rs__note" role="note">
         {{
           'RECEIPT.CURRENCY_DIFF'
             | translate
               : { receipt: result.extraction.currency, app: currency }
         }}
+        @if (result.extraction.total !== undefined) {
+        <button
+          type="button"
+          class="rs__link"
+          [disabled]="converting"
+          (click)="convert()"
+        >
+          {{ 'RECEIPT.CONVERT' | translate : { app: currency } }}
+        </button>
+        }
       </p>
+      @if (convertError) {
+      <p class="rs__error" role="alert">{{ 'RECEIPT.CONVERT_FAILED' | translate }}</p>
+      }
       } } @if (error) {
       <p class="rs__error" role="alert">{{ error | translate }}</p>
       }
@@ -233,6 +263,20 @@ import {
       .rs__error {
         color: var(--mf-danger);
       }
+      .rs__link {
+        display: inline-block;
+        min-height: 44px;
+        padding: 0 var(--mf-space-1);
+        border: 0;
+        background: transparent;
+        color: var(--mf-primary);
+        font: inherit;
+        font-weight: var(--mf-weight-semibold);
+        cursor: pointer;
+      }
+      .rs__link:disabled {
+        opacity: 0.6;
+      }
       button:focus-visible {
         outline: 2px solid var(--mf-focus-ring);
         outline-offset: 2px;
@@ -250,11 +294,18 @@ export class ReceiptScanComponent {
   private readonly translate = inject(TranslateService);
   private readonly prefs = inject(ReceiptPrefsService);
   private readonly connection = inject(ConnectionService);
+  private readonly vault = inject(VaultService);
 
   /** The currency the app shows amounts in. */
   @Input() currency = '';
   @Output() scanned = new EventEmitter<ScanResult>();
   @Output() cleared = new EventEmitter<void>();
+  /** The amount to put in the form: converted to the app currency, or the original again. */
+  @Output() convertedAmount = new EventEmitter<number>();
+
+  converting = false;
+  convertError = false;
+  converted: { from: string; to: string; rate: number } | null = null;
 
   busy = false;
   stage: ScanStage = 'preparing';
@@ -298,6 +349,37 @@ export class ReceiptScanComponent {
     return !!r && !!this.currency && r !== this.currency.toUpperCase();
   }
 
+  /** Converts the receipt total to the app currency at today's market rate. */
+  async convert(): Promise<void> {
+    const e = this.result?.extraction;
+    const from = e?.currency;
+    const to = this.currency.toUpperCase();
+    if (!e || e.total === undefined || !from || !to || this.converting) return;
+    this.converting = true;
+    this.convertError = false;
+    this.cdr.markForCheck();
+    try {
+      const prices = await this.vault.refreshPrices();
+      const rate = prices ? convertAmount(1, from, to, prices.usdPer) : null;
+      if (rate === null) {
+        this.convertError = true;
+        return;
+      }
+      this.converted = { from, to, rate: Math.round(rate * 10000) / 10000 };
+      this.convertedAmount.emit(Math.round(e.total * rate * 100) / 100);
+    } finally {
+      this.converting = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  undoConvert(): void {
+    const total = this.result?.extraction.total;
+    this.converted = null;
+    if (total !== undefined) this.convertedAmount.emit(total);
+    this.cdr.markForCheck();
+  }
+
   async onFile(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -305,6 +387,8 @@ export class ReceiptScanComponent {
     if (!file || this.busy) return;
     await this.askConsentOnce();
     this.error = '';
+    this.converted = null;
+    this.convertError = false;
     this.busy = true;
     this.progress = 0;
     this.cdr.markForCheck();
@@ -354,6 +438,8 @@ export class ReceiptScanComponent {
 
   clear(): void {
     this.result = null;
+    this.converted = null;
+    this.convertError = false;
     this.error = '';
     this.cleared.emit();
     this.cdr.markForCheck();

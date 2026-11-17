@@ -424,6 +424,13 @@ export class ExpenseFormComponent
   }
 
   /** Fills the form from a scanned receipt; the person reviews and saves. */
+  /** The receipt total converted to the account currency (or put back as read). */
+  onConvertedAmount(amount: number): void {
+    this.expenseForm.patchValue({ amount });
+    this.expenseForm.markAsDirty();
+    this.cdr.markForCheck();
+  }
+
   onReceiptScanned(result: ScanResult): void {
     this.receiptScan = result;
     const e = result.extraction;

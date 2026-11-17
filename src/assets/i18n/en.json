@@ -1234,7 +1234,7 @@
     "REMOVE": "Remove receipt",
     "NOT_FOUND": "We could not read this receipt. Try a clearer photo in good light, or enter the details yourself.",
     "FAILED": "Could not read the photo. Try again or enter the details yourself.",
-    "CURRENCY_DIFF": "This receipt is in {{receipt}}, but your amounts are in {{app}}. No conversion is applied.",
+    "CURRENCY_DIFF": "This receipt is in {{receipt}}, but your amounts are in {{app}}.",
     "ITEMS": "Items",
     "RECEIPT": "Receipt",
     "CONSENT_TITLE": "Read receipts online?",
@@ -1246,7 +1246,11 @@
     "OPEN": "View receipt full screen",
     "FIT": "Fit to screen",
     "SCAN_SHORT": "Scan",
-    "TAKE_PHOTO": "Take a photo"
+    "TAKE_PHOTO": "Take a photo",
+    "CONVERT": "Convert to {{app}}",
+    "CONVERTED": "Converted from {{from}} to {{to}} at today's market rate (1 {{from}} = {{rate}} {{to}}).",
+    "CONVERT_UNDO": "Undo",
+    "CONVERT_FAILED": "Couldn't get the exchange rate. Check your connection and try again."
   },
   "VAULT": {
     "TITLE": "Vault",
@@ -1360,5 +1364,11 @@
     "LOCAL_OLD": "Entered {{n}} days ago. Check it against the jeweler's price.",
     "VALUED_LOCAL": "Gold is valued at your local price.",
     "VALUED_GLOBAL": "Gold is valued at the international price."
+  },
+  "HTTP_ERRORS": {
+    "SESSION_EXPIRED": "Your session has ended. Please sign in again.",
+    "NO_INTERNET": "No internet connection. Please check your network.",
+    "FORBIDDEN": "You don't have permission to access this.",
+    "SERVER": "Server error. Please try again later."
   }
 }

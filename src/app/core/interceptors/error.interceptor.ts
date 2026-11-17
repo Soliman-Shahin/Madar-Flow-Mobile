@@ -11,6 +11,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConnectionService } from '../services/connection.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TokenService } from '../../modules/auth/services/token.service';
+
+/** Same message twice within this window is shown once. */
+const TOAST_DEDUPE_MS = 5000;
+let lastToast = { message: '', at: 0 };
 
 function handleAccountLocked(error: HttpErrorResponse): string {
   const lockoutMinutes = error.error?.lockoutMinutes || 15;
@@ -47,8 +53,14 @@ function extractValidationErrors(error: HttpErrorResponse): string {
 async function handleError(
   error: HttpErrorResponse,
   request: HttpRequest<unknown>,
-  toastService: ToastService
+  toastService: ToastService,
+  translate: TranslateService,
+  sessionEnded: boolean
 ): Promise<void> {
+  const t = (key: string, fallback: string) => {
+    const v = translate.instant(key);
+    return v && v !== key ? v : fallback;
+  };
   // Online receipt reading is an optional extra: when it fails the app reads
   // the receipt on the device instead, so the person must not see an error.
   if (request.url.includes('/receipts/extract')) return;
@@ -58,21 +70,24 @@ async function handleError(
 
   switch (error.status) {
     case 0:
-      errorMessage = 'No internet connection. Please check your network.';
+      errorMessage = t('HTTP_ERRORS.NO_INTERNET', 'No internet connection. Please check your network.');
       break;
     case 400:
       errorMessage =
         error.error?.message || 'Invalid request. Please check your input.';
       break;
     case 401:
-      errorMessage = 'Session expired. Please login again.';
-      // Get current URL from router, not from request
-      // Authentication teardown is owned by the renewal interceptor.
+      // The renewal interceptor owns recovery: it refreshes, or ends the session
+      // and opens the sign-in screen. A 401 that leaves the session alive (a call
+      // made before the saved session was restored, or while the app is locked)
+      // is not something the person needs to be told about.
+      errorMessage = t('HTTP_ERRORS.SESSION_EXPIRED', 'Your session has ended. Please sign in again.');
+      if (!sessionEnded) shouldShowToast = false;
       break;
     case 403:
       errorMessage =
         error.error?.message ||
-        "You don't have permission to access this resource.";
+        t('HTTP_ERRORS.FORBIDDEN', "You don't have permission to access this resource.");
       // Forbidden is an authorization result, not a reason to destroy the session.
       break;
     case 404:
@@ -92,7 +107,7 @@ async function handleError(
     case 502:
     case 503:
     case 504:
-      errorMessage = 'Server error. Please try again later.';
+      errorMessage = t('HTTP_ERRORS.SERVER', 'Server error. Please try again later.');
       break;
     default:
       errorMessage = error.error?.message || error.message || errorMessage;
@@ -115,6 +130,9 @@ async function handleError(
   });
 
   if (shouldShowToast) {
+    const now = Date.now();
+    if (lastToast.message === errorMessage && now - lastToast.at < TOAST_DEDUPE_MS) return;
+    lastToast = { message: errorMessage, at: now };
     await toastService.presentErrorToast('top', errorMessage);
   }
 }
@@ -126,6 +144,11 @@ export const errorInterceptor: HttpInterceptorFn = (
   if (!isApiUrl(req.url)) return next(req);
   const toastService = inject(ToastService);
   const connection = inject(ConnectionService);
+  const translate = inject(TranslateService);
+  const tokens = inject(TokenService);
+  // Only a person who had a session when the call started can lose it during
+  // the call; anonymous calls never announce an expired session.
+  const hadSession = tokens.hasRestoredSession() || !!tokens.getAccessToken();
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -134,7 +157,9 @@ export const errorInterceptor: HttpInterceptorFn = (
       if (!connection.isOnline() || !navigator.onLine) {
         return throwError(() => error);
       }
-      handleError(error, req, toastService);
+      const sessionEnded =
+        hadSession && !tokens.hasRestoredSession() && !tokens.getAccessToken();
+      handleError(error, req, toastService, translate, sessionEnded);
       return throwError(() => error);
     })
   );
