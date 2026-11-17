@@ -3,7 +3,7 @@ import { ExpenseService } from './expense.service';
 
 /** Offline-first routing of the expense service: when to call the API, when to save locally. */
 function harness(options: { online?: boolean } = {}) {
-  const calls = { post: [] as any[], put: [] as any[], delete: [] as string[], tracked: [] as string[], savedOffline: [] as any[] };
+  const calls = { post: [] as any[], put: [] as any[], delete: [] as string[], tracked: [] as string[], savedOffline: [] as any[], hardRemoved: [] as string[] };
   const service = Object.create(ExpenseService.prototype) as any;
   service.endpoint = '/expenses';
   service.expensesCache$ = 'stale-cache';
@@ -15,6 +15,9 @@ function harness(options: { online?: boolean } = {}) {
   service.connectionService = { isOnline: () => options.online !== false };
   service.offlineStorage = {
     saveSyncedEntity: () => of(null),
+    removeEntityHard: (_type: string, id: string) => {
+      calls.hardRemoved.push(id);
+    },
     deleteEntity: (_type: string, id: string) => {
       calls.delete.push(id);
       return of(true);
@@ -116,6 +119,9 @@ describe('ExpenseService offline-first routing', () => {
     const ok = harness();
     await firstValueFrom(ok.service.deleteExpense('abc123'));
     expect(ok.calls.delete).toContain('/expenses/abc123');
+    // the server already removed it, so nothing is left waiting to sync
+    expect(ok.calls.hardRemoved).toEqual(['abc123']);
+    expect(ok.calls.delete).not.toContain('abc123');
 
     const net = harness();
     net.service.nextResponse = throwError(() => ({ status: 0 }));

@@ -431,8 +431,9 @@ export class ExpenseService {
         this.expensesCache$ = null;
         this.totalsCache.clear();
         invalidateHttpCache('/expenses');
-        // Also mark as deleted in local storage
-        this.offlineStorage.deleteEntity('expense', id).subscribe();
+        // The server already removed it: drop the local copy outright. Marking
+        // it deleted would queue a second DELETE and show it as "not synced".
+        this.offlineStorage.removeEntityHard('expense', id);
         this.expenseReconciledSubject.next();
       }),
       catchError((error) => {

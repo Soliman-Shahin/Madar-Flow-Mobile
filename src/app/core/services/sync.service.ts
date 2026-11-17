@@ -8,6 +8,7 @@ import {
   interval,
   throwError,
   Subscription,
+  Subject,
   firstValueFrom,
 } from 'rxjs';
 import {
@@ -18,6 +19,7 @@ import {
   filter,
   finalize,
   distinctUntilChanged,
+  debounceTime,
 } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { OfflineStorageService } from './offline-storage.service';
@@ -113,6 +115,9 @@ export class SyncService {
   private syncInProgress = false;
   private syncOwnerId: string | null = null;
   private autoSyncSubscription?: Subscription;
+  /** Fires when new local changes are waiting while the app is online. */
+  private readonly pushSoon$ = new Subject<void>();
+  private lastPendingCount = 0;
 
   /** Key used to persist lastSyncTime in localStorage as fallback */
   private readonly LAST_SYNC_KEY = 'sync_lastSyncTime';
@@ -128,11 +133,25 @@ export class SyncService {
   }
 
   private initializeQueueMonitoring(): void {
+    // A burst of edits becomes one sync a few seconds after the last one.
+    this.pushSoon$.pipe(debounceTime(3000)).subscribe(() => {
+      if (this.isOnline && this.syncConfig.autoSync && !this.syncInProgress) {
+        this.syncAll().subscribe({
+          error: (err) => console.error('❌ Auto-push failed:', err),
+        });
+      }
+    });
+
     // Monitor offline queue and update metadata
     this.offlineStorage.syncQueue$.subscribe((queue) => {
       const pendingCount = queue.operations.filter(
         (op) => op.status === SyncStatus.PENDING
       ).length;
+      // New work arrived (not a retry of old work): push it without being asked.
+      if (pendingCount > this.lastPendingCount && this.isOnline) {
+        this.pushSoon$.next();
+      }
+      this.lastPendingCount = pendingCount;
       const errorCount = queue.operations.filter(
         (op) => op.status === SyncStatus.ERROR
       ).length;
