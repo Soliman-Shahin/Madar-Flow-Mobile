@@ -1,3 +1,4 @@
+import { AppVersionService } from 'src/app/core/services/app-version.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { BiometricService } from 'src/app/core/services/biometric.service';
@@ -26,6 +27,7 @@ import { BRAND } from 'src/app/config/brand.config';
 })
 export class SettingsListComponent extends BaseComponent implements OnInit {
   readonly brand = BRAND;
+  readonly appVersion = inject(AppVersionService);
   biometricAvailable = false;
   biometricSignInAvailable = false;
   biometricEnabled = false;

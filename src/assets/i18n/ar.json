@@ -451,7 +451,8 @@
     "SESSION_ACTIVE_NOW": "نشط الآن",
     "SESSION_LAST_ACTIVE": "آخر نشاط",
     "SESSION_SIGNED_IN": "سجّل الدخول",
-    "SUPPORT": "الدعم"
+    "SUPPORT": "الدعم",
+    "UPDATE_TO": "تحديث متاح: {{version}}"
   },
   "BUDGET": {
     "TITLE": "الميزانية"

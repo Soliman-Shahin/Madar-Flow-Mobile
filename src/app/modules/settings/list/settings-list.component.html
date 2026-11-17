@@ -351,8 +351,13 @@
       <img src="assets/icon/icon.png" alt="" class="mf-about__logo" />
       <p class="mf-about__name">{{ brand.productName }}</p>
       <p class="mf-about__version">
-        {{ "SETTINGS.VERSION" | translate }} <bdi>1.0.0</bdi>
+        {{ "SETTINGS.VERSION" | translate }} <bdi>{{ appVersion.version() }}</bdi>
       </p>
+      @if (appVersion.updateTo(); as latest) {
+      <p class="mf-about__version">
+        {{ "SETTINGS.UPDATE_TO" | translate : { version: latest } }}
+      </p>
+      }
     </footer>
   </div>
   }

@@ -1,3 +1,4 @@
+import { AppVersionService } from 'src/app/core/services/app-version.service';
 import { Component, ChangeDetectionStrategy, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BaseComponent } from 'src/app/shared/base/base.component';
@@ -20,6 +21,7 @@ import {
 })
 export class HelpPageComponent extends BaseComponent {
   readonly brand = BRAND;
+  readonly appVersion = inject(AppVersionService);
   private readonly appSettings = inject(AppSettingsService);
   private readonly lang = toSignal(this.language$, {
     initialValue: this.currentLang,

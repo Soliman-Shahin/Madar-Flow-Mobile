@@ -1,3 +1,4 @@
+import { AppVersionService } from 'src/app/core/services/app-version.service';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -43,6 +44,7 @@ export class SideMenuComponent
   private logoutInProgress = false;
   avatarFailed = false;
   private readonly profileService = inject(ProfileService);
+  readonly appVersion = inject(AppVersionService);
   readonly notificationUnreadCount$ = inject(NotificationService).unreadCount$;
 
   private readonly activeLink$ = this.router.events.pipe(
