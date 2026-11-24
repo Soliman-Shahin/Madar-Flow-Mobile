@@ -1,12 +1,12 @@
 export const environment = {
   production: true,
-  // Production: replace the api.madar-flow.invalid placeholder before release.
-  // `npm run build:prod` refuses to build while it is a placeholder or staging.
-  browserApiUrl: 'https://api.madar-flow.invalid/v1',
-  nativeApiUrl: 'https://api.madar-flow.invalid/v1',
-  backendOrigin: 'https://api.madar-flow.invalid',
+  // Production API (Railway "Madar Flow" project, custom domain on orbit-madar.com).
+  // `npm run build:prod` refuses to build while this is a placeholder or staging.
+  browserApiUrl: 'https://flow-api.orbit-madar.com/v1',
+  nativeApiUrl: 'https://flow-api.orbit-madar.com/v1',
+  backendOrigin: 'https://flow-api.orbit-madar.com',
   /** @deprecated Use browserApiUrl, nativeApiUrl, or backendOrigin explicitly. */
-  apiUrl: 'https://api.madar-flow.invalid/v1',
+  apiUrl: 'https://flow-api.orbit-madar.com/v1',
 
   // Google OAuth
   google: {

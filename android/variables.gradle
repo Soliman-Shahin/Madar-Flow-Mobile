@@ -1,7 +1,10 @@
 ext {
     minSdkVersion = 24
-    compileSdkVersion = 35
-    targetSdkVersion = 35
+    // Google Play requires new apps and updates to target Android 16 (API 36) since 2026-08-31.
+    // compileSdk 37 (the "android-37.0" platform) lacks android.hardware.fingerprint, which the
+    // native-biometric plugin needs, so compile against 36 (Capacitor 8's own default).
+    compileSdkVersion = 36
+    targetSdkVersion = 36
     androidxActivityVersion = '1.7.0'
     // Downgrade to avoid D8 NPE with 1.7.0 in AGP 8.0/Gradle 8.0.2
     androidxAppCompatVersion = '1.6.1'
