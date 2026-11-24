@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+// Release signing. The upload keystore and its passwords live OUTSIDE the repository.
+// Point MADARFLOW_KEYSTORE_PROPERTIES (env var) or -PmadarflowKeystoreProperties at a
+// .properties file with: storeFile, storePassword, keyAlias, keyPassword.
+def keystorePropsPath = System.getenv('MADARFLOW_KEYSTORE_PROPERTIES') ?: findProperty('madarflowKeystoreProperties')
+def keystoreProps = new Properties()
+def hasReleaseSigning = false
+if (keystorePropsPath && file(keystorePropsPath).exists()) {
+    file(keystorePropsPath).withInputStream { keystoreProps.load(it) }
+    hasReleaseSigning = ['storeFile', 'storePassword', 'keyAlias', 'keyPassword'].every { keystoreProps[it] }
+}
+
 android {
     packagingOptions {
         resources {
@@ -21,8 +32,21 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
