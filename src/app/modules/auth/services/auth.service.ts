@@ -24,6 +24,7 @@ import { StorageService } from './storage.service';
 import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 import { EncryptionService } from 'src/app/core/services/encryption.service';
 import { ApiService } from 'src/app/core/services/api.service';
+import { clearHttpCache } from 'src/app/core/interceptors/cache.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -385,6 +386,7 @@ export class AuthService {
   expireSession(): void {
     if (!this.tokenService.getAccessToken() && !this.getRefreshToken()) return;
     this.tokenService.removeSession();
+    clearHttpCache();
     if (!this.router.url.startsWith('/auth/')) {
       this.redirectUrl = this.router.url;
       void this.router.navigate(['/auth/login']);
@@ -444,6 +446,8 @@ export class AuthService {
         /* Local logout must work offline. */
       } finally {
         this.tokenService.removeSession();
+        // Cached API responses belong to the account that is leaving.
+        clearHttpCache();
         this.storageService.clear();
         // clear() removes the policy marker: restore it before any native reload.
         localStorage.setItem('madarflow_auth_persistent', 'false');
