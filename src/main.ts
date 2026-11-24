@@ -18,6 +18,7 @@ import {
   HttpClient,
 } from '@angular/common/http';
 import { GlobalErrorHandler } from './app/core/services/global-error-handler.service';
+import { initSentry } from './app/core/monitoring/sentry';
 
 // Functional interceptors
 import { retryInterceptor } from './app/core/interceptors/retry.interceptor';
@@ -83,6 +84,8 @@ const isNativeApp = Capacitor.isNativePlatform();
 if (isNativeApp) {
   void retireNativeServiceWorker();
 }
+
+initSentry(); // no-op unless environment.sentryDsn is set (production)
 
 if (environment.production) {
   enableProdMode();
