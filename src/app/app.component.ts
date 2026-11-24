@@ -107,9 +107,14 @@ export class AppComponent extends BaseComponent implements OnInit {
     if (Capacitor.isNativePlatform()) {
       void this.deviceLockService
         .listen(() => {
+          // Same rule as a cold start (TokenService only locks a restored session when the app
+          // lock is enabled): lock on device lock only if the user turned the app lock on in
+          // Settings. Without this, a user who never enabled it was asked for a biometric, and
+          // on a device with no biometric available the app stayed on the lock screen.
           if (
-            this.tokenService.hasRestoredSession() ||
-            this.authService.isLoggedIn
+            this.biometricService.isEnabled &&
+            (this.tokenService.hasRestoredSession() ||
+              this.authService.isLoggedIn)
           ) {
             this.isLocked = true;
             this.tokenService.requireBiometricUnlock();
