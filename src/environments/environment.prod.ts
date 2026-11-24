@@ -19,6 +19,10 @@ export const environment = {
   googleDriveClientId:
     '353235771010-hrhbu0k5v93qbjqpuirdh4pcatb1sdvg.apps.googleusercontent.com',
 
+  // Crash reporting (Sentry, EU region). The DSN is a write-only ingest key and is safe to ship.
+  sentryDsn:
+    'https://fc12ce942886aa1f8119ba0bfe2c4b16@o4512486631211008.ingest.de.sentry.io/4512486642417744',
+
   // Encryption is handled by backend
   enableEncryption: true,
 

@@ -1,6 +1,7 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { ToastService } from '../../shared/services/toast.service';
 import { environment } from '../../../environments/environment';
+import { captureClientError } from '../monitoring/sentry';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.toastService.presentErrorToast('bottom', message);
     });
 
-    // TODO: Send error to logging service (e.g., Sentry, LogRocket)
-    // this.logErrorToService(error);
+    // Report to Sentry (production builds only; scrubbed, HTTP errors are skipped there)
+    captureClientError(error);
   }
 
   private getErrorMessage(error: any): string {
@@ -44,9 +45,4 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
     return 'An unexpected error occurred. Please try again.';
   }
-
-  // private logErrorToService(error: any): void {
-  //   // TODO: Implement error logging service
-  //   // Example: Sentry.captureException(error);
-  // }
 }
