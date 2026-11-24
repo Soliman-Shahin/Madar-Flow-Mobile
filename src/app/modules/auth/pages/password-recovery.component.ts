@@ -1,4 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,7 +15,7 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { BiometricSignInService } from '../services/biometric-signin.service';
 import { BRAND } from 'src/app/config/brand.config';
@@ -99,19 +104,22 @@ export class ForgotPasswordComponent {
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
   });
-  private loadingState = new BehaviorSubject(false);
-  private sentState = new BehaviorSubject(false);
-  loading = () => this.loadingState.value;
-  sent = () => this.sentState.value;
+  // Signals, not BehaviorSubjects read through plain functions: this component is OnPush, and
+  // only signals mark the view for check when the HTTP response arrives. With the old approach
+  // the spinner never went away and the "link sent" notice never appeared (found on a device).
+  private loadingState = signal(false);
+  private sentState = signal(false);
+  readonly loading = this.loadingState.asReadonly();
+  readonly sent = this.sentState.asReadonly();
   submit() {
     if (this.form.invalid) return;
-    this.loadingState.next(true);
+    this.loadingState.set(true);
     this.auth
       .requestPasswordReset(this.form.value.email!)
-      .pipe(finalize(() => this.loadingState.next(false)))
+      .pipe(finalize(() => this.loadingState.set(false)))
       .subscribe({
-        next: () => this.sentState.next(true),
-        error: () => this.sentState.next(true),
+        next: () => this.sentState.set(true),
+        error: () => this.sentState.set(true),
       });
   }
 }
@@ -228,12 +236,13 @@ export class ResetPasswordComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   token = this.route.snapshot.queryParamMap.get('token');
-  private loadingState = new BehaviorSubject(false);
-  private doneState = new BehaviorSubject(false);
-  private errorState = new BehaviorSubject(false);
-  loading = () => this.loadingState.value;
-  done = () => this.doneState.value;
-  error = () => this.errorState.value;
+  // Signals (see ForgotPasswordComponent): required for OnPush views to update after the request.
+  private loadingState = signal(false);
+  private doneState = signal(false);
+  private errorState = signal(false);
+  readonly loading = this.loadingState.asReadonly();
+  readonly done = this.doneState.asReadonly();
+  readonly error = this.errorState.asReadonly();
   form = new FormGroup(
     {
       password: new FormControl('', [
@@ -246,17 +255,17 @@ export class ResetPasswordComponent {
   );
   submit() {
     if (!this.token || this.form.invalid) return;
-    this.loadingState.next(true);
+    this.loadingState.set(true);
     this.auth
       .resetPassword(this.token, this.form.value.password!)
-      .pipe(finalize(() => this.loadingState.next(false)))
+      .pipe(finalize(() => this.loadingState.set(false)))
       .subscribe({
         next: () => {
           void this.biometricSignIn.clearLocalEnrollment();
-          this.doneState.next(true);
+          this.doneState.set(true);
           void this.router.navigateByUrl('/auth/login');
         },
-        error: () => this.errorState.next(true),
+        error: () => this.errorState.set(true),
       });
   }
 }
