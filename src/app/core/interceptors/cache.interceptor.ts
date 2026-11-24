@@ -38,6 +38,17 @@ export function clearHttpCache(): number {
   return size;
 }
 
+/**
+ * Cache key = credential + URL. The cache lives in memory only, but without the credential two
+ * accounts used one after the other on the same device (sign out, then sign in or sign up as
+ * someone else) shared entries for the TTL, so the second account was served the first account's
+ * cached lists, totals and profile data. The full Authorization value is used (not a hash) so
+ * keys can never collide; a refreshed token simply starts a fresh partition.
+ */
+export function httpCacheKey(req: HttpRequest<unknown>): string {
+  return `${req.headers.get('Authorization') ?? 'anonymous'}|${req.urlWithParams}`;
+}
+
 function isExpired(entry: CacheEntry): boolean {
   return Date.now() - entry.timestamp > CACHE_TTL;
 }
@@ -70,14 +81,15 @@ export const cacheInterceptor: HttpInterceptorFn = (
   if (req.method !== 'GET') {
     return next(req);
   }
-  const cached = cache.get(req.urlWithParams);
+  const key = httpCacheKey(req);
+  const cached = cache.get(key);
   if (cached && !isExpired(cached)) {
     debugLog('✅ [Cache] HIT:', req.urlWithParams);
     return of(cached.response.clone());
   }
 
   if (cached) {
-    cache.delete(req.urlWithParams);
+    cache.delete(key);
   }
   return next(req).pipe(
     tap((event) => {
@@ -89,7 +101,7 @@ export const cacheInterceptor: HttpInterceptorFn = (
           }
         }
 
-        cache.set(req.urlWithParams, {
+        cache.set(key, {
           response: event.clone(),
           timestamp: Date.now(),
         });
