@@ -755,6 +755,7 @@
     "DETAIL_PENDING_DESCRIPTION": "Waiting to sync",
     "DETAIL_ISSUE": "Sync issue",
     "DETAIL_ISSUE_DESCRIPTION": "Couldn't sync this change",
+    "LIMIT_NOTICE": "Some items were not synced because you reached your plan limit. They stay on this device.",
     "DETAIL_LIMIT": "Plan limit reached",
     "DETAIL_LIMIT_DESCRIPTION": "This record is saved only on this device. Upgrade your plan to sync it.",
     "PENDING": "Pending",

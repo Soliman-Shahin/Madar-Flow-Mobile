@@ -29,12 +29,14 @@ import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/app/modules/auth/services/token.service';
 import {
   SyncStatus,
+  SyncOperation,
   SyncMetadata,
   SyncConfig,
   SyncProgress,
   SyncIndicatorState,
 } from 'src/app/shared/models/sync.model';
 import { debugLog } from 'src/app/shared/utils/debug-log.util';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 /**
  * 🔄 Sync Service - Professional Implementation
@@ -55,6 +57,7 @@ export class SyncService {
   private expenseService = inject(ExpenseService);
   private tokenService = inject(TokenService);
   private readonly telemetry = inject(TelemetryService);
+  private readonly toastService = inject(ToastService);
 
   // ==================== CONFIGURATION ====================
 
@@ -631,6 +634,11 @@ export class SyncService {
           switchMap((result) =>
             from(Promise.all(failureUpdates)).pipe(map(() => result))
           ),
+          switchMap((result) =>
+            from(this.handlePlanLimitRejections(batch, result)).pipe(
+              map(() => result)
+            )
+          ),
           switchMap((result) => {
             if (!result?.success) return of(false);
             // Continue until the owner-scoped queue is drained; a single configured
@@ -649,6 +657,36 @@ export class SyncService {
         );
       })
     );
+  }
+
+  /**
+   * Operations the server refused because of the plan limit: carry the refusal
+   * over to expenses of a refused category, and tell the user once.
+   */
+  private async handlePlanLimitRejections(
+    batch: SyncOperation[],
+    result: any
+  ): Promise<void> {
+    const limited = new Set<string>(
+      (result?.errors || [])
+        .filter((error: any) => error?.code === 'PLAN_LIMIT_EXCEEDED')
+        .map((error: any) => String(error.operationId))
+    );
+    if (limited.size === 0) return;
+
+    const refusedCategories = batch
+      .filter((op) => op.entityType === 'category' && limited.has(op.id))
+      .map((op) => op.entityId);
+    const cascaded =
+      await this.offlineStorage.failExpensesOfLimitedCategories(
+        refusedCategories
+      );
+    if (limited.size + cascaded > 0) {
+      void this.toastService.presentWarningToast(
+        'bottom',
+        'SYNC.LIMIT_NOTICE'
+      );
+    }
   }
 
   // ==================== SYNC COMPLETION ====================

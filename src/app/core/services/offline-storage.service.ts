@@ -646,6 +646,42 @@ export class OfflineStorageService {
     return { ...operation, retryCount, maxRetries, status, error };
   }
 
+  /**
+   * A category the server refused because of the plan limit will never exist
+   * there, so expenses that point at it can only fail with "Category not found".
+   * Mark those pending expense operations with the same terminal limit error.
+   * Returns how many operations were updated.
+   */
+  async failExpensesOfLimitedCategories(
+    categoryIds: string[]
+  ): Promise<number> {
+    const ownerUserId = this.tokenService.getUserId();
+    if (!ownerUserId || categoryIds.length === 0) return 0;
+    const refused = new Set(categoryIds.map(String));
+    const dependants = await this.db.syncOperations
+      .where('ownerUserId')
+      .equals(String(ownerUserId))
+      .filter((op) => {
+        if (op.entityType !== 'expense' || op.status !== SyncStatus.PENDING)
+          return false;
+        const category = op.data?.category;
+        const ref = typeof category === 'object' ? category?._id : category;
+        return ref != null && refused.has(String(ref));
+      })
+      .toArray();
+    await Promise.all(
+      dependants.map((op) =>
+        this.db.syncOperations.update(op.id, {
+          retryCount: Math.max(1, Number(op.maxRetries || 3)),
+          status: SyncStatus.ERROR,
+          error: 'PLAN_LIMIT_EXCEEDED',
+        })
+      )
+    );
+    if (dependants.length) await this.loadSyncQueue();
+    return dependants.length;
+  }
+
   async persistSyncReceipt(operationId: string, receiptId: string): Promise<void> {
     const ownerUserId = this.tokenService.getUserId();
     if (!ownerUserId || !receiptId) return;
