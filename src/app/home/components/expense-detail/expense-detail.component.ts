@@ -119,11 +119,16 @@ export class ExpenseDetailComponent implements OnInit {
       );
   }
 
+  /** True when the server refused this record because of the plan limit. */
+  planLimitHit = false;
+
   get syncLabelKey(): string {
+    if (this.planLimitHit) return 'SYNC.DETAIL_LIMIT';
     return `SYNC.DETAIL_${this.syncState.toUpperCase()}`;
   }
 
   get syncDescriptionKey(): string {
+    if (this.planLimitHit) return 'SYNC.DETAIL_LIMIT_DESCRIPTION';
     return `SYNC.DETAIL_${this.syncState.toUpperCase()}_DESCRIPTION`;
   }
 
@@ -163,6 +168,11 @@ export class ExpenseDetailComponent implements OnInit {
         )
     );
     const status = entity._syncStatus;
+    this.planLimitHit = operations.some(
+      (operation) =>
+        operation.status === SyncStatus.ERROR &&
+        operation.error === 'PLAN_LIMIT_EXCEEDED'
+    );
     this.syncState =
       operations.some((operation) => operation.status === SyncStatus.ERROR) ||
       [SyncStatus.ERROR, SyncStatus.CONFLICT].includes(status)

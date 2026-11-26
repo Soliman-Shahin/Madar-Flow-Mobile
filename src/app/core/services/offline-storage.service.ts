@@ -627,14 +627,15 @@ export class OfflineStorageService {
     if (!operation) return null;
     if (operation.status !== SyncStatus.PENDING) return operation;
 
-    const retryCount = Math.max(0, Number(operation.retryCount || 0)) + 1;
+    // A plan-limit rejection never succeeds on retry, so it is terminal at once.
+    const planLimit = safeError === 'PLAN_LIMIT_EXCEEDED';
     const maxRetries = Math.max(1, Number(operation.maxRetries || 3));
+    const retryCount = planLimit
+      ? maxRetries
+      : Math.max(0, Number(operation.retryCount || 0)) + 1;
     const status =
       retryCount >= maxRetries ? SyncStatus.ERROR : SyncStatus.PENDING;
-    const error =
-      safeError === 'SYNC_OPERATION_FAILED'
-        ? safeError
-        : 'SYNC_OPERATION_FAILED';
+    const error = planLimit ? 'PLAN_LIMIT_EXCEEDED' : 'SYNC_OPERATION_FAILED';
     await this.db.syncOperations.update(operation.id, {
       retryCount,
       maxRetries,

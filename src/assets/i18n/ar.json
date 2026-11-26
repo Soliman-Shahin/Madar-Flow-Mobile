@@ -756,6 +756,8 @@
     "DETAIL_PENDING_DESCRIPTION": "في انتظار المزامنة",
     "DETAIL_ISSUE": "مشكلة في المزامنة",
     "DETAIL_ISSUE_DESCRIPTION": "تعذرت مزامنة هذا التغيير",
+    "DETAIL_LIMIT": "وصلت للحد الأقصى للباقة",
+    "DETAIL_LIMIT_DESCRIPTION": "هذا السجل محفوظ على هذا الجهاز فقط. رقّي باقتك لمزامنته.",
     "PENDING": "معلق",
     "CONFLICTS": "التعارضات",
     "ERRORS": "الأخطاء",
