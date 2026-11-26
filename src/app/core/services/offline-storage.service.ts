@@ -774,7 +774,12 @@ export class OfflineStorageService {
     const limited = await this.getPlanLimitedOperations();
     await Promise.all(
       limited.map(async (op) => {
-        if (op.entityType === 'category' || op.entityType === 'expense') {
+        // Only a refused create exists solely on this device. A refused edit
+        // belongs to a record the server already has: drop the edit, keep the row.
+        if (
+          op.type === 'CREATE' &&
+          (op.entityType === 'category' || op.entityType === 'expense')
+        ) {
           await this.db.getTable(op.entityType).delete(op.entityId);
         }
         await this.db.syncOperations.delete(op.id);

@@ -135,6 +135,7 @@ describe('refused operations: retry, discard and dependents', () => {
   const limitedOps = () => [
     mine({
       id: 'op-cat',
+      type: 'CREATE',
       entityType: 'category',
       entityId: 'offline_cat',
       status: SyncStatus.ERROR,
@@ -188,6 +189,27 @@ describe('refused operations: retry, discard and dependents', () => {
     expect(
       db.syncOperations.rows.find((r: any) => r.id === 'op-cat')
     ).toBeUndefined();
+  });
+});
+
+describe('discarding a refused edit', () => {
+  it('drops the edit but keeps the synced record on the device', async () => {
+    const { service, db } = storage({
+      expenses: [mine({ _id: 'server-exp' })],
+      ops: [
+        mine({
+          id: 'op-edit',
+          type: 'UPDATE',
+          entityType: 'expense',
+          entityId: 'server-exp',
+          status: SyncStatus.ERROR,
+          error: 'PLAN_LIMIT_EXCEEDED',
+        }),
+      ],
+    });
+    expect(await service.discardPlanLimitedOperations()).toBe(1);
+    expect(db.expenses.rows.map((r: any) => r._id)).toEqual(['server-exp']);
+    expect(db.syncOperations.rows).toEqual([]);
   });
 });
 
