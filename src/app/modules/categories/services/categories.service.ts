@@ -7,6 +7,7 @@ import { Category, SyncStatus } from 'src/app/shared/models';
 import { CategoryParams } from '../models';
 import { ApiService, ConnectionService } from 'src/app/core/services';
 import { OfflineStorageService } from 'src/app/core/services/offline-storage.service';
+import { PlanLimitGuardService } from 'src/app/core/services/plan-limit-guard.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class CategoryService {
   private readonly telemetry = inject(TelemetryService);
   private offlineStorage = inject(OfflineStorageService);
   private connectionService = inject(ConnectionService);
+  private planGuard = inject(PlanLimitGuardService);
 
   private shouldQueueOffline(error: any): boolean {
     return !this.connectionService.isOnline() || error?.status === 0;
@@ -307,6 +309,18 @@ export class CategoryService {
   }
 
   private _saveOffline(
+    type: 'CREATE' | 'UPDATE',
+    category: Partial<Category>
+  ): Observable<Category> {
+    // A new record the plan would refuse is not saved at all.
+    return type === 'CREATE'
+      ? this.planGuard
+          .assertCanCreate('categories')
+          .pipe(switchMap(() => this._persistOffline(type, category)))
+      : this._persistOffline(type, category);
+  }
+
+  private _persistOffline(
     type: 'CREATE' | 'UPDATE',
     category: Partial<Category>
   ): Observable<Category> {

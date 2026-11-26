@@ -726,6 +726,10 @@
   "TOAST": {
     "DELETE_SUCCESS": "Item deleted successfully."
   },
+  "PLAN_LIMIT": {
+    "TRANSACTIONS_REACHED": "You've reached your plan's monthly transaction limit. Your existing records are safe.",
+    "CATEGORIES_REACHED": "You've reached your plan's category limit. Your existing categories are safe."
+  },
   "SYNC": {
     "INDICATOR_PENDING": "{{count}} pending",
     "INDICATOR_SYNCING": "Syncing",
@@ -755,6 +759,16 @@
     "DETAIL_PENDING_DESCRIPTION": "Waiting to sync",
     "DETAIL_ISSUE": "Sync issue",
     "DETAIL_ISSUE_DESCRIPTION": "Couldn't sync this change",
+    "LIMITED_TITLE": "Not synced: plan limit",
+    "LIMITED_COUNT": "{{count}} items are only on this device",
+    "LIMITED_HINT": "The server refused them because your plan limit was reached. Retry after freeing space, or delete them from this device.",
+    "LIMITED_RETRY": "Retry sync",
+    "LIMITED_DISCARD": "Delete from this device",
+    "LIMITED_DISCARD_CONFIRM": "These items will be deleted from this device and can't be recovered. Continue?",
+    "LIMITED_RETRYING": "Retrying sync…",
+    "LIMITED_DISCARDED": "Items deleted from this device",
+    "LIMITED_CANCEL": "Cancel",
+    "LIMIT_NOTICE": "Some items were not synced because you reached your plan limit. They stay on this device.",
     "DETAIL_LIMIT": "Plan limit reached",
     "DETAIL_LIMIT_DESCRIPTION": "This record is saved only on this device. Upgrade your plan to sync it.",
     "PENDING": "Pending",

@@ -646,6 +646,149 @@ export class OfflineStorageService {
     return { ...operation, retryCount, maxRetries, status, error };
   }
 
+  /**
+   * A category the server refused because of the plan limit will never exist
+   * there, so expenses that point at it can only fail with "Category not found".
+   * Mark those pending expense operations with the same terminal limit error.
+   * Returns how many operations were updated.
+   */
+  async failExpensesOfLimitedCategories(
+    categoryIds: string[]
+  ): Promise<number> {
+    const ownerUserId = this.tokenService.getUserId();
+    if (!ownerUserId || categoryIds.length === 0) return 0;
+    const refused = new Set(categoryIds.map(String));
+    const dependants = await this.db.syncOperations
+      .where('ownerUserId')
+      .equals(String(ownerUserId))
+      .filter((op) => {
+        if (op.entityType !== 'expense' || op.status !== SyncStatus.PENDING)
+          return false;
+        const category = op.data?.category;
+        const ref = typeof category === 'object' ? category?._id : category;
+        return ref != null && refused.has(String(ref));
+      })
+      .toArray();
+    await Promise.all(
+      dependants.map((op) =>
+        this.db.syncOperations.update(op.id, {
+          retryCount: Math.max(1, Number(op.maxRetries || 3)),
+          status: SyncStatus.ERROR,
+          error: 'PLAN_LIMIT_EXCEEDED',
+        })
+      )
+    );
+    if (dependants.length) await this.loadSyncQueue();
+    return dependants.length;
+  }
+
+  /**
+   * What this account has stored on the device, counted like the server does:
+   * own (non-starter) categories, and this month's transactions. Deleted rows
+   * never count.
+   */
+  async countPlanUsage(): Promise<{
+    categories: number;
+    transactionsThisMonth: number;
+  }> {
+    const ownerUserId = this.tokenService.getUserId();
+    if (!ownerUserId) return { categories: 0, transactionsThisMonth: 0 };
+    const owner = String(ownerUserId);
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime();
+    const [categories, expenses] = await Promise.all([
+      this.db.categories.where('ownerUserId').equals(owner).toArray(),
+      this.db.expenses.where('ownerUserId').equals(owner).toArray(),
+    ]);
+    const unique = <T extends { _id?: string; _clientId?: string }>(
+      rows: T[]
+    ) => {
+      const seen = new Set<string>();
+      return rows.filter((row) => {
+        const key = row._clientId || row._id;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    };
+    return {
+      categories: unique(categories as any[]).filter(
+        (c: any) => !c._isDeleted && !c.isStarter && !c.isDefault
+      ).length,
+      transactionsThisMonth: unique(expenses as any[]).filter((e: any) => {
+        if (e._isDeleted) return false;
+        const time = new Date(e.date).getTime();
+        return Number.isFinite(time) && time >= start && time < end;
+      }).length,
+    };
+  }
+
+  /** Operations the server refused because of the plan limit. */
+  async getPlanLimitedOperations(): Promise<SyncOperation[]> {
+    const ownerUserId = this.tokenService.getUserId();
+    if (!ownerUserId) return [];
+    return this.db.syncOperations
+      .where('ownerUserId')
+      .equals(String(ownerUserId))
+      .filter(
+        (op) =>
+          op.status === SyncStatus.ERROR && op.error === 'PLAN_LIMIT_EXCEEDED'
+      )
+      .toArray();
+  }
+
+  /**
+   * Expenses of a category that was already refused for the limit must not be
+   * pushed: the category will never exist on the server.
+   */
+  async failDependentsOfLimitedCategories(): Promise<number> {
+    const limited = await this.getPlanLimitedOperations();
+    const categoryIds = limited
+      .filter((op) => op.entityType === 'category')
+      .map((op) => op.entityId);
+    return this.failExpensesOfLimitedCategories(categoryIds);
+  }
+
+  /** Give refused operations a fresh set of attempts (limit raised or usage dropped). */
+  async requeuePlanLimitedOperations(): Promise<number> {
+    const limited = await this.getPlanLimitedOperations();
+    await Promise.all(
+      limited.map((op) =>
+        this.db.syncOperations.update(op.id, {
+          retryCount: 0,
+          status: SyncStatus.PENDING,
+          error: undefined,
+        })
+      )
+    );
+    if (limited.length) await this.loadSyncQueue();
+    return limited.length;
+  }
+
+  /**
+   * Remove refused records from this device for good: the local row and its
+   * queued operation. Returns how many operations were discarded.
+   */
+  async discardPlanLimitedOperations(): Promise<number> {
+    const limited = await this.getPlanLimitedOperations();
+    await Promise.all(
+      limited.map(async (op) => {
+        // Only a refused create exists solely on this device. A refused edit
+        // belongs to a record the server already has: drop the edit, keep the row.
+        if (
+          op.type === 'CREATE' &&
+          (op.entityType === 'category' || op.entityType === 'expense')
+        ) {
+          await this.db.getTable(op.entityType).delete(op.entityId);
+        }
+        await this.db.syncOperations.delete(op.id);
+      })
+    );
+    if (limited.length) await this.loadSyncQueue();
+    return limited.length;
+  }
+
   async persistSyncReceipt(operationId: string, receiptId: string): Promise<void> {
     const ownerUserId = this.tokenService.getUserId();
     if (!ownerUserId || !receiptId) return;

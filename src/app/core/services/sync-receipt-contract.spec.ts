@@ -20,6 +20,8 @@ function harness(operations: any[]) {
       persisted.push(`${id}:${receipt}`);
     },
     recordSyncFailure: async () => undefined,
+    failDependentsOfLimitedCategories: async () => 0,
+    failExpensesOfLimitedCategories: async () => 0,
     removeFromSyncQueue: () => undefined,
     markSynced: () => undefined,
     blockSyncOperation: () => undefined,

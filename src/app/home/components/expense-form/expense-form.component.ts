@@ -37,6 +37,7 @@ import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExpenseDraftService } from 'src/app/core/services/expense-draft.service';
+import { isPlanLimitError } from 'src/app/core/services/plan-limit-guard.service';
 import { ReceiptScanComponent } from 'src/app/shared/components/receipt-scan/receipt-scan.component';
 import { ScanResult } from 'src/app/core/receipts/receipt-scan.service';
 import { ReceiptStoreService } from 'src/app/core/receipts/receipt-store.service';
@@ -415,6 +416,14 @@ export class ExpenseFormComponent
           this.modalCtrl?.dismiss(response, 'confirm');
         },
         error: (error) => {
+          if (isPlanLimitError(error)) {
+            // Refused before saving: nothing was stored, the form stays open.
+            this.toastService.presentWarningToast(
+              'bottom',
+              this.translateService.instant('PLAN_LIMIT.TRANSACTIONS_REACHED')
+            );
+            return;
+          }
           const message = this.isEditMode
             ? this.translateService.instant('EXPENSE.UPDATE_ERROR')
             : this.translateService.instant('EXPENSE.CREATE_ERROR');

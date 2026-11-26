@@ -6,15 +6,19 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { LoadingController, IonicModule } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  IonicModule,
+} from '@ionic/angular';
 
 import { SyncService } from 'src/app/core/services/sync.service';
 import { OfflineStorageService } from 'src/app/core/services/offline-storage.service';
-import { SyncConfig } from 'src/app/shared/models/sync.model';
+import { SyncConfig, SyncStatus } from 'src/app/shared/models/sync.model';
 import { BaseComponent } from 'src/app/shared/base';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { APP_ROUTES } from 'src/app/core/constants';
@@ -109,6 +113,45 @@ import { APP_ROUTES } from 'src/app/core/constants';
             </ion-label>
           </ion-item>
         </ion-list>
+
+        @if ((limitedCount | async); as count) {
+        <div class="section-label">{{ 'SYNC.LIMITED_TITLE' | translate }}</div>
+        <ion-list inset="true" class="premium-list">
+          <ion-item lines="none">
+            <div slot="start" class="icon-wrapper color-orange">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+            </div>
+            <ion-label class="ion-text-wrap">
+              <h3>{{ 'SYNC.LIMITED_COUNT' | translate : { count: count } }}</h3>
+              <p>{{ 'SYNC.LIMITED_HINT' | translate }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item
+            lines="none"
+            button="true"
+            detail="false"
+            (click)="retryLimited()"
+          >
+            <div slot="start" class="icon-wrapper color-blue">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </div>
+            <ion-label>{{ 'SYNC.LIMITED_RETRY' | translate }}</ion-label>
+          </ion-item>
+          <ion-item
+            lines="none"
+            button="true"
+            detail="false"
+            (click)="discardLimited()"
+          >
+            <div slot="start" class="icon-wrapper color-red">
+              <ion-icon name="trash-outline"></ion-icon>
+            </div>
+            <ion-label color="danger">{{
+              'SYNC.LIMITED_DISCARD' | translate
+            }}</ion-label>
+          </ion-item>
+        </ion-list>
+        }
 
         <div class="section-label">{{ 'SYNC.ADVANCED' | translate }}</div>
         <ion-list inset="true" class="premium-list">
@@ -261,6 +304,55 @@ export class SyncSettingsPage extends BaseComponent implements OnInit {
   storageSize = this.offlineStorage.getStorageSize();
   pendingCount = this.syncService.getPendingCount();
   syncMetadata$ = this.syncService.syncMetadata$;
+  private alertController = inject(AlertController);
+
+  /** Items the server refused because of the plan limit (still on the device). */
+  limitedCount = this.offlineStorage.syncQueue$.pipe(
+    map(
+      (queue) =>
+        queue.operations.filter(
+          (op) =>
+            op.status === SyncStatus.ERROR && op.error === 'PLAN_LIMIT_EXCEEDED'
+        ).length
+    ),
+    distinctUntilChanged()
+  );
+
+  async retryLimited(): Promise<void> {
+    const count = await this.offlineStorage.requeuePlanLimitedOperations();
+    if (count === 0) return;
+    this.toastService.presentInfoToast('bottom', 'SYNC.LIMITED_RETRYING');
+    if (
+      this.syncService.isOnlineStatus() &&
+      !this.syncService.isSyncInProgress()
+    ) {
+      this.syncService.forceSync().subscribe({ error: () => undefined });
+    }
+  }
+
+  async discardLimited(): Promise<void> {
+    const t = (key: string) => this.translateService.instant(key);
+    const alert = await this.alertController.create({
+      header: t('SYNC.LIMITED_DISCARD'),
+      message: t('SYNC.LIMITED_DISCARD_CONFIRM'),
+      buttons: [
+        { text: t('SYNC.LIMITED_CANCEL'), role: 'cancel' },
+        {
+          text: t('SYNC.LIMITED_DISCARD'),
+          role: 'destructive',
+          handler: () => {
+            void this.offlineStorage.discardPlanLimitedOperations().then(() => {
+              this.toastService.presentSuccessToast(
+                'bottom',
+                'SYNC.LIMITED_DISCARDED'
+              );
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
 
   openConflicts(event?: Event): void {
     event?.preventDefault();
