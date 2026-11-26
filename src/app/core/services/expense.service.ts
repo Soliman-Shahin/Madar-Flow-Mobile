@@ -8,6 +8,7 @@ import { Expense } from 'src/app/shared/models/expense.model';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { OfflineStorageService } from './offline-storage.service';
 import { ConnectionService } from './connection.service';
+import { PlanLimitGuardService } from './plan-limit-guard.service';
 import { SyncStatus } from 'src/app/shared/models/sync.model';
 import { invalidateHttpCache } from '../interceptors/cache.interceptor';
 import { environment } from 'src/environments/environment';
@@ -33,6 +34,7 @@ export class ExpenseService {
   private auth = inject(AuthService);
   private offlineStorage = inject(OfflineStorageService);
   private connectionService = inject(ConnectionService);
+  private planGuard = inject(PlanLimitGuardService);
 
   private shouldFallbackOffline(error: any): boolean {
     // Angular HttpErrorResponse uses status 0 for transport failures
@@ -489,6 +491,18 @@ export class ExpenseService {
    * Saves an expense offline as a PENDING entity for later sync.
    */
   private _saveOffline(
+    type: 'CREATE' | 'UPDATE',
+    expense: Partial<Expense>
+  ): Observable<Expense> {
+    // A new record the plan would refuse is not saved at all.
+    return type === 'CREATE'
+      ? this.planGuard
+          .assertCanCreate('transactions')
+          .pipe(switchMap(() => this._persistOffline(type, expense)))
+      : this._persistOffline(type, expense);
+  }
+
+  private _persistOffline(
     type: 'CREATE' | 'UPDATE',
     expense: Partial<Expense>
   ): Observable<Expense> {

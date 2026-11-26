@@ -15,6 +15,7 @@ import { ColorSelectorComponent } from '../../containers/color-selector/color-se
 import { IconSelectorComponent } from '../../containers/icon-selector/icon-selector.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { isPlanLimitError } from 'src/app/core/services/plan-limit-guard.service';
 
 @Component({
   selector: 'app-add-category',
@@ -175,7 +176,11 @@ export class AddCategoryComponent extends BaseComponent implements OnInit {
         },
         error: (error) => {
           this.formSubmitted = false;
-          this.errorMessage.next('COMMON.ERRORS.DEFAULT');
+          this.errorMessage.next(
+            isPlanLimitError(error)
+              ? 'PLAN_LIMIT.CATEGORIES_REACHED'
+              : 'COMMON.ERRORS.DEFAULT'
+          );
         },
       });
   }

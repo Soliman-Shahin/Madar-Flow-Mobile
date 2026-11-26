@@ -37,6 +37,7 @@ import {
 } from 'src/app/shared/models/sync.model';
 import { debugLog } from 'src/app/shared/utils/debug-log.util';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { PlanService } from './plan.service';
 
 /**
  * 🔄 Sync Service - Professional Implementation
@@ -58,6 +59,7 @@ export class SyncService {
   private tokenService = inject(TokenService);
   private readonly telemetry = inject(TelemetryService);
   private readonly toastService = inject(ToastService);
+  private readonly planService = inject(PlanService);
 
   // ==================== CONFIGURATION ====================
 
@@ -143,6 +145,20 @@ export class SyncService {
           error: (err) => console.error('❌ Auto-push failed:', err),
         });
       }
+    });
+
+    // A raised limit (upgrade) gives refused items another chance at once.
+    this.planService.limitsIncreased$.subscribe(() => {
+      void this.offlineStorage
+        .requeuePlanLimitedOperations()
+        .then((count) => {
+          if (count > 0 && this.isOnline && !this.syncInProgress) {
+            this.syncAll().subscribe({
+              error: (err) => console.error('❌ Re-sync failed:', err),
+            });
+          }
+        })
+        .catch((err) => console.error('❌ Requeue failed:', err));
     });
 
     // Monitor offline queue and update metadata
@@ -470,7 +486,11 @@ export class SyncService {
   private pushLocalChanges(): Observable<boolean> {
     debugLog('📤 Checking for pending local changes...');
 
-    return this.offlineStorage.getPendingOperations().pipe(
+    // Expenses of an already-refused category would only fail again.
+    return from(
+      this.offlineStorage.failDependentsOfLimitedCategories().catch(() => 0)
+    ).pipe(
+      switchMap(() => this.offlineStorage.getPendingOperations()),
       switchMap((operations) => {
         if (!operations || operations.length === 0) {
           debugLog('ℹ️ No pending operations to push');

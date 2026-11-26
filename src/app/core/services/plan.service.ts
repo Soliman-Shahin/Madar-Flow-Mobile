@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
@@ -79,6 +79,7 @@ export class PlanService {
         revision === this.accountRevision &&
         userId === this.tokenService.getUserId()
       ) {
+        this.rememberLimits(userId, response.data?.context?.limits);
         this.currentPlanSubject.next(response.data);
       }
       return response.data;
@@ -147,6 +148,78 @@ export class PlanService {
     return permissions.every((p) =>
       currentPlan.context.permissions.includes(p)
     );
+  }
+
+  // ==================== Known limits (usable offline) ====================
+
+  /** Emits when a refreshed plan raised a limit (or removed it). */
+  private readonly limitsIncreasedSubject = new Subject<void>();
+  public limitsIncreased$ = this.limitsIncreasedSubject.asObservable();
+
+  private limitsKey(userId: string | null | undefined): string | null {
+    return userId ? `mf_plan_limits_${userId}` : null;
+  }
+
+  private rememberLimits(
+    userId: string | null | undefined,
+    limits: Partial<PlanLimits> | undefined
+  ): void {
+    const key = this.limitsKey(userId);
+    if (!key || !limits) return;
+    const next = {
+      maxCategories: limits.maxCategories ?? null,
+      maxTransactionsPerMonth: limits.maxTransactionsPerMonth ?? null,
+    };
+    const previous = this.readStoredLimits(userId);
+    try {
+      localStorage.setItem(key, JSON.stringify(next));
+    } catch {
+      /* storage unavailable: the server stays the authority */
+    }
+    const raised = (a: number | null, b: number | null | undefined) =>
+      b !== undefined && (a === null ? b !== null : b !== null && a > b);
+    if (
+      previous &&
+      (raised(next.maxCategories, previous.maxCategories) ||
+        raised(next.maxTransactionsPerMonth, previous.maxTransactionsPerMonth))
+    ) {
+      this.limitsIncreasedSubject.next();
+    }
+  }
+
+  private readStoredLimits(
+    userId: string | null | undefined
+  ): {
+    maxCategories: number | null;
+    maxTransactionsPerMonth: number | null;
+  } | null {
+    const key = this.limitsKey(userId);
+    if (!key) return null;
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * The limits last confirmed by the server for this account, or null when
+   * they were never loaded (then nothing is blocked locally).
+   */
+  getKnownLimits(): {
+    maxCategories: number | null;
+    maxTransactionsPerMonth: number | null;
+  } | null {
+    const userId = this.tokenService.getUserId();
+    const live = this.currentPlanSubject.value?.context?.limits;
+    if (live) {
+      return {
+        maxCategories: live.maxCategories ?? null,
+        maxTransactionsPerMonth: live.maxTransactionsPerMonth ?? null,
+      };
+    }
+    return this.readStoredLimits(userId);
   }
 
   // ==================== Limit Checks ====================
