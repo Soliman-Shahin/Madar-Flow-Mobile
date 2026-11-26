@@ -557,7 +557,9 @@ export class SyncService {
               const failed = new Map(
                 (result?.errors || []).map((error: any) => [
                   error.operationId,
-                  error.reason,
+                  error.code === 'PLAN_LIMIT_EXCEEDED'
+                    ? 'PLAN_LIMIT_EXCEEDED'
+                    : error.reason,
                 ])
               );
               batch.forEach((op) => {
@@ -588,7 +590,12 @@ export class SyncService {
                 }
                 if (failed.has(op.id)) {
                   failureUpdates.push(
-                    this.offlineStorage.recordSyncFailure(op.id)
+                    this.offlineStorage.recordSyncFailure(
+                      op.id,
+                      failed.get(op.id) === 'PLAN_LIMIT_EXCEEDED'
+                        ? 'PLAN_LIMIT_EXCEEDED'
+                        : undefined
+                    )
                   );
                   return;
                 }
